@@ -1,2 +1,16 @@
 node_modules
-client/node_modules
+
+xaiv-react-client/node_modules
+xaiv-react-client/node_modules/**/*
+xaiv-react-client/.expo/*
+xaiv-react-client/npm-debug.*
+xaiv-react-client/*.jks
+xaiv-react-client/*.p8
+xaiv-react-client/*.p12
+xaiv-react-client/*.key
+xaiv-react-client/*.mobileprovision
+xaiv-react-client/*.orig.*
+xaiv-react-client/web-build/
+
+# macOS
+.DS_Store
