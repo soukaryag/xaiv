@@ -1,41 +1,72 @@
 import React from 'react'
-import { Platform, StyleSheet } from 'react-native'
-import { Tile } from 'react-native-elements'
-import Layout from '../constants/Layout'
+import { View, Text, Image, StyleSheet, ImageSourcePropType, Dimensions } from 'react-native'
+import { shape, string, number } from 'prop-types'
+const { height } = Dimensions.get('window')
 
-export const Card = ({ pic, title, caption }) => (
-  <Tile
-    imageSrc={pic}
-    imageContainerStyle={styles.imageContainer}
-    activeOpacity={0.9}
-    title={title}
-    titleStyle={styles.title}
-    caption={caption}
-    captionStyle={styles.caption}
-    containerStyle={styles.container}
-    featured
-  />
+const Card = ({ card }: any) => (
+  <View
+    activeOpacity={1}
+    style={styles.card}
+  >
+    <Image
+      style={styles.image}
+      source={card.photo}
+      resizeMode="cover"
+    />
+    <View style={styles.photoDescriptionContainer}>
+      <Text style={styles.text}>
+        {`${card.name}, ${card.age}`}
+      </Text>
+    </View>
+  </View>
 )
 
+Card.propTypes = { 
+  card: shape({
+    photo: ImageSourcePropType,
+    name: string,
+    age: number,
+  }).isRequired,
+}
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  card: {
+    height: height - 200,
+    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 5,
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowRadius: 6,
+    shadowOpacity: 0.3,
+    elevation: 2,
   },
-  imageContainer: {
-    width: Layout.window.width - 30,
-    height: Layout.window.height - 29 * 6,
-    borderRadius: 20,
-    overflow: 'hidden',
+  image: {
+    borderRadius: 5,
+    flex: 1,
+    width: '100%',
   },
-  title: {
-    position: 'absolute',
-    left: 10,
-    bottom: 30,
-  },
-  caption: {
+  photoDescriptionContainer: {
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+    height: '100%',
     position: 'absolute',
     left: 10,
     bottom: 10,
   },
+  text: {
+    textAlign: 'center',
+    fontSize: 20,
+    color: 'white',
+    fontFamily: 'Avenir',
+    textShadowColor: 'black',
+    textShadowRadius: 10,
+  },
 })
+
+export default Card
