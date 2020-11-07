@@ -1,3 +1,6 @@
+/*
+    THIS IS ALL DUMMY DATA, TO BE REMOVED AT LATER TIME
+*/
 const photoCards = [
     {
         name: 'Old Town Road',

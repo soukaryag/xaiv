@@ -14,7 +14,6 @@ class HomeScreen extends React.Component {
                 <View style={styles.swiperContainer}>
                     <Swiper
                         animateCardOpacity
-                        containerStyle={styles.container}
                         cards={photoCards}
                         renderCard={(card: any) => <Card card={card} />}
                         disableBottomSwipe={true}
