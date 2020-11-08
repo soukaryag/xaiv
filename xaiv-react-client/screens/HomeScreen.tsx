@@ -3,7 +3,7 @@ import { SafeAreaView, StyleSheet, View, Dimensions } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
 import Card from '../components/Card'
 import photoCards from '../constants/Restaurants'
-import {io} from "socket.io-client"
+import {io} from 'socket.io-client'
 
 const { height } = Dimensions.get('window')
 
@@ -11,8 +11,9 @@ class HomeScreen extends React.Component {
     socket: any
     componentDidMount() {
         console.log("Mounted bitch");
-        this.socket = io("http://192.168.1.126:3000");
+        this.socket = io("http:127.0.0.1:3000");
         this.socket.emit("connection");
+        console.log("emitted connect");
         this.socket.on("test event", () => {
             console.log("client received test event");
         });
@@ -22,7 +23,7 @@ class HomeScreen extends React.Component {
     };
     tmp = fetchNearestPlacesFromGoogle().then( res => this.setState({ cardData: res }) );
     render() {
-        console.log(photoCards);
+        //console.log(photoCards);
         return (
             <SafeAreaView style={styles.container}>
                 <View style={styles.swiperContainer}>
