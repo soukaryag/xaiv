@@ -32,15 +32,21 @@ const path = require('path');
 const { get } = require('http');
 
 const PORT = process.env.PORT || 3000;
-const INDEX = '/public/views/index.html';
+//const INDEX = '/public/views/index.html';
 
 console.log(PORT);
 
 var app = express();
 app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname + INDEX));
-});
+    res.sendFile(path.join(__dirname));
+}); 
 app.use(express.static(path.join(__dirname, 'public')));
+console.log(__dirname);
 
 let server = app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 const io = socketIO(server);
+
+io.on("connection", () => {
+    console.log("HEY BGITCH");
+    io.emit("test event");
+});
