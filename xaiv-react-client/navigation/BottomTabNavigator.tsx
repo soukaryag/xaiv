@@ -7,7 +7,7 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import HomeScreen from '../screens/HomeScreen';
 import MessagesScreen from '../screens/MessagesScreen';
-import ProfileScreen from '../screens/ProfileScreen';
+import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import { BottomTabParamList, HomeParamList, MessagesParamList, ProfileParamList } from '../types';
 

@@ -53,9 +53,9 @@ const findCoordinates = () => {
 };
 
 const fetchNearestPlacesFromGoogle = () => {
-    const latitude: number = 38.033554; // you can update it with user's latitude & Longitude
+    const latitude: number = 38.033554;
     const longitude: number = -78.507980;
-    const radMetter: number = 1 * 1000; // Search withing 2 KM radius
+    const radMetter: number = 1 * 1000;
 
     const proxyurl = "https://cors-anywhere.herokuapp.com/";
     const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radMetter}&type=restaurant&key=AIzaSyAjfUxS2_xG_8I0UyUCTBI87HD1bHIgQYw`
@@ -65,7 +65,7 @@ const fetchNearestPlacesFromGoogle = () => {
             return res.json()
         })
         .then(res => {
-            var places = [] // This Array WIll contain locations received from google
+            var places = []
             for (let googlePlace of res.results) {
                 var place: any = {}
                 var lat = googlePlace.geometry.location.lat;
