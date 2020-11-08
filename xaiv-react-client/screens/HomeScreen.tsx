@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { SafeAreaView, StyleSheet, View, Dimensions } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
 import Card from '../components/Card'
