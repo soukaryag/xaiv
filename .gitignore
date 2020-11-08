@@ -12,5 +12,7 @@ xaiv-react-client/*.mobileprovision
 xaiv-react-client/*.orig.*
 xaiv-react-client/web-build/
 
+backend/node_modules
+
 # macOS
 .DS_Store

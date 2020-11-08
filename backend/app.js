@@ -17,7 +17,7 @@ const port = 3000;
     res.sendFile(path.resolve("./xaiv-react-client/App.tsx"));
 }); */
 
-io.on("connection", function(socket: any) {
+io.on("connection", function(socket) {
     console.log("I mean for FUCKS SAKE");
     io.emit("test event");
 });
