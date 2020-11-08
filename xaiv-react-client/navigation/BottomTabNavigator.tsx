@@ -13,9 +13,9 @@ import { BottomTabParamList, HomeParamList, MessagesParamList, ProfileParamList 
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
-export default function BottomTabNavigator() {
+export default function BottomTabNavigator({route, navigation} : any) {
   const colorScheme = useColorScheme();
-
+  const globals = route.params;
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
@@ -26,6 +26,7 @@ export default function BottomTabNavigator() {
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
         }}
+        initialParams={globals}
       />
       <BottomTab.Screen
         name="Messages"
@@ -55,13 +56,15 @@ function TabBarIcon(props: { name: string; color: string }) {
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
 const HomeStack = createStackNavigator<HomeParamList>();
 
-function HomeNavigator() {
+function HomeNavigator({route, navigation} : any) {
+  const globals = route.params;
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
         name="HomeScreen"
         component={HomeScreen}
         options={{ headerShown: false }}
+        initialParams={globals}
       />
     </HomeStack.Navigator>
   );
