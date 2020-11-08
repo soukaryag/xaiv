@@ -3,15 +3,24 @@ import { SafeAreaView, StyleSheet, View, Dimensions } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
 import Card from '../components/Card'
 import photoCards from '../constants/Restaurants'
+import {io} from "socket.io-client"
 
 const { height } = Dimensions.get('window')
 
 class HomeScreen extends React.Component {
+    socket: any
+    componentDidMount() {
+        console.log("Mounted bitch");
+        this.socket = io("http://192.168.1.126:3000");
+        this.socket.emit("connection");
+        this.socket.on("test event", () => {
+            console.log("client received test event");
+        });
+    }
     state = {
         cardData: photoCards
     };
     tmp = fetchNearestPlacesFromGoogle().then( res => this.setState({ cardData: res }) );
-
     render() {
         console.log(photoCards);
         return (
