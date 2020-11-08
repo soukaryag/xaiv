@@ -15,7 +15,7 @@ const Card = ({ card }: any) => (
     />
     <View style={styles.photoDescriptionContainer}>
       <Text style={styles.text}>
-        {`${card.name}, ${card.distance} mi`}
+        {`${card.name}`}
       </Text>
     </View>
   </View>
