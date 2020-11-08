@@ -15,12 +15,15 @@ const io = socketIO(server);
 
 io.on("connection", socket => {
     
-    socket.on("swipe-left", (id)=> {
+    socket.on("swipe-left", (id) => {
         console.log("User ignored the fuck out of ", id);
     });
 
-    socket.on("swipe-right", (id)=> {
+    socket.on("swipe-right", (id) => {
         console.log("User LIKED the fuck out of ", id);
     });
 });
+
+//UserTable with users
+//Group with group name and meta data
 
