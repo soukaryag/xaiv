@@ -11,7 +11,8 @@ class HomeScreen extends React.Component {
     socket: any
     componentDidMount() {
         console.log("Mounted bitch");
-        this.socket = io("http://127.0.0.1:3000");
+        this.socket = io("http://localhost:3000", {      
+            transports: ['websocket'], jsonp: false });
         this.socket.emit("connection");
         console.log("emitted connect");
         this.socket.on("test event", () => {
