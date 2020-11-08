@@ -3,22 +3,17 @@ import { SafeAreaView, StyleSheet, View, Dimensions } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
 import Card from '../components/Card'
 import photoCards from '../constants/Restaurants'
-import {io} from 'socket.io-client'
+
 
 const { height } = Dimensions.get('window')
 
 class HomeScreen extends React.Component {
     socket: any
-    componentDidMount() {
-        console.log("Mounted bitch");
-        this.socket = io("http://localhost:3000", {      
-            transports: ['websocket'], jsonp: false });
-        this.socket.emit("connection");
-        console.log("emitted connect");
-        this.socket.on("fuck", () => {
-            console.log("client received test event");
-        });
+    constructor(props : any) {
+        super(props);
+        this.socket = props.route.params.socket;
     }
+
     state = {
         cardData: photoCards
     };
@@ -34,8 +29,8 @@ class HomeScreen extends React.Component {
                         renderCard={(card: any) => <Card card={card} />}
                         disableBottomSwipe={true}
                         disableTopSwipe={true}
-                        onSwipedLeft={(cardIndex: number) => { swipeLeft(cardIndex) }}
-                        onSwipedRight={(cardIndex: number) => { swipeRight(cardIndex) }}
+                        onSwipedLeft={(cardIndex: number) => { swipeLeft(cardIndex, this.socket) }}
+                        onSwipedRight={(cardIndex: number) => { swipeRight(cardIndex, this.socket) }}
                         cardIndex={0}
                         backgroundColor="white"
                         stackSize={2}
@@ -48,10 +43,12 @@ class HomeScreen extends React.Component {
     }
 }
 
-const swipeLeft = (idx: number) => {
+const swipeLeft = (idx: number, socket: any) => {
+    socket.emit('swipe-left', idx);
     console.log(`Rejected ${idx}`);
 };
-const swipeRight = (idx: number) => {
+const swipeRight = (idx: number, socket: any) => {
+    socket.emit('swipe-right', idx);
     console.log(`Accepted ${idx}`);
 };
 
