@@ -32,7 +32,6 @@ const path = require('path');
 const { get } = require('http');
 
 const PORT = process.env.PORT || 3000;
-//const INDEX = '/public/views/index.html';
 
 console.log(PORT);
 
@@ -47,6 +46,6 @@ let server = app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 const io = socketIO(server);
 
 io.on("connection", () => {
-    console.log("HEY BGITCH");
-    io.emit("test event");
+    console.log("HEY BITCH");
+    io.emit("fuck");
 });

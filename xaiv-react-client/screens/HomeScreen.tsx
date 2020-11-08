@@ -15,7 +15,7 @@ class HomeScreen extends React.Component {
             transports: ['websocket'], jsonp: false });
         this.socket.emit("connection");
         console.log("emitted connect");
-        this.socket.on("test event", () => {
+        this.socket.on("fuck", () => {
             console.log("client received test event");
         });
     }
