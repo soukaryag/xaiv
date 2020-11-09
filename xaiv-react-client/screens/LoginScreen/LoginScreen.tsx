@@ -43,7 +43,7 @@ class LoginScreen extends React.Component {
 
     render() {
         return (
-            <View style={styles.container}  lightColor="#eee" darkColor="#003f5c">
+            <View style={styles.container} lightColor="#eee" darkColor="#003f5c">
                 <Text style={styles.logo}>XAIV</Text>
                 <View style={styles.inputView} >
                     <TextInput
@@ -64,7 +64,7 @@ class LoginScreen extends React.Component {
                     <Text style={styles.loginText}>LOGIN</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={this.socketSignup}>
-                    <Text>Signup</Text>
+                    <Text lightColor="#000" darkColor="#fff">Signup</Text>
                 </TouchableOpacity>
             </View>
         )
@@ -73,42 +73,42 @@ class LoginScreen extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
-    logo:{
-      fontWeight:"bold",
-      fontSize:50,
-      color:"#fb5b5a",
-      marginBottom:40
+    logo: {
+        fontWeight: "bold",
+        fontSize: 50,
+        color: "#fb5b5a",
+        marginBottom: 40
     },
-    inputView:{
-      width:"80%",
-      backgroundColor:"#ffffff",
-      opacity: 0.7,
-      borderRadius:25,
-      height:50,
-      marginBottom:20,
-      justifyContent:"center",
-      padding:20
+    inputView: {
+        width: "80%",
+        backgroundColor: "#ffffff",
+        opacity: 0.7,
+        borderRadius: 25,
+        height: 50,
+        marginBottom: 20,
+        justifyContent: "center",
+        padding: 20
     },
-    inputText:{
-      height:50,
+    inputText: {
+        height: 50,
     },
-    loginBtn:{
-      width:"80%",
-      backgroundColor:"#fb5b5a",
-      borderRadius:25,
-      height:50,
-      alignItems:"center",
-      justifyContent:"center",
-      marginTop:40,
-      marginBottom:10
+    loginBtn: {
+        width: "80%",
+        backgroundColor: "#fb5b5a",
+        borderRadius: 25,
+        height: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 40,
+        marginBottom: 10
     },
-    loginText:{
-      color:"white"
+    loginText: {
+        color: "white"
     }
-  });
+});
 
 export default LoginScreen
