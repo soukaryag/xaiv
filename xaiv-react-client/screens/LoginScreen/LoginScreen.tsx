@@ -1,10 +1,13 @@
 import React from 'react'
-import { ScrollView, StyleSheet, Text, View, TextInput, Button, Dimensions } from 'react-native'
+import { StyleSheet, TextInput, Image, TouchableOpacity, Dimensions } from 'react-native'
+import { Text, View } from '../../components/Themed';
+
+const { height, width } = Dimensions.get('window')
 
 class LoginScreen extends React.Component {
     socket: any
     navigation: any
-    constructor(props : any) {
+    constructor(props: any) {
         super(props);
         this.socket = props.route.params.socket;
         this.navigation = props.navigation;
@@ -17,32 +20,95 @@ class LoginScreen extends React.Component {
 
     socketLogin = () => {
         this.socket.emit("login", this.state.username, this.state.password);
-        // listen for feedback here!!!!!!
 
-        // if logged in
-        this.navigation.navigate("Root");
-        // otherwise ignore
+        this.socket.on("login_success", (username: string) => {
+            console.log(`Logged in ${username} successfully`)
+            this.navigation.navigate("Root");
+        })
+        this.socket.on("login_failed", () => {
+            console.log(`Failed to login, try again :(`)
+        })
+    };
+
+    socketSignup = () => {
+        this.socket.emit("signup", this.state.username, this.state.password);
+
+        this.socket.on("signup_success", (obj: any) => {
+            this.navigation.navigate("Root");
+        })
+        this.socket.on("signup_failed", (obj: any) => {
+            console.log("This user already exists, please try loggin in")
+        })
     };
 
     render() {
         return (
-            <ScrollView style={{padding: 20}}>
-                <Text 
-                    style={{fontSize: 27}}>
-                    Login
-                </Text>
-                <TextInput placeholder='Username' onChangeText={text => this.setState({'username': text})} />
-                <TextInput placeholder='Password' onChangeText={text => this.setState({'password': text})} />
-                <View style={{margin:7}} />
-                <Button 
-                    onPress={this.socketLogin}
-                    title="Submit"
-                />
-            </ScrollView>
+            <View style={styles.container}  lightColor="#eee" darkColor="#003f5c">
+                <Text style={styles.logo}>XAIV</Text>
+                <View style={styles.inputView} >
+                    <TextInput
+                        style={styles.inputText}
+                        placeholder="Username..."
+                        placeholderTextColor="#003f5c"
+                        onChangeText={text => this.setState({ username: text })} />
+                </View>
+                <View style={styles.inputView} >
+                    <TextInput
+                        secureTextEntry
+                        style={styles.inputText}
+                        placeholder="Password..."
+                        placeholderTextColor="#003f5c"
+                        onChangeText={text => this.setState({ password: text })} />
+                </View>
+                <TouchableOpacity style={styles.loginBtn} onPress={this.socketLogin}>
+                    <Text style={styles.loginText}>LOGIN</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.socketSignup}>
+                    <Text>Signup</Text>
+                </TouchableOpacity>
+            </View>
         )
     }
 }
 
-
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    logo:{
+      fontWeight:"bold",
+      fontSize:50,
+      color:"#fb5b5a",
+      marginBottom:40
+    },
+    inputView:{
+      width:"80%",
+      backgroundColor:"#ffffff",
+      opacity: 0.7,
+      borderRadius:25,
+      height:50,
+      marginBottom:20,
+      justifyContent:"center",
+      padding:20
+    },
+    inputText:{
+      height:50,
+    },
+    loginBtn:{
+      width:"80%",
+      backgroundColor:"#fb5b5a",
+      borderRadius:25,
+      height:50,
+      alignItems:"center",
+      justifyContent:"center",
+      marginTop:40,
+      marginBottom:10
+    },
+    loginText:{
+      color:"white"
+    }
+  });
 
 export default LoginScreen

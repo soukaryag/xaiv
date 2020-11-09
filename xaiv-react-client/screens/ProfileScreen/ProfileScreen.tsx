@@ -18,7 +18,7 @@ class ProfileScreen extends React.Component {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image source={{uri: "https://pbs.twimg.com/profile_images/865785147693649920/_x3PGTDL_400x400.jpg"}} style={styles.image} />
+          <Image source={{ uri: "https://pbs.twimg.com/profile_images/865785147693649920/_x3PGTDL_400x400.jpg" }} style={styles.image} />
         </View>
         <Text h4 style={styles.name}>
           {"Soukarya Ghosh"}
