@@ -19,9 +19,9 @@ USER_TO_GROUP_TABLE = "user_to_group"
 // -------------------------------
 GROUP_TO_USER_TABLE = "group_to_user"
 
-// --------------------------------------------------
-// |  activity_name  |   pub_key   |   secret_key   |
-// --------------------------------------------------
+// -------------------------------------------------------------------------------------
+// |  activity_id  |   activity_name  |   activity_url  |   pub_key   |   secret_key   |
+// -------------------------------------------------------------------------------------
 ACTIVITY_TABLE = "activities"
 
-module.exports = { USER_TABLE, GROUP_TABLE, USER_TO_GROUP_TABLE, ACTIVITY_TABLE }
+module.exports = { USER_TABLE, GROUP_TABLE, USER_TO_GROUP_TABLE, GROUP_TO_USER_TABLE, ACTIVITY_TABLE }
