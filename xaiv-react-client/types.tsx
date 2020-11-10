@@ -2,12 +2,14 @@ export type RootStackParamList = {
   Login: undefined;
   Root: undefined;
   NotFound: undefined;
+  Swipe: undefined;
 };
 
 export type BottomTabParamList = {
   Home: undefined;
   Messages: undefined;
   Profile: undefined;
+  Decide: undefined;
 };
 
 export type HomeParamList = {
@@ -21,3 +23,8 @@ export type MessagesParamList = {
 export type ProfileParamList = {
   ProfileScreen: undefined;
 };
+
+export type DecideParamList = {
+  DecideScreen: undefined;
+};
+

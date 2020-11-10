@@ -19,7 +19,7 @@ const io = socketIO(server);
 io.on("connection", socket => {
     // swipe left - reject entity
     socket.on("swipe-left", (cardData) => {
-        database.query({activity_id: cardData.key}, function(res) {
+        database.query({activity_id: cardData.key}, tables.ACTIVITY_TABLE, function(res) {
             if (res.length == 0) {
                 // create solana account for activity
                 
@@ -28,23 +28,28 @@ io.on("connection", socket => {
                 });
             } else {
                 activity = res[0];
-                console.log(acitvity, "swipe-left")
+                console.log(activity, "swipe-left")
             }
         });
     });
 
     // swipe left - accept entity
     socket.on("swipe-right", (cardData) => {
-        database.query({activity_id: cardData.key}, function(res) {
+        database.query({activity_id: cardData.key}, tables.ACTIVITY_TABLE, function(res) {
             if (res.length == 0) {
                 database.insert(cardData, tables.ACTIVITY_TABLE, function(res) {
                     console.log("Successfully added activity to the database");
                 });
             } else {
                 activity = res[0];
-                console.log(acitvity, "swipe-right")
+                console.log(activity, "swipe-right")
             }
         });
+
+        //database.insert({group_name: "Xaiv Devs in order of importance", members: ""}, tables.GROUP_TABLE, function(res) {
+           // console.log("Successfully signed up user");
+          //  socket.emit("signup_success");
+        //});
     });
 
     // login - check username and password against the users database
@@ -72,6 +77,22 @@ io.on("connection", socket => {
                 console.log("User already exists");
                 socket.emit("signup_failed");
             }
+        });
+    });
+
+    //Return all of a user's groups
+    socket.on("get_groups_for_user", (username) => {
+        console.log("USERNAME IS ", username);
+        database.query({username: username}, tables.GROUP_TO_USER_TABLE, function(res) {
+            //Assume only one user (unique usernames)
+            group_names = [];
+            for (var i = 0; i < res.length; i++) {
+                group_names.push(res[i]["group_name"]);
+                console.log(res[i]["group_name"]);
+                console.log("names is in loop ", group_names)
+            }
+            console.log(group_names);
+            socket.emit("return_groups_for_user", group_names);
         });
     });
 });

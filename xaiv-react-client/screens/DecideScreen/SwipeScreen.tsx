@@ -1,17 +1,19 @@
 import React from 'react'
 import { SafeAreaView, StyleSheet, View, Dimensions } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
-import Card from '../components/Card'
-import photoCards from '../constants/Restaurants'
+import Card from '../../components/Card'
+import photoCards from '../../constants/Restaurants'
 
 const { height } = Dimensions.get('window')
 
-class HomeScreen extends React.Component {
+class SwipeScreen extends React.Component {
     socket: any
+    name: any
     constructor(props : any) {
         super(props);
         this.socket = props.route.params.socket;
-        //console.log("HomeScreen", this.socket);
+        this.name = props.route.params.name;
+        console.log("swipe", this.name);
     }
 
     state = {
@@ -32,6 +34,7 @@ class HomeScreen extends React.Component {
         //console.log(photoCards);
         return (
             <SafeAreaView style={styles.container}>
+                
                 <View style={styles.swiperContainer}>
                     <Swiper
                         animateCardOpacity
@@ -130,4 +133,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default HomeScreen
+export default SwipeScreen

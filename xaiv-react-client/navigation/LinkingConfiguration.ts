@@ -26,6 +26,11 @@ export default {
               ProfileScreen: 'profile',
             },
           },
+          Decide: {
+            screens: {
+              DecideScreen: 'decide',
+            },
+          },
         },
       },
       NotFound: '*',

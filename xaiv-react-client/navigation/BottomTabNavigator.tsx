@@ -9,7 +9,8 @@ import HomeScreen from '../screens/HomeScreen';
 import MessagesScreen from '../screens/MessagesScreen';
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import { BottomTabParamList, HomeParamList, MessagesParamList, ProfileParamList } from '../types';
+import DecideScreen from '../screens/DecideScreen/DecideScreen';
+import { BottomTabParamList, HomeParamList, MessagesParamList, ProfileParamList, DecideParamList } from '../types';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -42,6 +43,14 @@ export default function BottomTabNavigator({route, navigation} : any) {
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="account" color={color} />,
         }}
+      />
+      <BottomTab.Screen
+        name="Decide"
+        component={DecideNavigator}
+        options={{
+          tabBarIcon: ({ color }) => <TabBarIcon name="account" color={color} />,
+        }}
+        initialParams={globals}
       />
     </BottomTab.Navigator>
   );
@@ -97,5 +106,22 @@ function ProfileNavigator() {
         options={{ headerShown: false }}
       />
     </ProfileStack.Navigator>
+  );
+}
+
+const DecideStack = createStackNavigator<DecideParamList>();
+
+function DecideNavigator({route, navigation} : any) {
+  const globals = route.params;
+  console.log("decNavigator", globals)
+  return (
+    <DecideStack.Navigator>
+      <DecideStack.Screen
+        name="DecideScreen"
+        component={DecideScreen}
+        options={{ headerShown: false }}
+        initialParams={globals}
+      />
+    </DecideStack.Navigator>
   );
 }
