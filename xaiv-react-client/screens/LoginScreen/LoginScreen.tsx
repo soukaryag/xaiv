@@ -15,7 +15,15 @@ class LoginScreen extends React.Component {
 
     state = {
         username: '',
-        password: ''
+        password: '',
+    }
+
+    componentDidMount() {
+        const username = localStorage.getItem("username");
+        if (username) {
+            this.setState({username: username})
+            this.navigation.navigate("Root", {socket: this.socket});
+        }
     }
 
     socketLogin = () => {
@@ -23,7 +31,8 @@ class LoginScreen extends React.Component {
 
         this.socket.on("login_success", (username: string) => {
             console.log(`Logged in ${username} successfully`)
-            this.navigation.navigate("Root");
+            localStorage.setItem('username', this.state.username);
+            this.navigation.navigate("Root", {socket: this.socket});
         })
         this.socket.on("login_failed", () => {
             console.log(`Failed to login, try again :(`)
@@ -34,6 +43,7 @@ class LoginScreen extends React.Component {
         this.socket.emit("signup", this.state.username, this.state.password);
 
         this.socket.on("signup_success", (obj: any) => {
+            localStorage.setItem('username', this.state.username);
             this.navigation.navigate("Root");
         })
         this.socket.on("signup_failed", (obj: any) => {
@@ -60,6 +70,9 @@ class LoginScreen extends React.Component {
                         placeholderTextColor="#003f5c"
                         onChangeText={text => this.setState({ password: text })} />
                 </View>
+                <TouchableOpacity>
+                    <Text lightColor="#000" darkColor="#fff">Forgot Password?</Text>
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.loginBtn} onPress={this.socketLogin}>
                     <Text style={styles.loginText}>LOGIN</Text>
                 </TouchableOpacity>

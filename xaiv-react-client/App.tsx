@@ -15,10 +15,11 @@ export default function App() {
       transports: ['websocket'], jsonp: false });
   socket.emit("connection");
 
+  console.log("App.tsx", socket)
+
   var globals = {
     socket: socket,
   };
-  
 
   if (!isLoadingComplete) {
     return null;

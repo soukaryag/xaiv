@@ -18,7 +18,7 @@ class ProfileScreen extends React.Component {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image source={{ uri: "https://pbs.twimg.com/profile_images/865785147693649920/_x3PGTDL_400x400.jpg" }} style={styles.image} />
+          <Image source={{ uri: "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg" }} style={styles.image} />
         </View>
         <Text h4 style={styles.name}>
           {"Soukarya Ghosh"}
@@ -26,8 +26,7 @@ class ProfileScreen extends React.Component {
         <Text style={styles.desc}>Software Engineer at Xaiv</Text>
         <Divider style={styles.divider} />
         <Text style={styles.desc}>
-          I love to travel. I have a cat named pickles, if he likes you, I
-          probably will too.
+          Beep boop bop, badaboom bap bop. POW. byebye doggy.
         </Text>
         <Divider style={styles.divider} />
         <Text style={styles.desc}>Find me on Social here</Text>

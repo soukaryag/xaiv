@@ -10,12 +10,12 @@ const Card = ({ card }: any) => (
   >
     <Image
       style={styles.image}
-      source={card.photo}
+      source={card.activity_photo}
       resizeMode="cover"
     />
     <View style={styles.photoDescriptionContainer}>
       <Text style={styles.text}>
-        {`${card.name}`}
+        {`${card.activity_name}`}
       </Text>
     </View>
   </View>

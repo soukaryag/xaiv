@@ -4,7 +4,6 @@ import Swiper from 'react-native-deck-swiper'
 import Card from '../components/Card'
 import photoCards from '../constants/Restaurants'
 
-
 const { height } = Dimensions.get('window')
 
 class HomeScreen extends React.Component {
@@ -12,12 +11,23 @@ class HomeScreen extends React.Component {
     constructor(props : any) {
         super(props);
         this.socket = props.route.params.socket;
+        console.log("HomeScreen", this.socket);
     }
 
     state = {
         cardData: photoCards
     };
     tmp = fetchNearestPlacesFromGoogle().then( res => this.setState({ cardData: res }) );
+
+    swipeLeft = (idx: number) => {
+        this.socket.emit('swipe-left', this.state.cardData[idx]);
+        console.log(`Rejected ${idx}`);
+    };
+    swipeRight = (idx: number) => {
+        this.socket.emit('swipe-right', this.state.cardData[idx]);
+        console.log(`Accepted ${idx}`);
+    };
+
     render() {
         //console.log(photoCards);
         return (
@@ -29,8 +39,8 @@ class HomeScreen extends React.Component {
                         renderCard={(card: any) => <Card card={card} />}
                         disableBottomSwipe={true}
                         disableTopSwipe={true}
-                        onSwipedLeft={(cardIndex: number) => { swipeLeft(cardIndex, this.socket) }}
-                        onSwipedRight={(cardIndex: number) => { swipeRight(cardIndex, this.socket) }}
+                        onSwipedLeft={(cardIndex: number) => { this.swipeLeft(cardIndex) }}
+                        onSwipedRight={(cardIndex: number) => { this.swipeRight(cardIndex) }}
                         cardIndex={0}
                         backgroundColor="white"
                         stackSize={2}
@@ -42,15 +52,6 @@ class HomeScreen extends React.Component {
         )
     }
 }
-
-const swipeLeft = (idx: number, socket: any) => {
-    socket.emit('swipe-left', idx);
-    console.log(`Rejected ${idx}`);
-};
-const swipeRight = (idx: number, socket: any) => {
-    socket.emit('swipe-right', idx);
-    console.log(`Accepted ${idx}`);
-};
 
 const findCoordinates = () => {
     navigator.geolocation.getCurrentPosition(
@@ -92,9 +93,9 @@ const fetchNearestPlacesFromGoogle = () => {
                     }
                 }
 
-                place.key = googlePlace.place_id.slice(-8, -1)
-                place.name = googlePlace.name
-                place.photo = gallery
+                place.activity_id = googlePlace.place_id
+                place.activity_name = googlePlace.name
+                place.activity_photo = gallery
 
                 places.push(place);
             }

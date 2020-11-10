@@ -1,4 +1,4 @@
-import { AntDesign } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
@@ -16,6 +16,7 @@ const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 export default function BottomTabNavigator({route, navigation} : any) {
   const colorScheme = useColorScheme();
   const globals = route.params;
+  console.log("BottomTabNavigator.tsx", globals)
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
@@ -32,14 +33,14 @@ export default function BottomTabNavigator({route, navigation} : any) {
         name="Messages"
         component={MessagesNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="message1" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="message" color={color} />,
         }}
       />
       <BottomTab.Screen
         name="Profile"
         component={ProfileNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="account" color={color} />,
         }}
       />
     </BottomTab.Navigator>
@@ -49,7 +50,7 @@ export default function BottomTabNavigator({route, navigation} : any) {
 // You can explore the built-in icon families and icons on the web at:
 // https://icons.expo.fyi/
 function TabBarIcon(props: { name: string; color: string }) {
-  return <AntDesign size={30} style={{ marginBottom: -3 }} {...props} />;
+  return <MaterialCommunityIcons size={30} style={{ marginBottom: -3 }} {...props} />;
 }
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
@@ -58,6 +59,7 @@ const HomeStack = createStackNavigator<HomeParamList>();
 
 function HomeNavigator({route, navigation} : any) {
   const globals = route.params;
+  console.log("HomeNavigator", globals)
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen

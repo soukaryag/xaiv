@@ -13,6 +13,7 @@ import LinkingConfiguration from './LinkingConfiguration';
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
 export default function Navigation({ colorScheme, globals }: any ) {
   //var dict: any = {key: globals};
+  console.log("index.tsx", globals)
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
@@ -27,6 +28,7 @@ export default function Navigation({ colorScheme, globals }: any ) {
 const Stack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator(globals: any) {
+  console.log("RootNavigator", globals)
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Login" component={LoginScreen} initialParams={globals.globals} />
