@@ -10,8 +10,8 @@ let connection;
 let payerAccount;
 let programId;
 
-const pathToSwipeLeftProgram = '.source_code/swipe_left.so';
-const pathToSwipeRightProgram = '.source_code/swipe_right.so';
+const pathToSwipeLeftProgram = './source_code/swipe_left.so';
+const pathToSwipeRightProgram = './source_code/swipe_right.so';
 
 const swipeDataLayout = BufferLayout.struct([
     BufferLayout.u32('swipe_left'),
@@ -24,6 +24,7 @@ function sleep(ms) {
 async function getProgramIdPublicKey(key) {
     const store = new storeModule.Store();
     const config = await store.load('config.json');
+    console.log(config[key]);
     return new solanaWeb3.PublicKey(config[key]);
 }
 
@@ -54,10 +55,11 @@ async function establishPayer(programName) {
         const { feeCalculator } = await connection.getRecentBlockhash();
 
         // Calculate the cost to load the program
+        let data = "";
         if ( programName === 'swipeLeftProgramId') 
-            const data = await fs.readFile(pathToSwipeLeftProgram);
+            data = await fs.readFile(pathToSwipeLeftProgram);
         else 
-            const data = await fs.readFile(pathToSwipeRightProgram);
+            data = await fs.readFile(pathToSwipeRightProgram);
         const NUM_RETRIES = 500; // allow some number of retries
         fees +=
             feeCalculator.lamportsPerSignature *
@@ -70,7 +72,7 @@ async function establishPayer(programName) {
         );
 
         // Calculate the cost of sending the transactions
-        fees += feeCalculator.lamportsPerSignature * 100; // wag
+        fees += feeCalculator.lamportsPerSignature * 1000; // wag
 
         // Fund a new payer via airdrop
         payerAccount = await newAccountWithLamports(connection, fees);
@@ -94,7 +96,9 @@ async function loadProgram(programName) {
     // Check if the program has already been loaded
     try {
         // load swipe left
-        programId = getProgramIdPublicKey(programName);
+        const store = new storeModule.Store();
+        const config = await store.load('config.json');
+        programId = new solanaWeb3.PublicKey(config[key]);
         await connection.getAccountInfo(programId);
         console.log('Program already loaded to account', programId.toBase58());
         return;
@@ -105,10 +109,11 @@ async function loadProgram(programName) {
     await establishPayer(programName);
 
     // Load the program
+    let data = "";
     if ( programName === 'swipeLeftProgramId') 
-        const data = await fs.readFile(pathToSwipeLeftProgram);
+        data = await fs.readFile(pathToSwipeLeftProgram);
     else 
-        const data = await fs.readFile(pathToSwipeRightProgram);
+        data = await fs.readFile(pathToSwipeRightProgram);
     const programAccount = new solanaWeb3.Account();
     await solanaWeb3.BpfLoader.load(
         connection,
@@ -121,9 +126,10 @@ async function loadProgram(programName) {
     console.log('Program loaded to account', programId.toBase58());
 
     // Save this info for next time
-    await store.save('config.json', {
-        programName: programId.toBase58(),
-    });
+    const store = new storeModule.Store();
+    const config = await store.load('config.json');
+    config[programName] = programId.toBase58()
+    await store.save('config.json', config);
 }
 
 async function createAccount(cardData, programName) {
