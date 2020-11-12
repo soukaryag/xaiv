@@ -1,10 +1,8 @@
 const database = require('./database');
 const tables = require('./tables.config');
 const conn = require('./solana/nodeConnection');
-const swipe_left_load = require('./solana/swipe_left');
-const storeModule = require('./solana/store');
+const solanaMain = require('./solana/solanaMain');
 
-const solanaWeb3 = require('@solana/web3.js');
 const express = require('express');
 const socketIO = require('socket.io');
 const path = require('path');
@@ -12,11 +10,12 @@ const PORT = process.env.PORT || 3000;
 
 connection = conn.getNodeConnection();
 
-async function loadProgramToSolana(conn) {
-    await swipe_left_load.loadProgram(conn);
+async function loadProgramToSolana() {
+    await solanaMain.loadProgram('swipeLeftProgramId');
+    await solanaMain.loadProgram('swipeRightProgramId');
 }
 
-loadProgramToSolana(connection);
+loadProgramToSolana();
 
 var app = express();
 app.get('/', function (req, res) {
@@ -33,10 +32,10 @@ io.on("connection", socket => {
         database.query({ activity_id: cardData.activity_id }, tables.ACTIVITY_TABLE, function (res) {
             console.log("Found", res.length, "results from the query");
             if (res.length == 0) {
-                swipe_left_load.createAccount(cardData);
+                solanaMain.createAccount(cardData, "swipeLeftProgramId");
             } else {
                 activity = res[0];
-                swipe_left_load.incrementCount(activity);
+                solanaMain.incrementCount(activity, "swipeLeftProgramId");
                 console.log("swiped left successfully!");
 
             }
