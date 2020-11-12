@@ -34,9 +34,6 @@ class SwipeScreen extends React.Component {
         this.socket.emit("get_feed_for_user", localStorage.getItem("username"), this.name);
     }
 
-    
-    //tmp = fetchNearestPlacesFromGoogle().then( res => this.setState({ cardData: res }) );
-
     swipeLeft = (idx: number) => {
         this.socket.emit('swipe-left', this.state.cardData[idx]);
         console.log(`Rejected ${idx}`);
@@ -75,60 +72,6 @@ class SwipeScreen extends React.Component {
     }
 }
 
-const findCoordinates = () => {
-    navigator.geolocation.getCurrentPosition(
-        position => {
-            console.log(position.coords);
-        },
-    );
-};
-
-const fetchNearestPlacesFromGoogle = () => {
-    const latitude: number = 38.033554;
-    const longitude: number = -78.507980;
-    const radMetter: number = 1 * 1000;
-
-    const proxyurl = "https://cors-anywhere.herokuapp.com/";
-    const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radMetter}&type=restaurant&key=AIzaSyAjfUxS2_xG_8I0UyUCTBI87HD1bHIgQYw`
-
-    return fetch(proxyurl + url)
-        .then(res => {
-            return res.json()
-        })
-        .then(res => {
-            var places = []
-            for (let googlePlace of res.results) {
-                var place: any = {}
-                var lat = googlePlace.geometry.location.lat;
-                var lng = googlePlace.geometry.location.lng;
-                var coordinate = {
-                    latitude: lat,
-                    longitude: lng,
-                }
-
-                var gallery: string = "";
-
-                if (googlePlace.photos) {
-                    for (let photo of googlePlace.photos) {
-                        gallery = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=AIzaSyAjfUxS2_xG_8I0UyUCTBI87HD1bHIgQYw`;
-                        break;
-                    }
-                }
-
-                place.activity_id = googlePlace.place_id
-                place.activity_name = googlePlace.name
-                place.activity_photo = gallery
-
-                places.push(place);
-            }
-            console.log("places is ", places)
-            return places;
-        })
-        .catch(error => {
-            console.log(error);
-        });
-
-}
 
 const styles = StyleSheet.create({
     container: {

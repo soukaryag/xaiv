@@ -1,7 +1,9 @@
-const database = require('./database');
-const tables = require('./tables.config');
+const database = require('./database/database');
+const tables = require('./database/tables.config');
 const conn = require('./solana/nodeConnection');
 const solanaMain = require('./solana/solanaMain');
+const swipe = require('./handlers/swipe');
+const accounts = require('./handlers/accounts');
 
 const express = require('express');
 const socketIO = require('socket.io');
@@ -29,68 +31,22 @@ const io = socketIO(server);
 io.on("connection", socket => {
     // swipe left - reject entity
     socket.on("swipe-left", (cardData) => {
-        database.query({ activity_id: cardData.activity_id }, tables.ACTIVITY_TABLE, async function (res) {
-            console.log("[LEFT] Found", res.length, "results from the query");
-            if (res.length == 0) {
-                await solanaMain.createAccount(cardData, "swipeRightProgramId");
-                await solanaMain.createAccount(cardData, "swipeLeftProgramId");
-            } else {
-                try {
-                    activity = res[0];
-                    await solanaMain.incrementCount(activity, "swipeLeftProgramId");
-                    console.log("[LEFT] swiped left successfully!");
-                } catch {
-                    console.log("[LEFT] failed to reach solana :(");
-                }
-            }
-        });
+        swipe.swipe_left(cardData);
     });
 
-    // swipe left - accept entity
+    // swipe right - accept entity
     socket.on("swipe-right", (cardData) => {
-        database.query({ activity_id: cardData.activity_id }, tables.ACTIVITY_TABLE, async function (res) {
-            console.log("[RIGHT] Found", res.length, "results from the query");
-            if (res.length == 0) {
-                await solanaMain.createAccount(cardData, "swipeRightProgramId");
-                await solanaMain.createAccount(cardData, "swipeLeftProgramId");
-            } else {
-                try {
-                    activity = res[0];
-                    await solanaMain.incrementCount(activity, "swipeRightProgramId");
-                    console.log("[RIGHT] swiped right successfully!");
-                } catch {
-                    console.log("[RIGHT] failed to reach solana :(");
-                }
-            }
-        });
+        swipe.swipe_right(cardData);
     });
 
     // login - check username and password against the users database
     socket.on("login", (username, password) => {
-        database.query({ username: username, password: password }, tables.USER_TABLE, function (res) {
-            if (res.length == 0) {
-                console.log("USER NOT FOUND");
-                socket.emit("login_failed");
-            } else {
-                console.log(res[0].username, "FOUND");
-                socket.emit("login_success", res[0].username);
-            }
-        }); 
+        accounts.login(socket, username, password);
     });
 
     // signup - enter credentials to the current database if user does not exist
     socket.on("signup", (username, password) => {
-        database.query({ username: username }, tables.USER_TABLE, function (res) {
-            if (res.length == 0) {
-                database.insert({ username: username, password: password }, tables.USER_TABLE, function (res) {
-                    console.log("Successfully signed up user");
-                    socket.emit("signup_success");
-                });
-            } else {
-                console.log("User already exists");
-                socket.emit("signup_failed");
-            }
-        });
+        accounts.signup(socket, username, password);
     });
 
     //Return all of a user's ACTIVE groups
