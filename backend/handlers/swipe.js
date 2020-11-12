@@ -34,7 +34,7 @@ const swipe_right = (cardData) => {
                 console.log("[RIGHT] swiped right successfully!");
             } catch (err) {
                 console.log("[RIGHT] failed to reach solana :(");
-                console.err(err);
+                console.error(err);
             }
         }
     });

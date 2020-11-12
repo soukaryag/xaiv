@@ -2,7 +2,7 @@ import React from 'react'
 import { SafeAreaView, StyleSheet, View, Dimensions } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
 import Card from '../components/Card'
-import photoCards from '../constants/Restaurants'
+import photoCards from '../constants/Template'
 
 const { height } = Dimensions.get('window')
 
@@ -11,13 +11,13 @@ class HomeScreen extends React.Component {
     constructor(props : any) {
         super(props);
         this.socket = props.route.params.socket;
-        //console.log("HomeScreen", this.socket);
     }
 
     state = {
-        cardData: photoCards
+        cardData: photoCards,
+        latitude: 0,
+        longitude: 0,
     };
-    tmp = fetchNearestPlacesFromGoogle().then( res => this.setState({ cardData: res }) );
 
     swipeLeft = (idx: number) => {
         this.socket.emit('swipe-left', this.state.cardData[idx]);
@@ -27,6 +27,15 @@ class HomeScreen extends React.Component {
         this.socket.emit('swipe-right', this.state.cardData[idx]);
         console.log(`Accepted ${idx}`);
     };
+
+    componentDidMount() {
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                this.setState({ latitude: position.coords.latitude, longitude: position.coords.longitude });
+                fetchNearestPlacesFromGoogle(this.state.latitude, this.state.longitude).then( res => this.setState({ cardData: res }) );
+            },
+        );
+    }
 
     render() {
         //console.log(photoCards);
@@ -53,17 +62,7 @@ class HomeScreen extends React.Component {
     }
 }
 
-const findCoordinates = () => {
-    navigator.geolocation.getCurrentPosition(
-        position => {
-            console.log(position.coords);
-        },
-    );
-};
-
-const fetchNearestPlacesFromGoogle = () => {
-    const latitude: number = 38.033554;
-    const longitude: number = -78.507980;
+const fetchNearestPlacesFromGoogle = (latitude: number, longitude: number) => {
     const radMetter: number = 1 * 1000;
 
     const proxyurl = "https://cors-anywhere.herokuapp.com/";
@@ -77,13 +76,6 @@ const fetchNearestPlacesFromGoogle = () => {
             var places = []
             for (let googlePlace of res.results) {
                 var place: any = {}
-                var lat = googlePlace.geometry.location.lat;
-                var lng = googlePlace.geometry.location.lng;
-                var coordinate = {
-                    latitude: lat,
-                    longitude: lng,
-                }
-
                 var gallery: string = "";
 
                 if (googlePlace.photos) {
@@ -100,12 +92,11 @@ const fetchNearestPlacesFromGoogle = () => {
                 places.push(place);
             }
             console.log(places)
-            return places;
+            return places.slice(0, 3);
         })
         .catch(error => {
             console.log(error);
         });
-
 }
 
 const styles = StyleSheet.create({

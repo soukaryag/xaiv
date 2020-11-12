@@ -21,7 +21,7 @@ const Card = ({ card }: any) => (
   </View>
 )
 
-Card.propTypes = { 
+Card.propTypes = {
   card: shape({
     photo: ImageSourcePropType,
     name: string,

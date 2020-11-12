@@ -2,7 +2,7 @@ import React from 'react'
 import { SafeAreaView, StyleSheet, View, Dimensions } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
 import Card from '../../components/Card'
-import photoCards from '../../constants/Restaurants'
+import photoCards from '../../constants/Template'
 
 const { height } = Dimensions.get('window')
 
