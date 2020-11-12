@@ -108,10 +108,10 @@ io.on("connection", socket => {
 
     /*Upon selecting the group session they wish to partake in, generate a 
     feed of cards from the user's pool and send it back to them*/
-    socket.on("get_feed_for_user", (username, group) => {
+    socket.on("get_feed_for_user", async (username, group) => {
         var ok = false;
         //First assert the user is actually in the group
-        database.query({username: username}, tables.GROUP_TO_USER_TABLE, function(names) {
+        database.query({username: username}, tables.GROUP_TO_USER_TABLE, async function(names) {
             for (var i = 0; i < names.length; i++) {
                 if (names[i]["group_name"] == group) {
                     ok = true;
@@ -119,7 +119,7 @@ io.on("connection", socket => {
                 }
             }
             if (ok) {
-                database.query({group_name: group}, tables.GROUP_TABLE, function(dbGroups) {
+                database.query({group_name: group}, tables.GROUP_TABLE, async function(dbGroups) {
                     console.log(dbGroups);
                     var members = dbGroups[0]["member_data"];
                     var userPool = null;
@@ -132,7 +132,22 @@ io.on("connection", socket => {
                         console.log("uh oh, user not found in group members");
                     }
                     else {
-                        socket.emit("return_feed_for_user", userPool);
+                        //Convert the pool (list of ids) to activity cards
+                        //Arrange them as desired:
+                        var feed = await convertPoolToActivities(userPool);
+                        var cardFeed = [];
+                        console.log(feed);
+                        //Now from Activity DB objects to appropriate JSON cards
+                        for (var i = 0; i < feed.length; i++) {
+                            var tmp = {
+                                "activity_name": feed[i]["activity_name"],
+                                "activity_photo": feed[i]["activity_photo"],
+                                "activity_id": feed[i]["activity_id"],
+                            };
+                            cardFeed.push(tmp);
+                        }
+                        console.log("FEED IS", cardFeed);
+                        socket.emit("return_feed_for_user", cardFeed);
                     }
                     
                 });
@@ -144,3 +159,26 @@ io.on("connection", socket => {
         });
     });
 });
+
+async function convertPoolToActivities(userPool) {
+    console.log("in convert");
+    var feed = [];
+    for (var i = 0; i < userPool.length; i++) {
+        console.log(userPool[i]["id"]);
+        var res = await convertPoolToActivitiesQuery(userPool[i]["id"]);
+        console.log("res has been awaited for", res);
+        feed.push(res);
+    }
+    console.log("feed is", feed);
+    return feed;
+}
+
+async function convertPoolToActivitiesQuery(id) {
+    console.log("in the query func");
+    return await database.queryOneAsync({activity_id: id}, tables.ACTIVITY_TABLE);
+    /*await database.queryOneAsync({activity_id: id}, tables.ACTIVITY_TABLE, function(activities) {
+        console.log("AAAAH", activities);
+        res = activities[0]; //feed.push(activities[0]); //should be only one unique activity
+    });
+    return res; */
+}

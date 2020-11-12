@@ -14,20 +14,28 @@ class SwipeScreen extends React.Component {
         this.socket = props.route.params.socket;
         this.name = props.route.params.name;
         console.log("swipe", this.name);
-        this.socket.emit("get_feed_for_user", localStorage.getItem("username"), this.name);
-    
+
         this.socket.on("return_feed_for_user", (feed: any) => { 
             console.log("pool is ", feed);
             this.setState({
-                feed: feed
+                ready: true,
+                cardData: feed
             });
         });
     }
 
     state = {
+        ready: false,
         cardData: photoCards
     };
-    tmp = fetchNearestPlacesFromGoogle().then( res => this.setState({ cardData: res }) );
+
+    componentDidMount() {
+        console.log("mounted - emitting");
+        this.socket.emit("get_feed_for_user", localStorage.getItem("username"), this.name);
+    }
+
+    
+    //tmp = fetchNearestPlacesFromGoogle().then( res => this.setState({ cardData: res }) );
 
     swipeLeft = (idx: number) => {
         this.socket.emit('swipe-left', this.state.cardData[idx]);
@@ -39,10 +47,13 @@ class SwipeScreen extends React.Component {
     };
 
     render() {
-        //console.log(photoCards);
+        if (!this.state.ready) {
+            return (
+                <View>Loading...</View>
+            );
+        }
         return (
             <SafeAreaView style={styles.container}>
-                
                 <View style={styles.swiperContainer}>
                     <Swiper
                         animateCardOpacity

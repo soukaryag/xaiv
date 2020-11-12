@@ -15,6 +15,33 @@ function insert(args, table, callBack) {
     });
 }
 
+async function queryOneAsync(args, table) {
+    const client = await MongoClient.connect(DATABASE_URL);
+    if (!client) {
+        return;
+    }
+    let result = null;
+    try {
+        const db = client.db(DATABASE_NAME);
+
+        let collection = db.collection(table);
+
+        result = await collection.findOne(args);
+        
+        console.log("in MONGO MOTHERFUCKING DB, RESULT IS ", result);
+        return result;
+    }
+    catch (err) {
+        console.log(err);
+    }
+    finally {
+        client.close();
+        return result;
+    }
+}
+
+
+
 function query(args, table, callBack) {
     MongoClient.connect(DATABASE_URL, function(err, db){
         if(err) throw err;
@@ -27,4 +54,4 @@ function query(args, table, callBack) {
     })
 }
 
-module.exports = { insert, query }
+module.exports = { insert, query, queryOneAsync }
