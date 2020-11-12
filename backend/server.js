@@ -90,19 +90,37 @@ io.on("connection", socket => {
         });
     });
 
-    //Return all of a user's groups
-    socket.on("get_groups_for_user", (username) => {
-        console.log("USERNAME IS ", username);
-        database.query({username: username}, tables.GROUP_TO_USER_TABLE, function(res) {
+    //Return all of a user's ACTIVE groups
+    socket.on("get_active_groups_for_user", async (username) => {
+        database.query({username: username}, tables.GROUP_TO_USER_TABLE, async function(res) {
             //Assume only one user (unique usernames)
             group_names = [];
             for (var i = 0; i < res.length; i++) {
-                group_names.push(res[i]["group_name"]);
-                console.log(res[i]["group_name"]);
-                console.log("names is in loop ", group_names)
+                var group = await database.queryOneAsync({group_name: res[i]["group_name"]}, tables.GROUP_TABLE);
+                var active = group["group_data"]["session"]["active"];
+                if (active) {
+                    group_names.push(res[i]["group_name"]);
+                }
             }
             console.log(group_names);
-            socket.emit("return_groups_for_user",  group_names);
+            socket.emit("return_active_groups_for_user",  group_names);
+        });
+    });
+
+    //Return all of a user's INACTIVE groups
+    socket.on("get_inactive_groups_for_user", async (username) => {
+        database.query({username: username}, tables.GROUP_TO_USER_TABLE, async function(res) {
+            //Assume only one user (unique usernames)
+            group_names = [];
+            for (var i = 0; i < res.length; i++) {
+                var group = await database.queryOneAsync({group_name: res[i]["group_name"]}, tables.GROUP_TABLE);
+                var active = group["group_data"]["session"]["active"];
+                if (!active) {
+                    group_names.push(res[i]["group_name"]);
+                }
+            }
+            console.log(group_names);
+            socket.emit("return_inactive_groups_for_user",  group_names);
         });
     });
 
@@ -161,24 +179,11 @@ io.on("connection", socket => {
 });
 
 async function convertPoolToActivities(userPool) {
-    console.log("in convert");
     var feed = [];
     for (var i = 0; i < userPool.length; i++) {
-        console.log(userPool[i]["id"]);
-        var res = await convertPoolToActivitiesQuery(userPool[i]["id"]);
-        console.log("res has been awaited for", res);
+        var res = await database.queryOneAsync({activity_id: userPool[i]["id"]}, tables.ACTIVITY_TABLE);
         feed.push(res);
     }
-    console.log("feed is", feed);
     return feed;
 }
 
-async function convertPoolToActivitiesQuery(id) {
-    console.log("in the query func");
-    return await database.queryOneAsync({activity_id: id}, tables.ACTIVITY_TABLE);
-    /*await database.queryOneAsync({activity_id: id}, tables.ACTIVITY_TABLE, function(activities) {
-        console.log("AAAAH", activities);
-        res = activities[0]; //feed.push(activities[0]); //should be only one unique activity
-    });
-    return res; */
-}

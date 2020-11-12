@@ -12,18 +12,27 @@ class DecideScreen extends React.Component {
         super(props);
         this.socket = props.route.params.socket;
         this.navigation = props.navigation;
-        this.socket.emit("get_groups_for_user", localStorage.getItem("username"));
         
-        this.socket.on("return_groups_for_user", (group_names: any) => { 
-            console.log("names is ", group_names);
+        this.socket.on("return_active_groups_for_user", (active_groups: any) => { 
             this.setState({
-                groups: group_names
+                active_groups: active_groups,
             });
         });
+
+        this.socket.on("return_inactive_groups_for_user", (inactive_groups: any) => {
+            this.setState({
+                inactive_groups: inactive_groups,
+            });
+        });
+
+        this.socket.emit("get_active_groups_for_user", localStorage.getItem("username"));
+        this.socket.emit("get_inactive_groups_for_user", localStorage.getItem("username"));
+
     };
 
     state = {
-        groups : [],
+        active_groups : [],
+        inactive_groups: []
     }
 
     
@@ -46,7 +55,7 @@ class DecideScreen extends React.Component {
             <View style={styles.container} lightColor="#eee" darkColor="#003f5c">
                 <View style={styles.topBar} lightColor={Colors.light.header}><Text>Choose a Group</Text></View>
                 <ScrollView style={styles.scrollContainer}>
-                    {this.state.groups.map((prop, key) => {
+                    {this.state.active_groups.map((prop, key) => {
                         return (
                             <Pressable onPress={() => {this.joinGroupSwiping(prop)}} key={key}>
                                 <View style={[styles.group, styles.activeGroup]} lightColor={Colors.light.navigation} >
