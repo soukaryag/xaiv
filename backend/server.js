@@ -35,9 +35,13 @@ io.on("connection", socket => {
                 await solanaMain.createAccount(cardData, "swipeRightProgramId");
                 await solanaMain.createAccount(cardData, "swipeLeftProgramId");
             } else {
-                activity = res[0];
-                solanaMain.incrementCount(activity, "swipeLeftProgramId");
-                console.log("[LEFT] swiped left successfully!");
+                try {
+                    activity = res[0];
+                    await solanaMain.incrementCount(activity, "swipeLeftProgramId");
+                    console.log("[LEFT] swiped left successfully!");
+                } catch {
+                    console.log("[LEFT] failed to reach solana :(");
+                }
             }
         });
     });
@@ -50,9 +54,13 @@ io.on("connection", socket => {
                 await solanaMain.createAccount(cardData, "swipeRightProgramId");
                 await solanaMain.createAccount(cardData, "swipeLeftProgramId");
             } else {
-                activity = res[0];
-                solanaMain.incrementCount(activity, "swipeRightProgramId");
-                console.log("[RIGHT] swiped right successfully!");
+                try {
+                    activity = res[0];
+                    await solanaMain.incrementCount(activity, "swipeRightProgramId");
+                    console.log("[RIGHT] swiped right successfully!");
+                } catch {
+                    console.log("[RIGHT] failed to reach solana :(");
+                }
             }
         });
     });
