@@ -10,6 +10,7 @@ import MessagesScreen from '../screens/MessagesScreen';
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import DecideScreen from '../screens/DecideScreen/DecideScreen';
+import TopicScreen from '../screens/DecideScreen/TopicScreen';
 import { BottomTabParamList, HomeParamList, MessagesParamList, ProfileParamList, DecideParamList } from '../types';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
@@ -113,7 +114,6 @@ const DecideStack = createStackNavigator<DecideParamList>();
 
 function DecideNavigator({route, navigation} : any) {
   const globals = route.params;
-  console.log("decNavigator", globals)
   return (
     <DecideStack.Navigator>
       <DecideStack.Screen
@@ -123,5 +123,21 @@ function DecideNavigator({route, navigation} : any) {
         initialParams={globals}
       />
     </DecideStack.Navigator>
+  );
+}
+
+const TopicStack = createStackNavigator<TopicParamList>();
+
+function TopicNavigator({route, navigation} : any) {
+  const globals = route.params;
+  return (
+    <TopicStack.Navigator>
+      <TopicStack.Screen
+        name="TopicScreen"
+        component={TopicScreen}
+        options={{ headerShown: false }}
+        initialParams={globals}
+      />
+    </TopicStack.Navigator>
   );
 }

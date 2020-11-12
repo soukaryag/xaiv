@@ -9,6 +9,7 @@ import { RootStackParamList } from '../types';
 import BottomTabNavigator from './BottomTabNavigator';
 import LinkingConfiguration from './LinkingConfiguration';
 import SwipeScreen from '../screens/DecideScreen/SwipeScreen';
+import TopicScreen from '../screens/DecideScreen/TopicScreen';
 
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
@@ -35,6 +36,7 @@ function RootNavigator(globals: any) {
       <Stack.Screen name="Login" component={LoginScreen} initialParams={globals.globals} />
       <Stack.Screen name="Root" component={BottomTabNavigator} initialParams={globals.globals} />
       <Stack.Screen name="Swipe" component={SwipeScreen} initialParams={globals.globals} />
+      <Stack.Screen name="Topic" component={TopicScreen} initialParams={globals.globals} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
     </Stack.Navigator>
   );

@@ -1,11 +1,11 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js install
+  C:\Program Files\nodejs\node.exe C:\Users\Austin\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add @types/modal-react-native-web
 
 PATH: 
-  C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\souka\bin;C:\Users\souka\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\souka\bin;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\ProgramData\DockerDesktop\version-bin;C:\Program Files\Docker\Docker\Resources\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\ProgramData\Oracle\Java\javapath;C:\Program Files\Intel\iCLS Client;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files\PuTTY;C:\Program Files\Git\cmd;C:\WINDOWS\System32\OpenSSH;C:\ProgramData\chocolatey\bin;C:\Program Files\Microsoft VS Code\bin;C:\Program Files\Intel\WiFi\bin;C:\Program Files\Common Files\Intel\WirelessCommon;C:\Program Files\MATLAB\bin;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\heroku\bin;C:\Program Files (x86)\Yarn\bin;C:\Program Files\nodejs;C:\Users\souka\AppData\Local\Programs\Python\Python38\Scripts;C:\Users\souka\AppData\Local\Programs\Python\Python38;C:\Users\souka\.windows-build-tools\python27;C:\Program Files\nodejs\node_modules\npm\node_modules\npm-lifecycle\node-gyp-bin;C:\Users\souka\AppData\Roaming\npm\node_modules\windows-build-tools\node_modules\.bin;C:\Users\souka\AppData\Roaming\npm\node_modules\.bin;C:\Program Files\nodejs\node_modules\npm\node_modules\npm-lifecycle\node-gyp-bin;C:\Users\souka\Desktop\Projects\edex-ui\node_modules\.bin;C:\ProgramData\DockerDesktop\version-bin;C:\Program Files\Docker\Docker\Resources\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client;C:\Program Files\Intel\iCLS Client;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\MATLAB\R2017a\bin;C:\Program Files (x86)\Windows Live\Shared;C:\WINDOWS\System32\OpenSSH;C:\Program Files\Intel\WiFi\bin;C:\Program Files\Common Files\Intel\WirelessCommon;C:\Users\souka\AppData\Local\Microsoft\WindowsApps;C:\Users\souka\AppData\Local\Programs\MiKTeX 2.9\miktex\bin\x64;C:\Program Files\PostgreSQL\11\bin;C:\Users\souka\AppData\Local\Google\Cloud SDK\google-cloud-sdk\bin;C:\Users\souka\AppData\Local\atom\bin;C:\tools\dart-sdk\bin;C:\Users\souka\AppData\Roaming\Pub\Cache\bin;C:\Program Files\PuTTY;C:\Program Files\Git\cmd;C:\Program Files\nodejs;C:\ProgramData\chocolatey\bin;C:\Program Files\Microsoft VS Code\bin;C:\Program Files\Docker Toolbox;C:\Users\souka\AppData\Local\Programs\Python\Python37\Scripts;C:\Users\souka\AppData\Local\Programs\Python\Python37;C:\Users\souka\AppData\Local\Programs\Python\Python36\Scripts;C:\Users\souka\AppData\Local\Programs\Python\Python36;C:\Users\souka\AppData\Local\Programs\Python\Python36-32\Scripts;C:\Users\souka\AppData\Local\Programs\Python\Python36-32;C:\Program Files\heroku\bin;C:\Program Files\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin;C:\Program Files\CMake\bin;C:\Users\souka\AppData\Local\Yarn\bin;C:\Users\souka\AppData\Roaming\npm;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl;C:\Users\souka\bin\win-sudo\s;C:\Users\souka\bin\win-sudo\s
+  C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\Austin\bin;C:\Python39\Scripts;C:\Python39;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\WINDOWS\System32\OpenSSH;C:\Users\Austin\AppData\Local\Programs\Python\Python38;C:\Program Files (x86)\PuTTY;C:\Program Files\Git\cmd;C:\ProgramData\chocolatey\bin;C:\Program Files\nodejs;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Program Files\Java\jdk-10.0.2\bin;C:\Users\Austin\.cargo\bin;C:\Users\Austin\AppData\Local\Microsoft\WindowsApps;search-ms;displayname=Search%20Results%20in%20This%20PC&crumb=location;%3A%3A{20D04FE0-3AEA-1069-A2D8-08002B30309D}\Python36;C:\Users\Austin\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\heroku\bin;C:\Users\Austin\AppData\Roaming\npm;C:\Users\Austin\.cargo\bin
 
 Yarn version: 
-  1.22.5
+  1.22.10
 
 Node version: 
   15.1.0
@@ -14,7 +14,17 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: EPERM: operation not permitted, unlink 'C:\Users\souka\Desktop\Projects\xaiv\xaiv-react-client\node_modules\@babel\generator\node_modules\.bin'
+  Error: https://registry.yarnpkg.com/@types%2fmodal-react-native-web: Not found
+      at Request.params.callback [as _callback] (C:\Users\Austin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:66988:18)
+      at Request.self.callback (C:\Users\Austin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:140662:22)
+      at Request.emit (node:events:327:20)
+      at Request.<anonymous> (C:\Users\Austin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141634:10)
+      at Request.emit (node:events:327:20)
+      at IncomingMessage.<anonymous> (C:\Users\Austin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141556:12)
+      at Object.onceWrapper (node:events:433:28)
+      at IncomingMessage.emit (node:events:339:22)
+      at endReadableNT (node:internal/streams/readable:1289:12)
+      at processTicksAndRejections (node:internal/process/task_queues:80:21)
 
 npm manifest: 
   {
@@ -47,6 +57,7 @@ npm manifest:
       "expo-status-bar": "~1.0.2",
       "expo-web-browser": "~8.5.0",
       "express": "^4.17.1",
+      "modal-react-native-web": "^0.2.0",
       "react": "16.13.1",
       "react-dom": "16.13.1",
       "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.4.tar.gz",
@@ -6422,6 +6433,13 @@ Lockfile:
     dependencies:
       minimist "^1.2.5"
   
+  modal-react-native-web@^0.2.0:
+    version "0.2.0"
+    resolved "https://registry.yarnpkg.com/modal-react-native-web/-/modal-react-native-web-0.2.0.tgz#5daaa76213218fd25df739a267b11aed37e8c0c2"
+    integrity sha512-sC0/jL3ZL4bGtv1VS43TnrH7/FHUqgb7IU3VYWNDzuR223fYlpG5Gc974GsTP172Vi+lnnBL/G70xONmaggxeQ==
+    dependencies:
+      warning "^4.0.1"
+  
   ms@2.0.0:
     version "2.0.0"
     resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
@@ -8765,6 +8783,13 @@ Lockfile:
     integrity sha1-L3+bj9ENZ3JisYqITijRlhjgKPs=
     dependencies:
       makeerror "1.0.x"
+  
+  warning@^4.0.1:
+    version "4.0.3"
+    resolved "https://registry.yarnpkg.com/warning/-/warning-4.0.3.tgz#16e9e077eb8a86d6af7d64aa1e05fd85b4678ca3"
+    integrity sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==
+    dependencies:
+      loose-envify "^1.0.0"
   
   wcwidth@^1.0.1:
     version "1.0.1"
