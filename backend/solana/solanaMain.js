@@ -10,7 +10,8 @@ let connection;
 let payerAccount;
 let programId;
 
-const pathToProgram = './swipe_left.so';
+const pathToSwipeLeftProgram = '.source_code/swipe_left.so';
+const pathToSwipeRightProgram = '.source_code/swipe_right.so';
 
 const swipeDataLayout = BufferLayout.struct([
     BufferLayout.u32('swipe_left'),
@@ -18,6 +19,12 @@ const swipeDataLayout = BufferLayout.struct([
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function getProgramIdPublicKey(key) {
+    const store = new storeModule.Store();
+    const config = await store.load('config.json');
+    return new solanaWeb3.PublicKey(config[key]);
 }
 
 async function newAccountWithLamports(connection, lamports = 1000000) {
@@ -41,13 +48,16 @@ async function newAccountWithLamports(connection, lamports = 1000000) {
 /**
  * Establish an account to pay for everything
  */
-async function establishPayer() {
+async function establishPayer(programName) {
     if (!payerAccount) {
         let fees = 0;
         const { feeCalculator } = await connection.getRecentBlockhash();
 
         // Calculate the cost to load the program
-        const data = await fs.readFile(pathToProgram);
+        if ( programName === 'swipeLeftProgramId') 
+            const data = await fs.readFile(pathToSwipeLeftProgram);
+        else 
+            const data = await fs.readFile(pathToSwipeRightProgram);
         const NUM_RETRIES = 500; // allow some number of retries
         fees +=
             feeCalculator.lamportsPerSignature *
@@ -76,17 +86,15 @@ async function establishPayer() {
     );
 }
 
-async function loadProgram() {
+async function loadProgram(programName) {
     if (!connection) {
         connection = await conn.getNodeConnection();
     }
 
-    const store = new storeModule.Store();
-
     // Check if the program has already been loaded
     try {
-        const config = await store.load('config.json');
-        programId = new solanaWeb3.PublicKey(config.programId);
+        // load swipe left
+        programId = getProgramIdPublicKey(programName);
         await connection.getAccountInfo(programId);
         console.log('Program already loaded to account', programId.toBase58());
         return;
@@ -94,11 +102,13 @@ async function loadProgram() {
         // try to load the program
     }
 
-    await establishPayer();
+    await establishPayer(programName);
 
     // Load the program
-    console.log('Loading swipe left program...');
-    const data = await fs.readFile(pathToProgram);
+    if ( programName === 'swipeLeftProgramId') 
+        const data = await fs.readFile(pathToSwipeLeftProgram);
+    else 
+        const data = await fs.readFile(pathToSwipeRightProgram);
     const programAccount = new solanaWeb3.Account();
     await solanaWeb3.BpfLoader.load(
         connection,
@@ -112,11 +122,11 @@ async function loadProgram() {
 
     // Save this info for next time
     await store.save('config.json', {
-        programId: programId.toBase58(),
+        programName: programId.toBase58(),
     });
 }
 
-async function createAccount(cardData) {
+async function createAccount(cardData, programName) {
     const activity_account = new solanaWeb3.Account();
     activity_account_pub_key = activity_account.publicKey;
     const space = swipeDataLayout.span;
@@ -124,12 +134,10 @@ async function createAccount(cardData) {
         swipeDataLayout.span,
     );
 
-    const store = new storeModule.Store();
-    const config = await store.load('config.json');
-    programId = new solanaWeb3.PublicKey(config.programId);
+    programId = getProgramIdPublicKey(programName);
 
     if (!payerAccount) {
-        await establishPayer();
+        await establishPayer(programName);
     }
 
     const transaction = new solanaWeb3.Transaction().add(
@@ -162,7 +170,7 @@ async function createAccount(cardData) {
     });
 }
 
-async function incrementCount(activity) {
+async function incrementCount(activity, programName) {
     const programId = new solanaWeb3.PublicKey("AnKZgQNwzkt9h5xpmZEG6JT9eYkk8Q8FMJUV8c6brtUc");
     const activity_account_pubKey = new solanaWeb3.PublicKey(activity.pub_key);
 
@@ -173,7 +181,7 @@ async function incrementCount(activity) {
     })
 
     if (!payerAccount) {
-        await establishPayer();
+        await establishPayer(programName);
     }
 
     await solanaWeb3.sendAndConfirmTransaction(
@@ -186,10 +194,10 @@ async function incrementCount(activity) {
         },
     )
 
-    await count(activity.pub_key);
+    await printAccountData(activity.pub_key);
 }
 
-async function count(pub_key) {
+async function printAccountData(pub_key) {
     PubKey = new solanaWeb3.PublicKey(pub_key);
     const accountInfo = await connection.getAccountInfo(PubKey);
     if (accountInfo === null) {
