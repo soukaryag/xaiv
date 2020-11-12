@@ -1,11 +1,12 @@
-const fetchNearestPlacesFromGoogle = (latitude, longitude, radiusKM, type) => {
+fetch = require("node-fetch");
+
+async function fetchActivities(socket, latitude, longitude, radiusKM, type="restaurant") {
     const radMetter = radiusKM * 1000;
-    type = "restaurant"
 
-    const proxyurl = "https://cors-anywhere.herokuapp.com/";
+    console.log("[GOOGLE]", latitude, longitude, radiusKM, type);
+
     const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radMetter}&type=${type}&key=AIzaSyAjfUxS2_xG_8I0UyUCTBI87HD1bHIgQYw`
-
-    return fetch(proxyurl + url)
+    return fetch(url)
         .then(res => {
             return res.json()
         })
@@ -29,9 +30,11 @@ const fetchNearestPlacesFromGoogle = (latitude, longitude, radiusKM, type) => {
                 places.push(place);
             }
 
-            return places.slice(0, 19);
+            socket.emit("send_activities", places.slice(0, 10));
         })
         .catch(error => {
             console.log(error);
         });
 }
+
+module.exports = { fetchActivities }

@@ -4,6 +4,7 @@ const conn = require('./solana/nodeConnection');
 const solanaMain = require('./solana/solanaMain');
 const swipe = require('./handlers/swipe');
 const accounts = require('./handlers/accounts');
+const googleApi = require('./handlers/googleApi');
 
 const express = require('express');
 const socketIO = require('socket.io');
@@ -47,6 +48,10 @@ io.on("connection", socket => {
     // signup - enter credentials to the current database if user does not exist
     socket.on("signup", (username, password) => {
         accounts.signup(socket, username, password);
+    });
+
+    socket.on("get_activities", (lng, lat, radius) => {
+        googleApi.fetchActivities(socket, lng, lat, radius);
     });
 
     //Return all of a user's ACTIVE groups

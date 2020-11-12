@@ -3,7 +3,7 @@
 */
 let photoCards: object[] = []
 
-for (let i = 0; i < 3; i++) {
+for (let i = 0; i < 10; i++) {
     photoCards.push({
         activity_name: 'Loading Cards...',
         activity_photo: 'https://icon-library.com/images/inquiry-icon/inquiry-icon-23.jpg',
