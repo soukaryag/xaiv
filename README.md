@@ -1,4 +1,4 @@
-# xaiv
+# XAIV: Group Decisions, Simplified
 
 ## TO-DO
 - Functionality:
