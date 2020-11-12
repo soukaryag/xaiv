@@ -26,7 +26,7 @@ uint64_t swipeleft(SolParameters *params) {
   }
 
   uint32_t *num_left = (uint32_t *)account->data;
-  *num_left -= 1;
+  *num_left += 1;
 
   sol_log("Swiped left");
 

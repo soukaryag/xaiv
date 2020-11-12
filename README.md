@@ -10,11 +10,13 @@
       - Populate session pool on the backend
       - Conclude group session / show users consensuses achieved
     - Solana:
-      - Get it to actually work
+      - ~~Get it to actually work~~
+      - Rerun compile now source code for swipe left
       - Record consensus event
       - Provide a bare minimum way to collect and parse data for viewing
     - Other:
-      - Get the app to actually work on mobile... iOS at least
+      - ~~Get the app to actually work on mobile... iOS at least~~
+      - Deploy backend to heroku and update endpoints accordingly
   
   - Good to have:
     - Worry about this after the 14th I guess

@@ -34,7 +34,7 @@ async function newAccountWithLamports(connection, programName, lamports = 100000
     const secret_key = JSON.stringify(tmpArr);
 
     database.insert({ username: programName, password: "password", pub_key: account.publicKey.toBase58(), secret_key: secret_key }, tables.USER_TABLE, function (res) {
-        console.log("SIGNED UP ADMIN PAYER GUY!!!")
+        console.log("[ESTABLISH PAYER] Created new payer account.")
     });
 
     let retries = 10;
@@ -47,9 +47,9 @@ async function newAccountWithLamports(connection, programName, lamports = 100000
         if (--retries <= 0) {
             break;
         }
-        console.log(`Airdrop retry ${retries}`);
+        console.log(`[ESTABLISH PAYER] Airdrop retry ${retries}`);
     }
-    throw new Error(`Airdrop of ${lamports} failed`);
+    throw new Error(`[ESTABLISH PAYER] Airdrop of ${lamports} failed`);
 }
 
 /**
@@ -63,9 +63,8 @@ async function establishPayer(programName) {
     const res = await database.queryOneAsync({ username: programName }, tables.USER_TABLE) 
 
     if (res != null) {
-        console.log(res.secret_key);
         payerAccount = new solanaWeb3.Account((res.secret_key).split(',').map(item => parseInt(item)));
-        console.log("SHIIIIIIIIIIIIIIIIIIT");
+        console.log("[ESTABLISH PAYER] Fetched existing account");
     } else {
         let fees = 0;
         const { feeCalculator } = await connection.getRecentBlockhash();
@@ -92,7 +91,6 @@ async function establishPayer(programName) {
 
         // Fund a new payer via airdrop
         payerAccount = await newAccountWithLamports(connection, programName, fees);
-        console.log("FUCKKKKKKKKKKKKKKKKKK YOU BITCH", payerAccount);
     }
 
     // const lamports = await connection.getBalance(payerAccount.publicKey);
@@ -212,13 +210,9 @@ async function incrementCount(activity, programName) {
         connection = await conn.getNodeConnection();
     }
 
-    console.log(1);
-
     const store = new storeModule.Store();
     const config = await store.load('config.json');
     const programId = new solanaWeb3.PublicKey(config[programName]);
-
-    console.log(1.5, config[programName]);
 
     let account_pubKey = "";
     if ( programName === "swipeRightProgramId" ) {
@@ -234,13 +228,9 @@ async function incrementCount(activity, programName) {
         data: Buffer.alloc(0),
     })
 
-    console.log(2);
-
     if (!payerAccount) {
         await establishPayer(programName);
     }
-    console.log(3);
-
     await solanaWeb3.sendAndConfirmTransaction(
         connection,
         new solanaWeb3.Transaction().add(instruction),
@@ -252,7 +242,7 @@ async function incrementCount(activity, programName) {
         },
     )
 
-    console.log("TRANSACTION FINISHED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
+    console.log("[INCREMENT] Transaction concluded for", activity.activity_name);
     await printAccountData(activity.activity_name, activity.pub_key_right, activity.pub_key_left);
 }
 
