@@ -50,6 +50,10 @@ async function newAccountWithLamports(connection, lamports = 1000000) {
  * Establish an account to pay for everything
  */
 async function establishPayer(programName) {
+    if (!connection) {
+        connection = await conn.getNodeConnection();
+    }
+    
     if (!payerAccount) {
         let fees = 0;
         const { feeCalculator } = await connection.getRecentBlockhash();
