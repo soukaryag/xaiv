@@ -6,70 +6,36 @@ import photoCards from '../../constants/Restaurants'
 
 const { height } = Dimensions.get('window')
 
-class SwipeScreen extends React.Component {
+class TopicScreen extends React.Component {
     socket: any
     name: any
     constructor(props : any) {
         super(props);
         this.socket = props.route.params.socket;
         this.name = props.route.params.name;
-        console.log("swipe", this.name);
 
-        this.socket.on("return_feed_for_user", (feed: any) => { 
-            console.log("pool is ", feed);
-            this.setState({
-                ready: true,
-                cardData: feed
-            });
-        });
     }
 
     state = {
-        ready: false,
-        cardData: photoCards
+        
     };
 
     componentDidMount() {
-        console.log("mounted - emitting");
-        this.socket.emit("get_feed_for_user", localStorage.getItem("username"), this.name);
+        
     }
 
     
     //tmp = fetchNearestPlacesFromGoogle().then( res => this.setState({ cardData: res }) );
 
-    swipeLeft = (idx: number) => {
-        this.socket.emit('swipe-left', this.state.cardData[idx]);
-        console.log(`Rejected ${idx}`);
-    };
-    swipeRight = (idx: number) => {
-        this.socket.emit('swipe-right', this.state.cardData[idx]);
-        console.log(`Accepted ${idx}`);
-    };
-
     render() {
-        if (!this.state.ready) {
+        /*if (!this.state.ready) {
             return (
                 <View>Loading...</View>
             );
-        }
+        } */
         return (
             <SafeAreaView style={styles.container}>
-                <View style={styles.swiperContainer}>
-                    <Swiper
-                        animateCardOpacity
-                        cards={this.state.cardData}
-                        renderCard={(card: any) => <Card card={card} />}
-                        disableBottomSwipe={true}
-                        disableTopSwipe={true}
-                        onSwipedLeft={(cardIndex: number) => { this.swipeLeft(cardIndex) }}
-                        onSwipedRight={(cardIndex: number) => { this.swipeRight(cardIndex) }}
-                        cardIndex={0}
-                        backgroundColor="white"
-                        stackSize={3}
-                        infinite
-                        showSecondCard
-                    />
-                </View>
+                
             </SafeAreaView>
         )
     }
@@ -152,4 +118,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default SwipeScreen
+export default TopicScreen

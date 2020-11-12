@@ -8,19 +8,24 @@
                 "topic" : "restaurant",
                 "pool" : [
                     {
-                        "id": "0",
-                        "swipe_rights": "1",
-                        "swipe_lefts": "0"
+                        "id": "ChIJnf6IY0iGs4kRiZIMGa09blM",
+                        "swipe_rights": 1,
+                        "swipe_lefts": 0
                     },
                     {
-                        "id": "1",
-                        "swipe_rights": "0",
-                        "swipe_lefts": "2"
+                        "id": "ChIJ-ZvRdziGs4kRqL3TPH5X5ZM",
+                        "swipe_rights": 0,
+                        "swipe_lefts": 2
                     },
                     {
-                        "id": "2",
-                        "swipe_rights": "0",
-                        "swipe_lefts": "0"
+                        "id": "ChIJ7xj5xkeGs4kR0D-ASgOCZaE",
+                        "swipe_rights": 0,
+                        "swipe_lefts": 0
+                    },
+                    {
+                        "id": "xDDDD",
+                        "swipe_rights": 0,
+                        "swipe_lefts": 0
                     }
                 ]
                 
@@ -31,10 +36,13 @@
                 "name" : "Austin",
                 "pool" : [
                     {
-                        "id": "0"
+                        "id": "ChIJnf6IY0iGs4kRiZIMGa09blM"
                     },
                     {
-                        "id": "2"
+                        "id": "ChIJ7xj5xkeGs4kR0D-ASgOCZaE"
+                    },
+                    {
+                        "id": "xDDDD"
                     }
                 ]
             },
@@ -42,10 +50,13 @@
                 "name" : "Sho",
                 "pool" : [
                     {
-                        "id": "1"
+                        "id": "ChIJ-ZvRdziGs4kRqL3TPH5X5ZM"
                     },
                     {
-                        "id": "2"
+                        "id": "ChIJ7xj5xkeGs4kR0D-ASgOCZaE"
+                    },
+                    {
+                        "id": "xDDDD"
                     }
                 ]
             },
@@ -53,7 +64,10 @@
                 "name" : "Bon",
                 "pool" : [
                     {
-                        "id": "2"
+                        "id": "ChIJ7xj5xkeGs4kR0D-ASgOCZaE"
+                    },
+                    {
+                        "id": "xDDDD"
                     }
                 ]
             },
@@ -61,13 +75,16 @@
                 "name" : "Your mom",
                 "pool" : [
                     {
-                        "id": "0"
+                        "id": "ChIJnf6IY0iGs4kRiZIMGa09blM"
                     },
                     {
-                        "id": "1"
+                        "id": "ChIJ-ZvRdziGs4kRqL3TPH5X5ZM"
                     },
                     {
-                        "id": "2"
+                        "id": "ChIJ7xj5xkeGs4kR0D-ASgOCZaE"
+                    },
+                    {
+                        "id": "xDDDD"
                     }
                 ]
             }

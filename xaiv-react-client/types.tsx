@@ -3,6 +3,7 @@ export type RootStackParamList = {
   Root: undefined;
   NotFound: undefined;
   Swipe: undefined;
+  Topic: undefined;
 };
 
 export type BottomTabParamList = {
@@ -27,4 +28,8 @@ export type ProfileParamList = {
 export type DecideParamList = {
   DecideScreen: undefined;
 };
+
+export type TopicParamList = {
+  TopicScreen: undefined;
+}
 

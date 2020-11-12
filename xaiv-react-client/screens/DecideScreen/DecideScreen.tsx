@@ -2,6 +2,8 @@ import React from 'react'
 import { StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ScrollView, Pressable } from 'react-native'
 import { Text, View } from '../../components/Themed';
 import Colors from '../../constants/Colors';
+import { Overlay } from 'react-native-elements';
+import Modal from 'modal-react-native-web';
 
 const { height, width } = Dimensions.get('window')
 
@@ -12,41 +14,75 @@ class DecideScreen extends React.Component {
         super(props);
         this.socket = props.route.params.socket;
         this.navigation = props.navigation;
-        this.socket.emit("get_groups_for_user", localStorage.getItem("username"));
         
-        this.socket.on("return_groups_for_user", (group_names: any) => { 
-            console.log("names is ", group_names);
+        this.socket.on("return_active_groups_for_user", (active_groups: any) => { 
             this.setState({
-                groups: group_names
+                active_groups: active_groups,
             });
         });
+
+        this.socket.on("return_inactive_groups_for_user", (inactive_groups: any) => {
+            this.setState({
+                inactive_groups: inactive_groups,
+            });
+        });
+
+        this.socket.emit("get_active_groups_for_user", localStorage.getItem("username"));
+        this.socket.emit("get_inactive_groups_for_user", localStorage.getItem("username"));
     };
 
     state = {
-        groups : [],
+        active_groups : [],
+        inactive_groups: [],
+        overlay: false
     }
-
-    
 
     startNewSession = () => {
         console.log("starting a new sesson");
+        this.toggleOverlay();
         //pop up the overlay of non started groups
+
+    };
+
+    toggleOverlay = () => {
+        this.setState({
+            overlay: !this.state.overlay
+        });
     };
 
     joinGroupSwiping = (name: String) => {
-        console.log("joining group", name);
         //display a swipe screen, and give it the required params:
         //socket
         //group
         this.navigation.navigate("Swipe", {socket: this.socket, name: name});
     };
 
+    /* Navigate to the pick topic screen */
+
+    decideTopic = (name: String) => {
+        this.toggleOverlay();
+        this.navigation.navigate("Topic", {socket: this.socket, name: name});
+    };
+
     render() {
         return (
             <View style={styles.container} lightColor="#eee" darkColor="#003f5c">
                 <View style={styles.topBar} lightColor={Colors.light.header}><Text>Choose a Group</Text></View>
+                <Overlay ModalComponent={Modal} isVisible={this.state.overlay} onBackdropPress={this.toggleOverlay}>
+                    <ScrollView style={styles.scrollContainer}>
+                        {this.state.inactive_groups.map((prop, key) => {
+                            return (
+                                <Pressable onPress={() => {this.decideTopic(prop)}} key={key}>
+                                    <View style={[styles.group, styles.activeGroup]} lightColor={Colors.light.navigation} >
+                                        <Text style={styles.groupText} lightColor={Colors.light.text}>{prop}</Text>
+                                    </View>
+                                </Pressable>
+                            );
+                        })}
+                    </ScrollView>
+                </Overlay>
                 <ScrollView style={styles.scrollContainer}>
-                    {this.state.groups.map((prop, key) => {
+                    {this.state.active_groups.map((prop, key) => {
                         return (
                             <Pressable onPress={() => {this.joinGroupSwiping(prop)}} key={key}>
                                 <View style={[styles.group, styles.activeGroup]} lightColor={Colors.light.navigation} >
@@ -114,74 +150,5 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     }
 });
-
-/*
-    <Text style={styles.logo}>XAIV</Text>
-    <View style={styles.inputView} >
-        <TextInput
-            style={styles.inputText}
-            placeholder="Username..."
-            placeholderTextColor="#003f5c"
-            onChangeText={text => this.setState({ username: text })} />
-    </View>
-    <View style={styles.inputView} >
-        <TextInput
-            secureTextEntry
-            style={styles.inputText}
-            placeholder="Password..."
-            placeholderTextColor="#003f5c"
-            onChangeText={text => this.setState({ password: text })} />
-    </View>
-    <TouchableOpacity>
-        <Text lightColor="#000" darkColor="#fff">Forgot Password?</Text>
-    </TouchableOpacity>
-    <TouchableOpacity style={styles.loginBtn} onPress={this.socketLogin}>
-        <Text style={styles.loginText}>LOGIN</Text>
-    </TouchableOpacity>
-    <TouchableOpacity onPress={this.socketSignup}>
-        <Text lightColor="#000" darkColor="#fff">Signup</Text>
-    </TouchableOpacity>
-
-
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    logo: {
-        fontWeight: "bold",
-        fontSize: 50,
-        color: "#fb5b5a",
-        marginBottom: 40
-    },
-    inputView: {
-        width: "80%",
-        backgroundColor: "#ffffff",
-        opacity: 0.7,
-        borderRadius: 25,
-        height: 50,
-        marginBottom: 20,
-        justifyContent: "center",
-        padding: 20
-    },
-    inputText: {
-        height: 50,
-    },
-    loginBtn: {
-        width: "80%",
-        backgroundColor: "#fb5b5a",
-        borderRadius: 25,
-        height: 50,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 40,
-        marginBottom: 10
-    },
-    loginText: {
-        color: "white"
-    }
-}); */
 
 export default DecideScreen
