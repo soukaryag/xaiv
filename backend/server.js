@@ -106,4 +106,28 @@ io.on("connection", socket => {
             socket.emit("return_groups_for_user", group_names);
         });
     });
+
+    /*Upon selecting the group session they wish to partake in, generate a 
+    feed of cards from the user's pool and send it back to them*/
+    socket.on("get_feed_for_user", (username, group) => {
+        var ok = false;
+        //First assert the user is actually in the group
+        database.query({username: username}, tables.GROUP_TO_USER_TABLE, function(res) {
+            for (var i = 0; i < res.length; i++) {
+                if (res[i]["group_name"] == group) {
+                    ok = true;
+                    break;
+                }
+            }
+            if (ok) {
+                database.query({group_name: group}, tables.GROUP_TABLE, function(res) {
+                    console.log(res);
+                });
+            }
+            else {
+                console.log("user not in group - fix");
+                return;
+            }
+        });
+    });
 });

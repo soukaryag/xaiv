@@ -19,7 +19,6 @@ class DecideScreen extends React.Component {
             this.setState({
                 groups: group_names
             });
-            
         });
     };
 

@@ -14,6 +14,7 @@ class SwipeScreen extends React.Component {
         this.socket = props.route.params.socket;
         this.name = props.route.params.name;
         console.log("swipe", this.name);
+        this.socket.emit("get_feed_for_user", localStorage.getItem("username"), this.name);
     }
 
     state = {

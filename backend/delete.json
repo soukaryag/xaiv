@@ -1,34 +1,76 @@
 [
     {
-        "group_name" : "A1",
-        "username" : "Austin"
-    },
-    {
-        "group_name" : "A2",
-        "username" : "Austin"
-    },
-    {
-        "group_name" : "A3",
-        "username" : "Austin"
-    },
-    {
-        "group_name" : "A4",
-        "username" : "Austin"
-    },
-    {
-        "group_name" : "A5",
-        "username" : "Austin"
-    },
-    {
-        "group_name" : "A6",
-        "username" : "Austin"
-    },
-    {
-        "group_name" : "A7",
-        "username" : "Austin"
-    },
-    {
-        "group_name" : "A8",
-        "username" : "Austin"
+        "group_name" : "Test2",
+        "group_data": {
+            "members" : ["Austin", "Sho", "Bon", "Your mom"],
+            "session" : {
+                "active" : true,
+                "topic" : "restaurant",
+                "pool" : [
+                    {
+                        "id": "0",
+                        "swipe_rights": "1",
+                        "swipe_lefts": "0"
+                    },
+                    {
+                        "id": "1",
+                        "swipe_rights": "0",
+                        "swipe_lefts": "2"
+                    },
+                    {
+                        "id": "2",
+                        "swipe_rights": "0",
+                        "swipe_lefts": "0"
+                    }
+                ]
+                
+            }
+        },
+        "member_data" : [
+            {
+                "name" : "Austin",
+                "pool" : [
+                    {
+                        "id": "0"
+                    },
+                    {
+                        "id": "2"
+                    }
+                ]
+            },
+            {
+                "name" : "Sho",
+                "pool" : [
+                    {
+                        "id": "1"
+                    },
+                    {
+                        "id": "2"
+                    }
+                ]
+            },
+            {
+                "name" : "Bon",
+                "pool" : [
+                    {
+                        "id": "2"
+                    }
+                ]
+            },
+            {
+                "name" : "Your mom",
+                "pool" : [
+                    {
+                        "id": "0"
+                    },
+                    {
+                        "id": "1"
+                    },
+                    {
+                        "id": "2"
+                    }
+                ]
+            }
+        ]
     }
 ]
