@@ -14,10 +14,10 @@ uint64_t swiperight(SolParameters *params) {
   SolAccountInfo *account = &params->ka[0];
 
   // The account must be owned by the program in order to modify its data
-  if (!SolPubkey_same(account->owner, params->program_id)) {
+  /*if (!SolPubkey_same(account->owner, params->program_id)) {
     sol_log("Account does not have the correct program id");
     return ERROR_INCORRECT_PROGRAM_ID;
-  }
+  } */
 
   // The data must be large enough to hold an uint32_t value
   if (account->data_len < sizeof(uint32_t)) {
