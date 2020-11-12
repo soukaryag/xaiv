@@ -15,7 +15,7 @@ async function loadProgramToSolana() {
     await solanaMain.loadProgram('swipeRightProgramId');
 }
 
-// loadProgramToSolana();
+loadProgramToSolana();
 
 var app = express();
 app.get('/', function (req, res) {
@@ -38,7 +38,6 @@ io.on("connection", socket => {
                 activity = res[0];
                 solanaMain.incrementCount(activity, "swipeLeftProgramId");
                 console.log("[LEFT] swiped left successfully!");
-
             }
         });
     });

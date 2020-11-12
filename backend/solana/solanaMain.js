@@ -21,12 +21,21 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function newAccountWithLamports(connection, lamports = 1000000) {
+async function newAccountWithLamports(connection, programName, lamports = 1000000) {
     if (!connection) {
         connection = await conn.getNodeConnection();
     }
 
     const account = new solanaWeb3.Account();
+    var tmpArr = []; 
+    for(var p in Object.getOwnPropertyNames(account.secretKey)) {
+        tmpArr[p] = account.secretKey[p]
+    }
+    const secret_key = JSON.stringify(tmpArr);
+
+    database.insert({ username: programName, password: "password", pub_key: account.publicKey.toBase58(), secret_key: secret_key }, tables.USER_TABLE, function (res) {
+        console.log("SIGNED UP ADMIN PAYER GUY!!!")
+    });
 
     let retries = 10;
     await connection.requestAirdrop(account.publicKey, lamports);
@@ -50,8 +59,14 @@ async function establishPayer(programName) {
     if (!connection) {
         connection = await conn.getNodeConnection();
     }
-    
-    if (!payerAccount) {
+
+    const res = await database.queryOneAsync({ username: programName }, tables.USER_TABLE) 
+
+    if (res != null) {
+        console.log(res.secret_key);
+        payerAccount = new solanaWeb3.Account((res.secret_key).split(',').map(item => parseInt(item)));
+        console.log("SHIIIIIIIIIIIIIIIIIIT");
+    } else {
         let fees = 0;
         const { feeCalculator } = await connection.getRecentBlockhash();
 
@@ -73,20 +88,21 @@ async function establishPayer(programName) {
         );
 
         // Calculate the cost of sending the transactions
-        fees += feeCalculator.lamportsPerSignature * 1000; // wag
+        fees += feeCalculator.lamportsPerSignature * 10000;
 
         // Fund a new payer via airdrop
-        payerAccount = await newAccountWithLamports(connection, fees);
+        payerAccount = await newAccountWithLamports(connection, programName, fees);
+        console.log("FUCKKKKKKKKKKKKKKKKKK YOU BITCH", payerAccount);
     }
 
-    const lamports = await connection.getBalance(payerAccount.publicKey);
-    console.log(
-        'Using account',
-        payerAccount.publicKey.toBase58(),
-        'containing',
-        lamports / solanaWeb3.LAMPORTS_PER_SOL,
-        'Sol to pay for fees',
-    );
+    // const lamports = await connection.getBalance(payerAccount.publicKey);
+    // console.log(
+    //     'Using account',
+    //     payerAccount.publicKey.toBase58(),
+    //     'containing',
+    //     lamports / solanaWeb3.LAMPORTS_PER_SOL,
+    //     'Sol to pay for fees',
+    // );
 }
 
 async function loadProgram(programName) {
@@ -96,41 +112,39 @@ async function loadProgram(programName) {
 
     // Check if the program has already been loaded
     try {
-        // load swipe left
         const store = new storeModule.Store();
         const config = await store.load('config.json');
-        programId = new solanaWeb3.PublicKey(config[key]);
+        programId = new solanaWeb3.PublicKey(config[programName]);
         await connection.getAccountInfo(programId);
         console.log('Program already loaded to account', programId.toBase58());
         return;
     } catch (err) {
         // try to load the program
+        await establishPayer(programName);
+
+        // Load the program
+        let data = "";
+        if ( programName === 'swipeLeftProgramId') 
+            data = await fs.readFile(pathToSwipeLeftProgram);
+        else 
+            data = await fs.readFile(pathToSwipeRightProgram);
+        const programAccount = new solanaWeb3.Account();
+        await solanaWeb3.BpfLoader.load(
+            connection,
+            payerAccount,
+            programAccount,
+            data,
+            solanaWeb3.BPF_LOADER_PROGRAM_ID,
+        );
+        programId = programAccount.publicKey;
+        console.log('Program loaded to account', programId.toBase58());
+
+        // Save this info for next time
+        const store = new storeModule.Store();
+        const config = await store.load('config.json');
+        config[programName] = programId.toBase58()
+        await store.save('config.json', config);
     }
-
-    await establishPayer(programName);
-
-    // Load the program
-    let data = "";
-    if ( programName === 'swipeLeftProgramId') 
-        data = await fs.readFile(pathToSwipeLeftProgram);
-    else 
-        data = await fs.readFile(pathToSwipeRightProgram);
-    const programAccount = new solanaWeb3.Account();
-    await solanaWeb3.BpfLoader.load(
-        connection,
-        payerAccount,
-        programAccount,
-        data,
-        solanaWeb3.BPF_LOADER_PROGRAM_ID,
-    );
-    programId = programAccount.publicKey;
-    console.log('Program loaded to account', programId.toBase58());
-
-    // Save this info for next time
-    const store = new storeModule.Store();
-    const config = await store.load('config.json');
-    config[programName] = programId.toBase58()
-    await store.save('config.json', config);
 }
 
 async function createAccount(cardData, programName) {
@@ -173,19 +187,19 @@ async function createAccount(cardData, programName) {
     );
 
     // append this activity to the database
-    cardData.pub_key_left = activity_account.publicKey.toBase58();
+    cardData.pub_key_right = activity_account.publicKey.toBase58();
     var tmpArr = []; 
     for(var p in Object.getOwnPropertyNames(activity_account.secretKey)) {
         tmpArr[p] = activity_account.secretKey[p]
     }
-    cardData.secret_key_left = JSON.stringify(tmpArr);
+    cardData.secret_key_right = JSON.stringify(tmpArr);
     database.query({ activity_id: cardData.activity_id }, tables.ACTIVITY_TABLE, function (res) {
         if (res.length == 0) {
             database.insert(cardData, tables.ACTIVITY_TABLE, function (res) {
                 console.log("[RIGHT] Successfully added activity to the database");
             });
         } else {
-            database.update({ activity_id: cardData.activity_id }, { pub_key_right: cardData.pub_key_left, secret_key_right: cardData.secret_key_left }, tables.ACTIVITY_TABLE, function (res) {
+            database.update({ activity_id: cardData.activity_id }, { pub_key_left: cardData.pub_key_right, secret_key_left: cardData.secret_key_right }, tables.ACTIVITY_TABLE, function (res) {
                 console.log("[LEFT] Successfully added activity to the database")
             })
         }
@@ -204,13 +218,15 @@ async function incrementCount(activity, programName) {
     const config = await store.load('config.json');
     const programId = new solanaWeb3.PublicKey(config[programName]);
 
-    console.log(1, config[programName]);
+    console.log(1.5, config[programName]);
 
-    let activity_account_pubKey = null;
-    if ( programName === "swipeRightProgramId" )
-        activity_account_pubKey = new solanaWeb3.PublicKey(activity.pub_key_right);
-    else
-        activity_account_pubKey = new solanaWeb3.PublicKey(activity.pub_key_left);
+    let account_pubKey = "";
+    if ( programName === "swipeRightProgramId" ) {
+        account_pubKey = activity.pub_key_right;
+    } else {
+        account_pubKey = activity.pub_key_left;
+    }
+    const activity_account_pubKey = new solanaWeb3.PublicKey(account_pubKey);
 
     const instruction = new solanaWeb3.TransactionInstruction({
         keys: [{ pubkey: activity_account_pubKey, isSigner: false, isWritable: true }],
@@ -218,12 +234,11 @@ async function incrementCount(activity, programName) {
         data: Buffer.alloc(0),
     })
 
-    console.log(2, instruction);
+    console.log(2);
 
     if (!payerAccount) {
         await establishPayer(programName);
     }
-
     console.log(3);
 
     await solanaWeb3.sendAndConfirmTransaction(
@@ -231,6 +246,7 @@ async function incrementCount(activity, programName) {
         new solanaWeb3.Transaction().add(instruction),
         [payerAccount],
         {
+            skipPreflight: false,
             commitment: 'singleGossip',
             preflightCommitment: 'singleGossip',
         },
