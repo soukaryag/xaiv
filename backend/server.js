@@ -54,6 +54,25 @@ io.on("connection", socket => {
         googleApi.fetchActivities(socket, lng, lat, radius);
     });
 
+    //Instantiate a new session for the given username, group name, and topic string
+    socket.on("create_session", (username, group_name, topic) => {
+        var ok = false;
+        //First assert the user is actually in the group
+        database.query({username: username}, tables.GROUP_TO_USER_TABLE, async function(names) {
+            for (var i = 0; i < names.length; i++) {
+                if (names[i]["group_name"] == group_name) {
+                    ok = true;
+                    break;
+                }
+            }
+            if (ok) {
+                var group = await database.queryOneAsync({group_name: group_name}, tables.GROUP_TABLE);
+                //initialize the group session here
+                //pull card data from the google api
+            }
+        });
+    });
+
     //Return all of a user's ACTIVE groups
     socket.on("get_active_groups_for_user", async (username) => {
         database.query({username: username}, tables.GROUP_TO_USER_TABLE, async function(res) {
