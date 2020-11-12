@@ -9,9 +9,10 @@
       - Choose a topic / start a group session
       - Populate session pool on the backend
       - Conclude group session / show users consensuses achieved
+      - Make card data length dyanmic based on number of activities
     - Solana:
       - ~~Get it to actually work~~
-      - Rerun compile now source code for swipe left
+      - Rerun compile source code for swipe left
       - Record consensus event
       - Provide a bare minimum way to collect and parse data for viewing
     - Other:
