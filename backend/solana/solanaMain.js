@@ -24,11 +24,14 @@ function sleep(ms) {
 async function getProgramIdPublicKey(key) {
     const store = new storeModule.Store();
     const config = await store.load('config.json');
-    console.log(config[key]);
     return new solanaWeb3.PublicKey(config[key]);
 }
 
 async function newAccountWithLamports(connection, lamports = 1000000) {
+    if (!connection) {
+        connection = await conn.getNodeConnection();
+    }
+
     const account = new solanaWeb3.Account();
 
     let retries = 10;
@@ -137,6 +140,10 @@ async function loadProgram(programName) {
 }
 
 async function createAccount(cardData, programName) {
+    if (!connection) {
+        connection = await conn.getNodeConnection();
+    }
+
     const activity_account = new solanaWeb3.Account();
     activity_account_pub_key = activity_account.publicKey;
     const space = swipeDataLayout.span;
@@ -181,6 +188,10 @@ async function createAccount(cardData, programName) {
 }
 
 async function incrementCount(activity, programName) {
+    if (!connection) {
+        connection = await conn.getNodeConnection();
+    }
+
     const programId = new solanaWeb3.PublicKey("AnKZgQNwzkt9h5xpmZEG6JT9eYkk8Q8FMJUV8c6brtUc");
     const activity_account_pubKey = new solanaWeb3.PublicKey(activity.pub_key);
 
@@ -208,6 +219,10 @@ async function incrementCount(activity, programName) {
 }
 
 async function printAccountData(pub_key) {
+    if (!connection) {
+        connection = await conn.getNodeConnection();
+    }
+
     PubKey = new solanaWeb3.PublicKey(pub_key);
     const accountInfo = await connection.getAccountInfo(PubKey);
     if (accountInfo === null) {
