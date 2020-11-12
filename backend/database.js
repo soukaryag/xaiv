@@ -23,12 +23,8 @@ async function queryOneAsync(args, table) {
     let result = null;
     try {
         const db = client.db(DATABASE_NAME);
-
         let collection = db.collection(table);
-
         result = await collection.findOne(args);
-        
-        console.log("in MONGO MOTHERFUCKING DB, RESULT IS ", result);
         return result;
     }
     catch (err) {

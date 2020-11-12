@@ -94,7 +94,7 @@ io.on("connection", socket => {
     socket.on("get_active_groups_for_user", async (username) => {
         database.query({username: username}, tables.GROUP_TO_USER_TABLE, async function(res) {
             //Assume only one user (unique usernames)
-            group_names = [];
+            var group_names = [];
             for (var i = 0; i < res.length; i++) {
                 var group = await database.queryOneAsync({group_name: res[i]["group_name"]}, tables.GROUP_TABLE);
                 var active = group["group_data"]["session"]["active"];
@@ -102,7 +102,6 @@ io.on("connection", socket => {
                     group_names.push(res[i]["group_name"]);
                 }
             }
-            console.log(group_names);
             socket.emit("return_active_groups_for_user",  group_names);
         });
     });
@@ -111,7 +110,7 @@ io.on("connection", socket => {
     socket.on("get_inactive_groups_for_user", async (username) => {
         database.query({username: username}, tables.GROUP_TO_USER_TABLE, async function(res) {
             //Assume only one user (unique usernames)
-            group_names = [];
+            var group_names = [];
             for (var i = 0; i < res.length; i++) {
                 var group = await database.queryOneAsync({group_name: res[i]["group_name"]}, tables.GROUP_TABLE);
                 var active = group["group_data"]["session"]["active"];
@@ -119,7 +118,6 @@ io.on("connection", socket => {
                     group_names.push(res[i]["group_name"]);
                 }
             }
-            console.log(group_names);
             socket.emit("return_inactive_groups_for_user",  group_names);
         });
     });
@@ -138,7 +136,6 @@ io.on("connection", socket => {
             }
             if (ok) {
                 database.query({group_name: group}, tables.GROUP_TABLE, async function(dbGroups) {
-                    console.log(dbGroups);
                     var members = dbGroups[0]["member_data"];
                     var userPool = null;
                     for (var i = 0; i < members.length; i++) {
@@ -154,7 +151,6 @@ io.on("connection", socket => {
                         //Arrange them as desired:
                         var feed = await convertPoolToActivities(userPool);
                         var cardFeed = [];
-                        console.log(feed);
                         //Now from Activity DB objects to appropriate JSON cards
                         for (var i = 0; i < feed.length; i++) {
                             var tmp = {
