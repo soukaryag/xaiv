@@ -26,6 +26,11 @@ export default {
               ProfileScreen: 'profile',
             },
           },
+          Calendar: {
+            screens: {
+              CalendarScreen: 'calendar',
+            },
+          },
           Decide: {
             screens: {
               DecideScreen: 'decide',
