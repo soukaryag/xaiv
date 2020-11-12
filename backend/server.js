@@ -102,7 +102,7 @@ io.on("connection", socket => {
                 console.log("names is in loop ", group_names)
             }
             console.log(group_names);
-            socket.emit("return_groups_for_user", group_names);
+            socket.emit("return_groups_for_user",  group_names);
         });
     });
 
@@ -111,16 +111,30 @@ io.on("connection", socket => {
     socket.on("get_feed_for_user", (username, group) => {
         var ok = false;
         //First assert the user is actually in the group
-        database.query({username: username}, tables.GROUP_TO_USER_TABLE, function(res) {
-            for (var i = 0; i < res.length; i++) {
-                if (res[i]["group_name"] == group) {
+        database.query({username: username}, tables.GROUP_TO_USER_TABLE, function(names) {
+            for (var i = 0; i < names.length; i++) {
+                if (names[i]["group_name"] == group) {
                     ok = true;
                     break;
                 }
             }
             if (ok) {
-                database.query({group_name: group}, tables.GROUP_TABLE, function(res) {
-                    console.log(res);
+                database.query({group_name: group}, tables.GROUP_TABLE, function(dbGroups) {
+                    console.log(dbGroups);
+                    var members = dbGroups[0]["member_data"];
+                    var userPool = null;
+                    for (var i = 0; i < members.length; i++) {
+                        if (members[i]["name"] == username) {
+                            userPool = members[i]["pool"];
+                        }
+                    }
+                    if (userPool == null) {
+                        console.log("uh oh, user not found in group members");
+                    }
+                    else {
+                        socket.emit("return_feed_for_user", userPool);
+                    }
+                    
                 });
             }
             else {
