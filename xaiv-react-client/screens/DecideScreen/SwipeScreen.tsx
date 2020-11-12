@@ -110,7 +110,7 @@ const fetchNearestPlacesFromGoogle = () => {
 
                 places.push(place);
             }
-            console.log(places)
+            console.log("places is ", places)
             return places;
         })
         .catch(error => {
