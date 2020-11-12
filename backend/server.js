@@ -15,7 +15,7 @@ async function loadProgramToSolana() {
     await solanaMain.loadProgram('swipeRightProgramId');
 }
 
-loadProgramToSolana();
+// loadProgramToSolana();
 
 var app = express();
 app.get('/', function (req, res) {
