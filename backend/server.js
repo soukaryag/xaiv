@@ -29,14 +29,15 @@ const io = socketIO(server);
 io.on("connection", socket => {
     // swipe left - reject entity
     socket.on("swipe-left", (cardData) => {
-        database.query({ activity_id: cardData.activity_id }, tables.ACTIVITY_TABLE, function (res) {
-            console.log("Found", res.length, "results from the query");
+        database.query({ activity_id: cardData.activity_id }, tables.ACTIVITY_TABLE, async function (res) {
+            console.log("[LEFT] Found", res.length, "results from the query");
             if (res.length == 0) {
-                solanaMain.createAccount(cardData, "swipeLeftProgramId");
+                await solanaMain.createAccount(cardData, "swipeRightProgramId");
+                await solanaMain.createAccount(cardData, "swipeLeftProgramId");
             } else {
                 activity = res[0];
                 solanaMain.incrementCount(activity, "swipeLeftProgramId");
-                console.log("swiped left successfully!");
+                console.log("[LEFT] swiped left successfully!");
 
             }
         });
@@ -44,22 +45,17 @@ io.on("connection", socket => {
 
     // swipe left - accept entity
     socket.on("swipe-right", (cardData) => {
-        database.query({ activity_id: cardData.key }, tables.ACTIVITY_TABLE, function (res) {
-            // if (res.length == 0) {
-            //     database.insert(cardData, tables.ACTIVITY_TABLE, function (res) {
-            //         console.log("Successfully added activity to the database");
-            //     });
-            // } else {
-            //     activity = res[0];
-            //     console.log(acitvity, "swipe-right")
-            // }
-            console.log("skipping for now...");
+        database.query({ activity_id: cardData.activity_id }, tables.ACTIVITY_TABLE, async function (res) {
+            console.log("[RIGHT] Found", res.length, "results from the query");
+            if (res.length == 0) {
+                await solanaMain.createAccount(cardData, "swipeRightProgramId");
+                await solanaMain.createAccount(cardData, "swipeLeftProgramId");
+            } else {
+                activity = res[0];
+                solanaMain.incrementCount(activity, "swipeRightProgramId");
+                console.log("[RIGHT] swiped right successfully!");
+            }
         });
-
-        //database.insert({group_name: "Xaiv Devs in order of importance", members: ""}, tables.GROUP_TABLE, function(res) {
-           // console.log("Successfully signed up user");
-          //  socket.emit("signup_success");
-        //});
     });
 
     // login - check username and password against the users database

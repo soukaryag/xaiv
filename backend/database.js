@@ -27,4 +27,17 @@ function query(args, table, callBack) {
     })
 }
 
-module.exports = { insert, query }
+function update(query, newValues, table, callBack) {
+    MongoClient.connect(DATABASE_URL, function(err, db){
+        if(err) throw err;
+        var dbo = db.db(DATABASE_NAME);
+        let args = { $set: newValues }
+        dbo.collection(table).updateOne(query, args, function(err, result){
+            if(err) throw err;
+            db.close();
+            return callBack(result);
+        });
+    })
+}
+
+module.exports = { insert, query, update }

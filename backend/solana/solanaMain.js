@@ -14,7 +14,7 @@ const pathToSwipeLeftProgram = './source_code/swipe_left.so';
 const pathToSwipeRightProgram = './source_code/swipe_right.so';
 
 const swipeDataLayout = BufferLayout.struct([
-    BufferLayout.u32('swipe_left'),
+    BufferLayout.u32('swipe'),
 ]);
 
 function sleep(ms) {
@@ -147,7 +147,7 @@ async function createAccount(cardData, programName) {
 
     const store = new storeModule.Store();
     const config = await store.load('config.json');
-    programId = new solanaWeb3.PublicKey(config[programName]);
+    const programId = new solanaWeb3.PublicKey(config[programName]);
 
     if (!payerAccount) {
         await establishPayer(programName);
@@ -172,15 +172,25 @@ async function createAccount(cardData, programName) {
         },
     );
 
-    cardData.pub_key = activity_account.publicKey.toBase58();
+    // append this activity to the database
+    cardData.pub_key_left = activity_account.publicKey.toBase58();
     var tmpArr = []; 
     for(var p in Object.getOwnPropertyNames(activity_account.secretKey)) {
         tmpArr[p] = activity_account.secretKey[p]
     }
-    cardData.secret_key = JSON.stringify(tmpArr);
-    database.insert(cardData, tables.ACTIVITY_TABLE, function (res) {
-        console.log("Successfully added activity to the database");
+    cardData.secret_key_left = JSON.stringify(tmpArr);
+    database.query({ activity_id: cardData.activity_id }, tables.ACTIVITY_TABLE, function (res) {
+        if (res.length == 0) {
+            database.insert(cardData, tables.ACTIVITY_TABLE, function (res) {
+                console.log("[RIGHT] Successfully added activity to the database");
+            });
+        } else {
+            database.update({ activity_id: cardData.activity_id }, { pub_key_right: cardData.pub_key_left, secret_key_right: cardData.secret_key_left }, tables.ACTIVITY_TABLE, function (res) {
+                console.log("[LEFT] Successfully added activity to the database")
+            })
+        }
     });
+    
 }
 
 async function incrementCount(activity, programName) {
@@ -188,8 +198,19 @@ async function incrementCount(activity, programName) {
         connection = await conn.getNodeConnection();
     }
 
-    const programId = new solanaWeb3.PublicKey("AnKZgQNwzkt9h5xpmZEG6JT9eYkk8Q8FMJUV8c6brtUc");
-    const activity_account_pubKey = new solanaWeb3.PublicKey(activity.pub_key);
+    console.log(1);
+
+    const store = new storeModule.Store();
+    const config = await store.load('config.json');
+    const programId = new solanaWeb3.PublicKey(config[programName]);
+
+    console.log(1, config[programName]);
+
+    let activity_account_pubKey = null;
+    if ( programName === "swipeRightProgramId" )
+        activity_account_pubKey = new solanaWeb3.PublicKey(activity.pub_key_right);
+    else
+        activity_account_pubKey = new solanaWeb3.PublicKey(activity.pub_key_left);
 
     const instruction = new solanaWeb3.TransactionInstruction({
         keys: [{ pubkey: activity_account_pubKey, isSigner: false, isWritable: true }],
@@ -197,9 +218,13 @@ async function incrementCount(activity, programName) {
         data: Buffer.alloc(0),
     })
 
+    console.log(2, instruction);
+
     if (!payerAccount) {
         await establishPayer(programName);
     }
+
+    console.log(3);
 
     await solanaWeb3.sendAndConfirmTransaction(
         connection,
@@ -211,25 +236,29 @@ async function incrementCount(activity, programName) {
         },
     )
 
-    await printAccountData(activity.pub_key);
+    console.log("TRANSACTION FINISHED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
+    await printAccountData(activity.activity_name, activity.pub_key_right, activity.pub_key_left);
 }
 
-async function printAccountData(pub_key) {
+async function printAccountData(activity_name, pub_key_right, pub_key_left) {
     if (!connection) {
         connection = await conn.getNodeConnection();
     }
 
-    PubKey = new solanaWeb3.PublicKey(pub_key);
-    const accountInfo = await connection.getAccountInfo(PubKey);
-    if (accountInfo === null) {
+    PubKeyRight = new solanaWeb3.PublicKey(pub_key_right);
+    const accountInfo_right = await connection.getAccountInfo(PubKeyRight);
+    PubKeyLeft = new solanaWeb3.PublicKey(pub_key_left);
+    const accountInfo_left = await connection.getAccountInfo(PubKeyLeft);
+    if (accountInfo_right === null || accountInfo_left === null) {
         throw 'Error: cannot find the account';
     }
-    const info = swipeDataLayout.decode(Buffer.from(accountInfo.data));
+    const infoRight = swipeDataLayout.decode(Buffer.from(accountInfo_right.data));
+    const infoLeft = swipeDataLayout.decode(Buffer.from(accountInfo_left.data));
     console.log(
-        PubKey.toBase58(),
-        'has been swiped left',
-        info.swipe_left.toString(),
-        'times',
+        activity_name,
+        'has the following metrics:\n',
+        `RIGHT SWIPES: ${infoRight.swipe.toString()}\n`,
+        `LEFT SWIPES: ${infoLeft.swipe.toString()}\n`
     );
 }
 
