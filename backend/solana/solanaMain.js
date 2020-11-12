@@ -21,12 +21,6 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function getProgramIdPublicKey(key) {
-    const store = new storeModule.Store();
-    const config = await store.load('config.json');
-    return new solanaWeb3.PublicKey(config[key]);
-}
-
 async function newAccountWithLamports(connection, lamports = 1000000) {
     if (!connection) {
         connection = await conn.getNodeConnection();
@@ -151,7 +145,9 @@ async function createAccount(cardData, programName) {
         swipeDataLayout.span,
     );
 
-    programId = getProgramIdPublicKey(programName);
+    const store = new storeModule.Store();
+    const config = await store.load('config.json');
+    programId = new solanaWeb3.PublicKey(config[programName]);
 
     if (!payerAccount) {
         await establishPayer(programName);
