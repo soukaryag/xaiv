@@ -14,10 +14,6 @@ class HomeScreen extends React.Component {
     state = {
     };
 
-    _onPressActivity = (activity: any) => {
-        console.log("FUCK YA BITCH");
-    };
-
     render() {
         return (
             <ScrollView style={styles.container}>

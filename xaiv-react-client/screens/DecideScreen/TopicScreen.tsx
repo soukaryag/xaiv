@@ -8,12 +8,17 @@ const { height } = Dimensions.get('window')
 
 class TopicScreen extends React.Component {
     socket: any
+    navigation: any
     name: any
     constructor(props : any) {
         super(props);
         this.socket = props.route.params.socket;
         this.name = props.route.params.name;
+        this.navigation = props.navigation;
 
+        this.socket.on("create_session_complete", () => {
+            this.navigation.navigate("Swipe", {socket: this.socket, name: this.name});
+        });
     }
 
     state = {
@@ -29,10 +34,15 @@ class TopicScreen extends React.Component {
     }
 
     selectTopic = (topic: String) => {
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                this.socket.emit("create_session", localStorage.getItem("username"), this.name, topic, position.coords.latitude, position.coords.longitude, 8);
+            },
+        );
         console.log(name, topic);
         //Update the group to have an active session
         //Populate the group pool with google api cards
-        this.socket.emit("create_session", localStorage.getItem("username"), this.name, topic);
+        
     }
 
 
@@ -45,19 +55,19 @@ class TopicScreen extends React.Component {
         return (
             <View style={styles.container} lightColor="#eee" darkColor="#003f5c">
                 <View style={styles.suggestedBox}>
-                    <Pressable style={styles.suggestedTopic} onPress={() => this.selectTopic("Restaurants")}>
+                    <Pressable style={styles.suggestedTopic} onPress={() => this.selectTopic("restaurant")}>
                         <View>
                             Sit-in food
                         </View>
                     </Pressable>
-                    <Pressable style={[styles.suggestedTopic, styles.suggestedTopicMiddle]} onPress={() => this.selectTopic("Take out food")}>
+                    <Pressable style={[styles.suggestedTopic, styles.suggestedTopicMiddle]} onPress={() => this.selectTopic("movie_theater")}>
                         <View>
-                            Take-out food
+                            Movie theaters biatch
                         </View>
                     </Pressable>
-                    <Pressable style={styles.suggestedTopic} onPress={() => this.selectTopic("Group activities")}>
+                    <Pressable style={styles.suggestedTopic} onPress={() => this.selectTopic("gym")}>
                         <View>
-                            Group activities
+                            Gym
                         </View>
                     </Pressable>
                 </View>

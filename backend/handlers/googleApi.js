@@ -1,6 +1,6 @@
 fetch = require("node-fetch");
 
-async function fetchActivities(socket, latitude, longitude, radiusKM, type="restaurant") {
+async function fetchActivities(socket, latitude, longitude, radiusKM, type) {
     const radMetter = radiusKM * 1000;
 
     console.log("[GOOGLE]", latitude, longitude, radiusKM, type);
@@ -30,7 +30,9 @@ async function fetchActivities(socket, latitude, longitude, radiusKM, type="rest
                 places.push(place);
             }
 
-            socket.emit("send_activities", places.slice(0, 10));
+            //socket.emit("send_activities", places.slice(0, 10));
+            console.log("HELL FUCKING O?", places);
+            return places;
         })
         .catch(error => {
             console.log(error);

@@ -59,7 +59,7 @@ io.on("connection", socket => {
     });
 
     //Instantiate a new session for the given username, group name, and topic string
-    socket.on("create_session", (username, group_name, topic) => {
+    socket.on("create_session", (username, group_name, topic, lng, lat, radius) => {
         var ok = false;
         //First assert the user is actually in the group
         database.query({username: username}, tables.GROUP_TO_USER_TABLE, async function(names) {
@@ -73,6 +73,26 @@ io.on("connection", socket => {
                 var group = await database.queryOneAsync({group_name: group_name}, tables.GROUP_TABLE);
                 //initialize the group session here
                 //pull card data from the google api
+                group["group_data"]["session"]["active"] = true;
+                group["group_data"]["session"]["topic"] = topic;
+                console.log("fetching for topic", topic);
+                var places = await googleApi.fetchActivities(socket, lng, lat, radius, topic);
+                for (var i = 0; i < places.length; i++) {
+                    //console.log("one of MANY WONDERFUL PLACES", i);
+                    await database.insertOneAsyncNoDuplicate(places[i], {activity_id: places[i]["activity_id"]}, tables.ACTIVITY_TABLE);
+                    var xddd = {
+                        id: places[i].activity_id
+                    };
+                    group["group_data"]["session"]["pool"].push(xddd);
+                    for (var j = 0; j < group["member_data"].length; j++) {
+                        group["member_data"][j]["pool"].push(xddd);
+                    }
+                }
+                //console.log("group before being shipped off to camp", group);
+                database.update({group_name: group_name}, group, tables.GROUP_TABLE, function(e, r) {
+                    //joe momma
+                    socket.emit("create_session_complete");
+                });
             }
         });
     });
@@ -140,6 +160,7 @@ io.on("connection", socket => {
                         var cardFeed = [];
                         //Now from Activity DB objects to appropriate JSON cards
                         for (var i = 0; i < feed.length; i++) {
+                        
                             var tmp = {
                                 "activity_name": feed[i]["activity_name"],
                                 "activity_photo": feed[i]["activity_photo"],
@@ -147,7 +168,7 @@ io.on("connection", socket => {
                             };
                             cardFeed.push(tmp);
                         }
-                        console.log("FEED IS", cardFeed);
+                        //console.log("FEED IS", cardFeed);
                         socket.emit("return_feed_for_user", cardFeed);
                     }
                     
@@ -163,10 +184,12 @@ io.on("connection", socket => {
 
 async function convertPoolToActivities(userPool) {
     var feed = [];
+    //console.log("cpta given userpool is", userPool);
     for (var i = 0; i < userPool.length; i++) {
         var res = await database.queryOneAsync({activity_id: userPool[i]["id"]}, tables.ACTIVITY_TABLE);
         feed.push(res);
     }
+    //console.log("cpta feed is before returning: ", feed);
     return feed;
 }
 
