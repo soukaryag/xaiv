@@ -41,7 +41,7 @@ class HomeScreen extends React.Component {
 
     render() {
         return (
-            <ScrollView style={styles.container}>
+            <ScrollView style={styles.container} showsVerticalScrollIndicator={false} stickyHeaderIndices={[1]}>
                 <Overlay ModalComponent={Modal} isVisible={this.state.overlay} onBackdropPress={this.toggleOverlay}>
                     <View style={styles.overlayContainer}>
                         
@@ -57,13 +57,14 @@ class HomeScreen extends React.Component {
                                 placeholderTextColor="#cccccc"
                                 onChangeText={text => this.setState({ friendUsername: text })}
                             />
-                            <TouchableOpacity onPress={this.addFriend}>
-                                <TabBarIcon name="plus" color={"#bbbbbb"} size={26} />
+                            <TouchableOpacity style={styles.addFriendOverlayBtn} onPress={this.addFriend}>
+                                <TabBarIcon name="plus" color={"#fff"} size={20} />
                             </TouchableOpacity>
                         </View>
                         
                     </View>
                 </Overlay>
+
                 <View style={styles.header}>
                     <Image source={{ uri:"https://cdn.discordapp.com/attachments/766156684648251433/776700626058608680/Logo.jpg" }} style={styles.logo} ></Image>
                     <TouchableOpacity
@@ -73,6 +74,7 @@ class HomeScreen extends React.Component {
                         <TabBarIcon name="user-plus" color={"#bbbbbb"} size={23} />
                     </TouchableOpacity>
                 </View>
+                
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.groups}>
                     <TouchableOpacity
                         style={styles.groupContainer}
@@ -100,24 +102,67 @@ class HomeScreen extends React.Component {
                         <Image source={{ uri: "https://image.freepik.com/free-vector/young-people-illustration-design_23-2148473079.jpg" }}  style={styles.groupImage} />
                     </TouchableOpacity>
                 </ScrollView>
-                <View style={styles.post}>
-                    <View style={styles.topTab}>
 
+                <View style={styles.post}>
+                    <View style={styles.postHeader}>
+                        <TouchableOpacity
+                            style={styles.profilePictureContainer}
+                        >
+                            <Image source={{ uri: "https://website.cs.vt.edu/content/website_cs_vt_edu/en/News/department-spotlights/austin_stout_profile.transform/l-medium/image.jpg" }}  style={styles.profilePicture} />
+                        </TouchableOpacity>
+                        <View>
+                            <Text style={styles.profileName}>Austin Stout</Text>
+                            <Text style={styles.postHeaderActivity}>visited a strip club with group</Text>
+                        </View>
+                        
+                    </View>
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.postBody}>
+                        <View style={styles.photoCard}>
+
+                        </View>
+                        <View style={styles.photoCard}>
+
+                        </View>
+                        <View style={styles.photoCard}>
+
+                        </View>
+                    </ScrollView>
+                    <View style={styles.postFooter}>
+                        <TouchableOpacity style={styles.footerIcons}>
+                            <TabBarIcon name="thumbs-up" color={"#f17650"} size={24} />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.footerIcons}>
+                            <TabBarIcon name="message-circle" color={"#f17650"} size={24} />
+                        </TouchableOpacity>
+                        
                     </View>
                 </View>
                 <View style={styles.post}>
-                    <View style={styles.topTab}>
-
+                    <View style={styles.postHeader}>
+                        <TouchableOpacity
+                            style={styles.profilePictureContainer}
+                        >
+                            <Image source={{ uri: "https://website.cs.vt.edu/content/website_cs_vt_edu/en/News/department-spotlights/austin_stout_profile.transform/l-medium/image.jpg" }}  style={styles.profilePicture} />
+                        </TouchableOpacity>
+                        <View>
+                            <Text style={styles.profileName}>Austin Stout</Text>
+                            <Text style={styles.postHeaderActivity}>went to a restaurant by himself :(</Text>
+                        </View>
+                        
                     </View>
-                </View>
-                <View style={styles.post}>
-                    <View style={styles.topTab}>
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.postBody}>
+                        <View style={styles.photoCard}>
 
-                    </View>
-                </View>
-                <View style={styles.post}>
-                    <View style={styles.topTab}>
-
+                        </View>
+                    </ScrollView>
+                    <View style={styles.postFooter}>
+                        <TouchableOpacity style={styles.footerIcons}>
+                            <TabBarIcon name="thumbs-up" color={"#f17650"} size={24} />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.footerIcons}>
+                            <TabBarIcon name="message-circle" color={"#f17650"} size={24} />
+                        </TouchableOpacity>
+                        
                     </View>
                 </View>
             </ScrollView>
@@ -131,7 +176,9 @@ function TabBarIcon(props: { name: string; color: string; size: number }) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
+        backgroundColor: '#f0f2f5',
+        color: "#222a36",
+        fontFamily: 'montserrat'
     },
     overlayContainer: {
         padding: 10,
@@ -156,24 +203,22 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginRight: 15,
     },
+
     groups: {
+        backgroundColor: '#fff',
         height: 100,
         width: width,
-        borderBottomColor: '#dddddd',
-        shadowColor: '#888888',
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowRadius: 5,
+        marginBottom: 2,
         shadowOpacity: 0.2,
         flexWrap:"wrap"
     },
     header: {
+        backgroundColor: '#fff',
         width: width,
         height: 60,
         flexWrap: "wrap",
         padding: 10,
+        marginBottom: 2,
     },
     groupContainer: {
         borderWidth:4,
@@ -189,30 +234,70 @@ const styles = StyleSheet.create({
     groupImage: { 
         width: 60, height: 60, borderRadius:50 
     },
+
+
     post: {
         backgroundColor: 'white',
-        height: 200,
-        width: width - 40,
-        margin: 20,
-        borderRadius: 10,
-        shadowColor: 'black',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowRadius: 10,
+        width: width,
+        marginBottom: 8,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
         shadowOpacity: 0.15,
     },
-    topTab: {
-        height: 50,
-        width: width-40,
-        borderBottomColor: '#eeeeee',
-        borderBottomWidth: 1,
+    postHeader: {
+        flexDirection: 'row',
+        paddingVertical: 10,
+        width: "100%",
     },
+    postBody: {
+        paddingVertical: 10,
+        width: "100%",
+    },
+    postFooter: {
+        flexDirection: 'row',
+        paddingVertical: 5,
+        width: "100%"
+    },
+    photoCard: {
+        backgroundColor: '#eeeeee',
+        borderRadius: 8,
+        width: width/1.5,
+        height: 150,
+        marginRight: 10,
+    },
+    profilePicture: {
+        width: 36, height: 36, borderRadius:50 
+    },
+    profilePictureContainer: {
+        width:38,
+        height:38,
+        borderRadius:50,
+    },
+    profileName: {
+        fontSize: 18,
+        fontWeight: "500",
+        marginLeft: 8,
+    },
+    postHeaderActivity: {
+        fontSize: 12,
+        fontWeight: "400",
+        marginLeft: 8,
+        color: "#abb6c8"
+    },
+    footerIcons: {
+        marginRight: 25,
+    },
+
+
     addFriend: {
         right: 15,
         position: "absolute",
         margin: 10,
+    },
+    addFriendOverlayBtn: {
+        borderRadius: 50,
+        backgroundColor: '#1adb4b',
+        padding: 3,
     },
     logo: {
         left: 15,

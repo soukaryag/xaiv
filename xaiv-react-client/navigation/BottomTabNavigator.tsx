@@ -163,28 +163,5 @@ function ProfileNavigator({ route, navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     borderTopColor: "#fff",
-    shadowColor: 'black',
-    shadowOffset: {
-      width: 0,
-      height: -3,
-    },
-    shadowRadius: 14,
-    shadowOpacity: 0.2,
   }
 })
-
-// const TopicStack = createStackNavigator<TopicParamList>();
-
-// function TopicNavigator({route, navigation} : any) {
-//   const globals = route.params;
-//   return (
-//     <TopicStack.Navigator>
-//       <TopicStack.Screen
-//         name="TopicScreen"
-//         component={TopicScreen}
-//         options={{ headerShown: false }}
-//         initialParams={globals}
-//       />
-//     </TopicStack.Navigator>
-//   );
-// }
