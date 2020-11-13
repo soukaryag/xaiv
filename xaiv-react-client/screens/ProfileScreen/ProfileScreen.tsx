@@ -14,10 +14,20 @@ class ProfileScreen extends React.Component {
   state = {
     overlay: false,
     username: '',
+    friends: '',
   };
 
   componentDidMount() {
     this.setState({ username: localStorage.getItem("username") })
+    this.socket.emit("get_friends", localStorage.getItem("username"));
+    this.socket.on("receive_friends", (friends: string[]) => {
+      let tmp = "";
+      friends.forEach(function (value) {
+        tmp += value + "\n";
+      }); 
+      this.setState({ friends: tmp });
+      console.log(friends);
+    });
   }
 
   toggleOverlay = () => {
@@ -30,16 +40,18 @@ class ProfileScreen extends React.Component {
         <View style={styles.imageContainer}>
           <Image source={{ uri: "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg" }} style={styles.image} />
         </View>
-        <Text h4 style={styles.name}>
+        <Text h4 style={[styles.name]}>
           {this.state.username}
         </Text>
-        <Text style={styles.desc}>Software Engineer at Xaiv</Text>
+        <Text style={[styles.desc]}>Software Engineer at Xaiv</Text>
         <Divider style={[styles.divider]} />
-        <Text style={styles.desc}>
+        <Text style={[styles.sectionHeader]}>About Me</Text>
+        <Text style={[styles.desc]}>
           Beep boop bop, badaboom bap bop. POW. byebye doggy.
         </Text>
         <Divider style={[styles.divider]} />
-        <Text style={styles.desc}>Find me on Social here</Text>
+        <Text style={[styles.sectionHeader]}>Friends</Text>
+        <Text style={[styles.friends]}>{this.state.friends}</Text>
 
       </SafeAreaView>
     )
@@ -70,6 +82,20 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginHorizontal: 30,
     fontSize: 14,
+  },
+  sectionHeader: {
+    color: '#888888',
+    marginHorizontal: 30,
+    fontSize: 25,
+    fontWeight: "600",
+  },
+  friends: {
+    color: '#000',
+    alignSelf: 'flex-start',
+    marginTop: 5,
+    marginHorizontal: 30,
+    fontSize: 15,
+    fontWeight: "400",
   },
   divider: {
     backgroundColor: '#C0C0C0',

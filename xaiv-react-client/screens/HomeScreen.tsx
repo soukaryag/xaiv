@@ -66,7 +66,7 @@ class HomeScreen extends React.Component {
                 </Overlay>
 
                 <View style={styles.header}>
-                    <Image source={{ uri:"https://cdn.discordapp.com/attachments/766156684648251433/776700626058608680/Logo.jpg" }} style={styles.logo} ></Image>
+                    <Image source={{ uri:"https://cdn.discordapp.com/attachments/766156684648251433/776927925773533204/Logo-min.png" }} style={styles.logo} ></Image>
                     <TouchableOpacity
                         onPress={() => this.toggleOverlay()}
                         style={styles.addFriend}

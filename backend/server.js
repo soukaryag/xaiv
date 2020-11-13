@@ -55,6 +55,14 @@ io.on("connection", socket => {
         accounts.addFriend(socket, username, friendUsername);
     });
 
+    socket.on("get_friends", (username) => {
+        database.query({ username: username }, tables.FRIENDS_TABLE, function (res) {
+            if (res.length != 0) {
+                socket.emit("receive_friends", res[0].friends_list);
+            }
+        });
+    });
+
     //Instantiate a new session for the given username, group name, and topic string
     socket.on("create_session", (username, group_name, topic, lng, lat, radius) => {
         let ok = false;
