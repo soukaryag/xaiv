@@ -38,5 +38,165 @@
                 ]
             }
         ]
+    },
+    {
+        "group_name" : "TestInactive2",
+        "group_data": {
+            "members" : ["Austin", "Sho", "Bon", "Your mom"],
+            "session" : {
+                "active" : false,
+                "topic" : "",
+                "pool" : [
+                    
+                ]
+                
+            }
+        },
+        "member_data" : [
+            {
+                "name" : "Austin",
+                "pool" : [
+                    
+                ]
+            },
+            {
+                "name" : "Sho",
+                "pool" : [
+                    
+                ]
+            },
+            {
+                "name" : "Bon",
+                "pool" : [
+                    
+                ]
+            },
+            {
+                "name" : "Your mom",
+                "pool" : [
+                    
+                ]
+            }
+        ]
+    },
+    {
+        "group_name" : "TestInactive3",
+        "group_data": {
+            "members" : ["Austin", "Sho", "Bon", "Your mom"],
+            "session" : {
+                "active" : false,
+                "topic" : "",
+                "pool" : [
+                    
+                ]
+                
+            }
+        },
+        "member_data" : [
+            {
+                "name" : "Austin",
+                "pool" : [
+                    
+                ]
+            },
+            {
+                "name" : "Sho",
+                "pool" : [
+                    
+                ]
+            },
+            {
+                "name" : "Bon",
+                "pool" : [
+                    
+                ]
+            },
+            {
+                "name" : "Your mom",
+                "pool" : [
+                    
+                ]
+            }
+        ]
+    },
+    {
+        "group_name" : "TestInactive4",
+        "group_data": {
+            "members" : ["Austin", "Sho", "Bon", "Your mom"],
+            "session" : {
+                "active" : false,
+                "topic" : "",
+                "pool" : [
+                    
+                ]
+                
+            }
+        },
+        "member_data" : [
+            {
+                "name" : "Austin",
+                "pool" : [
+                    
+                ]
+            },
+            {
+                "name" : "Sho",
+                "pool" : [
+                    
+                ]
+            },
+            {
+                "name" : "Bon",
+                "pool" : [
+                    
+                ]
+            },
+            {
+                "name" : "Your mom",
+                "pool" : [
+                    
+                ]
+            }
+        ]
+    },
+    {
+        "group_name" : "TestInactive5",
+        "group_data": {
+            "members" : ["Austin", "Sho", "Bon", "Your mom"],
+            "session" : {
+                "active" : false,
+                "topic" : "",
+                "pool" : [
+                    
+                ]
+                
+            }
+        },
+        "member_data" : [
+            {
+                "name" : "Austin",
+                "pool" : [
+                    
+                ]
+            },
+            {
+                "name" : "Sho",
+                "pool" : [
+                    
+                ]
+            },
+            {
+                "name" : "Bon",
+                "pool" : [
+                    
+                ]
+            },
+            {
+                "name" : "Your mom",
+                "pool" : [
+                    
+                ]
+            }
+        ]
     }
 ]

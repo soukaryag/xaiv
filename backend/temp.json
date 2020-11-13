@@ -2,5 +2,21 @@
     {
         "group_name": "TestInactive",
         "username": "Austin"
+    },
+    {
+        "group_name": "TestInactive2",
+        "username": "Austin"
+    },
+    {
+        "group_name": "TestInactive3",
+        "username": "Austin"
+    },
+    {
+        "group_name": "TestInactive4",
+        "username": "Austin"
+    },
+    {
+        "group_name": "TestInactive5",
+        "username": "Austin"
     }
 ]

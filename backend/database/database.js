@@ -15,6 +15,31 @@ function insert(args, table, callBack) {
     });
 }
 
+//Async insert. Doesn't insert if duplicate already exists...
+
+async function insertOneAsyncNoDuplicate(args, matchArgs, table) {
+    const client = await MongoClient.connect(DATABASE_URL);
+    if (!client) {
+        return;
+    }
+    try {
+        const db = client.db(DATABASE_NAME);
+        let collection = db.collection(table);
+        let result = await queryOneAsync(matchArgs, table);
+        if (result == null) {
+            await collection.insertOne(args);
+        }
+        //else, do nothing
+        
+    }
+    catch (err) {
+        console.log(err);
+    }
+    finally {
+        client.close();
+    }
+}
+
 async function queryOneAsync(args, table) {
     const client = await MongoClient.connect(DATABASE_URL);
     if (!client) {
@@ -63,4 +88,4 @@ function update(query, newValues, table, callBack) {
     })
 }
 
-module.exports = { insert, queryOneAsync, query, update }
+module.exports = { insertOneAsyncNoDuplicate, insert, queryOneAsync, query, update }
