@@ -4,6 +4,7 @@ const conn = require('./solana/nodeConnection');
 const solanaMain = require('./solana/solanaMain');
 const swipe = require('./handlers/swipe');
 const accounts = require('./handlers/accounts');
+const friends = require('./handlers/friends');
 const googleApi = require('./handlers/googleApi');
 
 const express = require('express');
@@ -52,15 +53,11 @@ io.on("connection", socket => {
 
     // add friend - add friend to someone's friend list
     socket.on("add_friend", (username, friendUsername) => {
-        accounts.addFriend(socket, username, friendUsername);
+        friends.addFriend(socket, username, friendUsername);
     });
 
     socket.on("get_friends", (username) => {
-        database.query({ username: username }, tables.FRIENDS_TABLE, function (res) {
-            if (res.length != 0) {
-                socket.emit("receive_friends", res[0].friends_list);
-            }
-        });
+        friends.getFriends(socket, username);
     });
 
     //Instantiate a new session for the given username, group name, and topic string

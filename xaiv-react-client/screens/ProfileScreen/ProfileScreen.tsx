@@ -15,6 +15,7 @@ class ProfileScreen extends React.Component {
     overlay: false,
     username: '',
     friends: '',
+    profilePicUrl: 'https://website.cs.vt.edu/content/website_cs_vt_edu/en/News/department-spotlights/austin_stout_profile.transform/l-medium/image.jpg',
   };
 
   componentDidMount() {
@@ -26,7 +27,6 @@ class ProfileScreen extends React.Component {
         tmp += value + "\n";
       }); 
       this.setState({ friends: tmp });
-      console.log(friends);
     });
   }
 
@@ -38,7 +38,7 @@ class ProfileScreen extends React.Component {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.imageContainer}>
-          <Image source={{ uri: "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg" }} style={styles.image} />
+          <Image source={{ uri: this.state.profilePicUrl }} style={styles.image} />
         </View>
         <Text h4 style={[styles.name]}>
           {this.state.username}

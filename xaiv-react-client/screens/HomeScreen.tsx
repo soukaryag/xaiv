@@ -2,6 +2,9 @@ import React from 'react'
 import { TouchableOpacity, Image, Text, StyleSheet, View, ScrollView, Dimensions, TextInput } from 'react-native'
 import { Feather } from '@expo/vector-icons';
 import { Overlay } from 'react-native-elements';
+import HomePost from '../components/HomePost';
+import postCards from '../constants/PostTemplate';
+
 import Modal from 'modal-react-native-web';
 
 const { height, width } = Dimensions.get('window')
@@ -40,6 +43,12 @@ class HomeScreen extends React.Component {
 
 
     render() {
+        const posts = []
+
+        for (let i = 0; i < postCards.length; i++) {
+            posts.push(<HomePost postInfo={postCards[i]} />)
+        }
+
         return (
             <ScrollView style={styles.container} showsVerticalScrollIndicator={false} stickyHeaderIndices={[1]}>
                 <Overlay ModalComponent={Modal} isVisible={this.state.overlay} onBackdropPress={this.toggleOverlay}>
@@ -103,68 +112,7 @@ class HomeScreen extends React.Component {
                     </TouchableOpacity>
                 </ScrollView>
 
-                <View style={styles.post}>
-                    <View style={styles.postHeader}>
-                        <TouchableOpacity
-                            style={styles.profilePictureContainer}
-                        >
-                            <Image source={{ uri: "https://website.cs.vt.edu/content/website_cs_vt_edu/en/News/department-spotlights/austin_stout_profile.transform/l-medium/image.jpg" }}  style={styles.profilePicture} />
-                        </TouchableOpacity>
-                        <View>
-                            <Text style={styles.profileName}>Austin Stout</Text>
-                            <Text style={styles.postHeaderActivity}>visited a strip club with group</Text>
-                        </View>
-                        
-                    </View>
-                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.postBody}>
-                        <View style={styles.photoCard}>
-
-                        </View>
-                        <View style={styles.photoCard}>
-
-                        </View>
-                        <View style={styles.photoCard}>
-
-                        </View>
-                    </ScrollView>
-                    <View style={styles.postFooter}>
-                        <TouchableOpacity style={styles.footerIcons}>
-                            <TabBarIcon name="thumbs-up" color={"#f17650"} size={24} />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.footerIcons}>
-                            <TabBarIcon name="message-circle" color={"#f17650"} size={24} />
-                        </TouchableOpacity>
-                        
-                    </View>
-                </View>
-                <View style={styles.post}>
-                    <View style={styles.postHeader}>
-                        <TouchableOpacity
-                            style={styles.profilePictureContainer}
-                        >
-                            <Image source={{ uri: "https://website.cs.vt.edu/content/website_cs_vt_edu/en/News/department-spotlights/austin_stout_profile.transform/l-medium/image.jpg" }}  style={styles.profilePicture} />
-                        </TouchableOpacity>
-                        <View>
-                            <Text style={styles.profileName}>Austin Stout</Text>
-                            <Text style={styles.postHeaderActivity}>went to a restaurant by himself :(</Text>
-                        </View>
-                        
-                    </View>
-                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.postBody}>
-                        <View style={styles.photoCard}>
-
-                        </View>
-                    </ScrollView>
-                    <View style={styles.postFooter}>
-                        <TouchableOpacity style={styles.footerIcons}>
-                            <TabBarIcon name="thumbs-up" color={"#f17650"} size={24} />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.footerIcons}>
-                            <TabBarIcon name="message-circle" color={"#f17650"} size={24} />
-                        </TouchableOpacity>
-                        
-                    </View>
-                </View>
+                {posts}
             </ScrollView>
         )
     }
@@ -234,60 +182,6 @@ const styles = StyleSheet.create({
     groupImage: { 
         width: 60, height: 60, borderRadius:50 
     },
-
-
-    post: {
-        backgroundColor: 'white',
-        width: width,
-        marginBottom: 8,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        shadowOpacity: 0.15,
-    },
-    postHeader: {
-        flexDirection: 'row',
-        paddingVertical: 10,
-        width: "100%",
-    },
-    postBody: {
-        paddingVertical: 10,
-        width: "100%",
-    },
-    postFooter: {
-        flexDirection: 'row',
-        paddingVertical: 5,
-        width: "100%"
-    },
-    photoCard: {
-        backgroundColor: '#eeeeee',
-        borderRadius: 8,
-        width: width/1.5,
-        height: 150,
-        marginRight: 10,
-    },
-    profilePicture: {
-        width: 36, height: 36, borderRadius:50 
-    },
-    profilePictureContainer: {
-        width:38,
-        height:38,
-        borderRadius:50,
-    },
-    profileName: {
-        fontSize: 18,
-        fontWeight: "500",
-        marginLeft: 8,
-    },
-    postHeaderActivity: {
-        fontSize: 12,
-        fontWeight: "400",
-        marginLeft: 8,
-        color: "#abb6c8"
-    },
-    footerIcons: {
-        marginRight: 25,
-    },
-
 
     addFriend: {
         right: 15,
