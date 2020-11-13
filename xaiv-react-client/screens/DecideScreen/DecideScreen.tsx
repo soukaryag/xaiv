@@ -5,8 +5,6 @@ import Colors from '../../constants/Colors';
 import { Overlay } from 'react-native-elements';
 import Modal from 'modal-react-native-web';
 
-const { height, width } = Dimensions.get('window')
-
 class DecideScreen extends React.Component {
     socket: any
     navigation: any
@@ -41,7 +39,6 @@ class DecideScreen extends React.Component {
         console.log("starting a new sesson");
         this.toggleOverlay();
         //pop up the overlay of non started groups
-
     };
 
     toggleOverlay = () => {

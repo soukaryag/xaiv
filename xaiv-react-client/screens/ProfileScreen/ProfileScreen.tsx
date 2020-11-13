@@ -4,16 +4,26 @@ import { Divider, Icon, Text } from 'react-native-elements'
 
 const { height, width } = Dimensions.get('window')
 
-const Social = ({ name }: any) => (
-  <Icon
-    name={name}
-    type="font-awesome"
-    containerStyle={styles.iconContainer}
-    size={32}
-  />
-)
-
 class ProfileScreen extends React.Component {
+  socket: any
+  constructor(props: any) {
+    super(props);
+    this.socket = props.route.params.socket;
+  }
+
+  state = {
+    overlay: false,
+    username: '',
+  };
+
+  componentDidMount() {
+    this.setState({ username: localStorage.getItem("username") })
+  }
+
+  toggleOverlay = () => {
+    this.setState({ overlay: !this.state.overlay });
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -21,20 +31,16 @@ class ProfileScreen extends React.Component {
           <Image source={{ uri: "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg" }} style={styles.image} />
         </View>
         <Text h4 style={styles.name}>
-          {"Soukarya Ghosh"}
+          {this.state.username}
         </Text>
         <Text style={styles.desc}>Software Engineer at Xaiv</Text>
-        <Divider style={styles.divider} />
+        <Divider style={[styles.divider]} />
         <Text style={styles.desc}>
           Beep boop bop, badaboom bap bop. POW. byebye doggy.
         </Text>
-        <Divider style={styles.divider} />
+        <Divider style={[styles.divider]} />
         <Text style={styles.desc}>Find me on Social here</Text>
-        <View style={styles.socialLinks}>
-          <Social name="snapchat" />
-          <Social name="instagram" />
-          <Social name="facebook-square" />
-        </View>
+
       </SafeAreaView>
     )
   }
@@ -69,13 +75,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#C0C0C0',
     width: width - 60,
     margin: 20,
-  },
-  socialLinks: {
-    flex: 1,
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    width: width,
-    marginLeft: 40,
   },
   iconContainer: {
     paddingHorizontal: 8,

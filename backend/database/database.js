@@ -16,7 +16,6 @@ function insert(args, table, callBack) {
 }
 
 //Async insert. Doesn't insert if duplicate already exists...
-
 async function insertOneAsyncNoDuplicate(args, matchArgs, table) {
     const client = await MongoClient.connect(DATABASE_URL);
     if (!client) {
@@ -29,8 +28,6 @@ async function insertOneAsyncNoDuplicate(args, matchArgs, table) {
         if (result == null) {
             await collection.insertOne(args);
         }
-        //else, do nothing
-        
     }
     catch (err) {
         console.log(err);

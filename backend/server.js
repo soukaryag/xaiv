@@ -50,27 +50,24 @@ io.on("connection", socket => {
         accounts.signup(socket, username, password);
     });
 
-    socket.on("get_activities", (lng, lat, radius) => {
-        googleApi.fetchActivities(socket, lng, lat, radius);
-    });
-
-    socket.on("add_friend", (username) => {
-        console.log(username, "is ADDING FRIEND...");
+    // add friend - add friend to someone's friend list
+    socket.on("add_friend", (username, friendUsername) => {
+        accounts.addFriend(socket, username, friendUsername);
     });
 
     //Instantiate a new session for the given username, group name, and topic string
     socket.on("create_session", (username, group_name, topic, lng, lat, radius) => {
-        var ok = false;
+        let ok = false;
         //First assert the user is actually in the group
         database.query({username: username}, tables.GROUP_TO_USER_TABLE, async function(names) {
-            for (var i = 0; i < names.length; i++) {
+            for (let i = 0; i < names.length; i++) {
                 if (names[i]["group_name"] == group_name) {
                     ok = true;
                     break;
                 }
             }
             if (ok) {
-                var group = await database.queryOneAsync({group_name: group_name}, tables.GROUP_TABLE);
+                let group = await database.queryOneAsync({group_name: group_name}, tables.GROUP_TABLE);
                 //initialize the group session here
                 //pull card data from the google api
                 group["group_data"]["session"]["active"] = true;
