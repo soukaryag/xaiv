@@ -54,6 +54,10 @@ io.on("connection", socket => {
         googleApi.fetchActivities(socket, lng, lat, radius);
     });
 
+    socket.on("add_friend", (username) => {
+        console.log(username, "is ADDING FRIEND...");
+    });
+
     //Instantiate a new session for the given username, group name, and topic string
     socket.on("create_session", (username, group_name, topic) => {
         var ok = false;

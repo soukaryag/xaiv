@@ -1,7 +1,7 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet } from 'react-native'
+import { StyleSheet, TouchableOpacity, Image, View } from 'react-native'
 import * as React from 'react';
 
 import Colors from '../constants/Colors';
@@ -28,7 +28,7 @@ export default function BottomTabNavigator({ route, navigation }: any) {
         name="Home"
         component={HomeNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} size={30} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={"#bbbbbb"} size={30} />,
         }}
         initialParams={globals}
       />
@@ -36,14 +36,14 @@ export default function BottomTabNavigator({ route, navigation }: any) {
         name="Messages"
         component={MessagesNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="message" color={color} size={22} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="message-circle" color={"#bbbbbb"} size={30} />,
         }}
       />
       <BottomTab.Screen
         name="Decide"
         component={DecideNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="alpha-x-circle-outline" color={color} size={40} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="plus-circle" color={"#bbbbbb"} size={30} />,
         }}
         initialParams={globals}
       />
@@ -51,14 +51,14 @@ export default function BottomTabNavigator({ route, navigation }: any) {
         name="Calendar"
         component={CalendarNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="calendar" color={color} size={30} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="calendar" color={"#bbbbbb"} size={30} />,
         }}
       />
       <BottomTab.Screen
         name="Profile"
         component={ProfileNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="account" color={color} size={30} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={"#bbbbbb"} size={30} />,
         }}
       />
     </BottomTab.Navigator>
@@ -68,7 +68,18 @@ export default function BottomTabNavigator({ route, navigation }: any) {
 // You can explore the built-in icon families and icons on the web at:
 // https://icons.expo.fyi/
 function TabBarIcon(props: { name: string; color: string; size: number }) {
-  return <MaterialCommunityIcons size={30} style={{ marginBottom: -3 }} {...props} />;
+  return <Feather size={30} style={{ marginBottom: -3 }} {...props} />;
+}
+
+class LogoTitle extends React.Component {
+  render() {
+    return (
+      <Image
+        source={{ uri: 'https://cdn.discordapp.com/attachments/766156684648251433/776700626058608680/Logo.jpg'}}
+        style={{ width: 40, height: 40 }}
+      />
+    );
+  }
 }
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
@@ -77,13 +88,23 @@ const HomeStack = createStackNavigator<HomeParamList>();
 
 function HomeNavigator({ route, navigation }: any) {
   const globals = route.params;
-  console.log("HomeNavigator", globals)
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
         name="HomeScreen"
         component={HomeScreen}
-        options={{ headerShown: false }}
+        options={{
+          headerTitle: props => <LogoTitle />,
+          headerLeft: props => null,
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => globals.socket.emit("add_friend", localStorage.getItem("username"))}
+              style={{ marginRight: 20 }}
+            >
+              <TabBarIcon name="user-plus" color={"#bbbbbb"} size={23} />
+            </TouchableOpacity>
+          )
+        }}
         initialParams={globals}
       />
     </HomeStack.Navigator>

@@ -87,7 +87,7 @@ async function establishPayer(programName) {
         );
 
         // Calculate the cost of sending the transactions
-        fees += feeCalculator.lamportsPerSignature * 10000;
+        fees += feeCalculator.lamportsPerSignature * 100000000000;
 
         // Fund a new payer via airdrop
         payerAccount = await newAccountWithLamports(connection, programName, fees);

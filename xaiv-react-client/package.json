@@ -20,6 +20,7 @@
     "@types/express": "^4.17.8",
     "@types/socket.io": "^2.1.11",
     "expo": "~39.0.2",
+    "expo-activity-feed": "^0.9.1",
     "expo-asset": "~8.2.0",
     "expo-constants": "~9.2.0",
     "expo-font": "~8.3.0",

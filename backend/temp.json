@@ -2,5 +2,9 @@
     {
         "group_name": "TestInactive",
         "username": "Austin"
+    },
+    {
+        "group_name": "Test2",
+        "username": "Austin"
     }
 ]
