@@ -8,6 +8,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-validator": "^6.6.1",
+    "heroku": "^7.47.2",
     "mkdirp-promise": "^5.0.1",
     "mongodb": "^3.6.3",
     "mongoose": "^5.10.13",
@@ -15,9 +16,7 @@
     "socket.io": "^3.0.0"
   },
   "scripts": {
-    "start": "ts-node src/client/main.ts",
-    "lint": "eslint --ext .ts src/client/* && prettier --check \"src/client/**/*.ts\"",
-    "lint:fix": "eslint --ext .ts src/client/* --fix && prettier --write \"src/client/**/*.ts\"",
+    "start": "node server.js",
     "bpf-sdk:update": "solana-bpf-sdk-install node_modules/@solana/web3.js && npm run clean",
     "clean": "npm run clean:program-c && npm run clean:program-rust",
     "clean:store": "rm -rf store",
