@@ -94,7 +94,9 @@ class DecideScreen extends React.Component {
                         );
                     })}
                 </ScrollView>
-                <Pressable style={styles.startButton} onPress={this.startNewSession}><Text style={{fontSize: 24}}>Start New Session</Text></Pressable>
+                <Pressable style={styles.startButton} onPress={this.startNewSession}>
+                    <Text style={{fontSize: 24}}>Start New Session</Text>
+                </Pressable>
             </View>
         )
     }

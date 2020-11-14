@@ -57,9 +57,7 @@ class HomeScreen extends React.Component {
                     <View style={styles.overlayContainer}>
                         
                         <View style={styles.overlayRow}>
-                            <Text style={styles.overlayHeader}>
-                                Add Friends
-                            </Text>
+                            <Text style={styles.overlayHeader}>Add Friends</Text>
                         </View>
                         <View style={styles.overlayRow}>
                             <TextInput

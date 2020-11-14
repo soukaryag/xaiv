@@ -23,7 +23,7 @@ export default function BottomTabNavigator({ route, navigation }: any) {
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
-      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint, style: styles.container }}>
+      tabBarOptions={{ activeTintColor: "red", style: styles.container }}>
       <BottomTab.Screen
         name="Home"
         component={HomeNavigator}

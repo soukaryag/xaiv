@@ -43,15 +43,11 @@ class ProfileScreen extends React.Component {
         <View style={styles.imageContainer}>
           <Image source={{ uri: this.state.profilePicUrl }} style={styles.image} />
         </View>
-        <Text h4 style={[styles.name]}>
-          {this.state.username}
-        </Text>
+        <Text h4 style={[styles.name]}>{this.state.username}</Text>
         <Text style={[styles.desc]}>Software Engineer at Xaiv</Text>
         <Divider style={[styles.divider]} />
         <Text style={[styles.sectionHeader]}>About Me</Text>
-        <Text style={[styles.desc]}>
-          Beep boop bop, badaboom bap bop. POW. byebye doggy.
-        </Text>
+        <Text style={[styles.desc]}>Beep boop bop, badaboom bap bop. POW. byebye doggy.</Text>
         <Divider style={[styles.divider]} />
         <Text style={[styles.sectionHeader]}>Friends</Text>
         <Text style={[styles.friends]}>{this.state.friends}</Text>
