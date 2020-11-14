@@ -1,6 +1,14 @@
 const tables = require('../database/tables.config');
 const database = require('../database/database');
 
+const getUser = (socket, username) => {
+    database.query({ username: username }, tables.USER_TABLE, function (res) {
+        if (res.length != 0) {
+            socket.emit("receive_user", res[0]);
+        }
+    }); 
+};
+
 const login = (socket, username, password) => {
     database.query({ username: username, password: password }, tables.USER_TABLE, function (res) {
         if (res.length == 0) {
@@ -27,4 +35,4 @@ const signup = (socket, username, password) => {
     });
 }
 
-module.exports = { login, signup }
+module.exports = { getUser, login, signup }

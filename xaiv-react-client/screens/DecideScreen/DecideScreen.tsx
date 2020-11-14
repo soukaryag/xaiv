@@ -13,6 +13,13 @@ class DecideScreen extends React.Component {
         super(props);
         this.socket = props.route.params.socket;
         this.navigation = props.navigation;
+        if ( typeof this.socket == "string" ) {
+            props.navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+            });
+            return;
+        }
         
         this.socket.on("return_active_groups_for_user", (active_groups: any) => { 
             this.setState({
@@ -46,7 +53,6 @@ class DecideScreen extends React.Component {
             this.socket.emit("get_active_groups_for_user", value);
             this.socket.emit("get_inactive_groups_for_user", value);
         });
-        
         
     };
 

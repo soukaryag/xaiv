@@ -19,7 +19,6 @@ const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 export default function BottomTabNavigator({ route, navigation }: any) {
   const colorScheme = useColorScheme();
   const globals = route.params;
-  // console.log("BottomTabNavigator.tsx", globals)
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
