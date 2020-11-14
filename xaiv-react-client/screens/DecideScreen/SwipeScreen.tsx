@@ -33,6 +33,10 @@ class SwipeScreen extends React.Component {
                 cardData: feed
             });
         });
+
+        this.socket.on("consensus_achieved", (cardData: any) => {
+            console.log("CONSENUS ACHIEVED ON", cardData);
+        });
     }
 
     state = {
@@ -60,19 +64,26 @@ class SwipeScreen extends React.Component {
     swipeLeft = (idx: number, button=false) => {
         this.setState({ currIdx: idx });
         if (button) this.swiper.swipeLeft();
-        this.socket.emit('swipe-left', this.state.cardData[idx]);
+        AsyncStorage.getItem("username").then((value) => {
+            this.socket.emit('swipe-left', value, this.name, this.state.cardData[idx]);
+        });
+        
         console.log(`Rejected ${idx}`);
     };
     swipeRight = (idx: number, button=false) => {
         this.setState({ currIdx: idx });
         if (button) this.swiper.swipeRight();
-        this.socket.emit('swipe-right', this.state.cardData[idx]);
+        AsyncStorage.getItem("username").then((value) => {
+            this.socket.emit('swipe-right', value, this.name, this.state.cardData[idx]);
+        });
         console.log(`Accepted ${idx}`);
     };
     swipeTop = (idx: number, button=false) => {
         this.setState({ currIdx: idx });
         if (button) this.swiper.swipeTop();
-        this.socket.emit('swipe-right', this.state.cardData[idx]);
+        AsyncStorage.getItem("username").then((value) => {
+            this.socket.emit('swipe-right', value, this.state.cardData[idx]);
+        });
         console.log(`SUPER Accepted ${idx}`);
     };
 

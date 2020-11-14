@@ -34,13 +34,91 @@ const io = socketIO(server);
 
 io.on("connection", socket => {
     // swipe left - reject entity
-    socket.on("swipe-left", (cardData) => {
+    socket.on("swipe-left", async (username, group_name, cardData) => {
         swipe.swipe_left(cardData);
+    
+        let group = await database.queryOneAsync({group_name: group_name}, tables.GROUP_TABLE);
+
+        //tally that activity's swipes in the main pool
+        var p = group["group_data"]["session"]["pool"];
+        for (var i = 0; i < p.length; i++) {
+            if (p[i]["id"] == cardData["activity_id"]) {
+                //match found
+                p[i]["swipe_lefts"] += 1;
+            }
+        }
+
+        //add that activity to the user's swipes tracker
+        for (var i = 0; i < group["member_data"].length; i++) {
+            if (group["member_data"][i]["name"] == username) {
+                group["member_data"][i]["swipe_lefts"].push({
+                    id: cardData["activity_id"]
+                });
+                //delete that activity from the user's pool
+                for (var j = 0; j < group["member_data"][i]["pool"].length; j++) {
+                    if (group["member_data"][i]["pool"][j]["id"] == cardData["activity_id"]) {
+                        //remove it
+                        console.log("left, removing ", cardData["activity_id"], "from the user", username, "'s pool")
+                        group["member_data"][i]["pool"].splice(j, 1);
+                        break;
+                    }
+                }
+            }
+
+            
+        }
+
+        database.update({group_name: group_name}, group, tables.GROUP_TABLE, function() {
+            //don't give a FUCK
+        });
     });
 
     // swipe right - accept entity
-    socket.on("swipe-right", (cardData) => {
+    socket.on("swipe-right", async (username, group_name, cardData) => {
         swipe.swipe_right(cardData);
+
+        let group = await database.queryOneAsync({group_name: group_name}, tables.GROUP_TABLE);
+        
+        var consensus = false;
+        //tally that activity's swipes in the main pool
+        var p = group["group_data"]["session"]["pool"];
+        for (var i = 0; i < p.length; i++) {
+            if (p[i]["id"] == cardData["activity_id"]) {
+                //match found
+                p[i]["swipe_rights"] += 1;
+                if (p[i]["swipe_rights"] == group["group_data"]["members"].length) {
+                    console.log("consensus achieved!!");
+                    consensus = true;
+                }
+            }
+        }
+
+        //add that activity to the user's swipes tracker
+        for (var i = 0; i < group["member_data"].length; i++) {
+            if (group["member_data"][i]["name"] == username) {
+                group["member_data"][i]["swipe_rights"].push({
+                    id: cardData["activity_id"]
+                });
+                //delete that activity from the user's pool
+                for (var j = 0; j < group["member_data"][i]["pool"].length; j++) {
+                    if (group["member_data"][i]["pool"][j]["id"] == cardData["activity_id"]) {
+                        //remove it
+                        group["member_data"][i]["pool"].splice(j, 1);
+                        console.log("right,m removing ", cardData["activity_id"], "from the user", username, "'s pool")
+                        break;
+                    }
+                }
+            }
+
+            
+        }
+
+        database.update({group_name: group_name}, group, tables.GROUP_TABLE, function(e, r) {
+            //don't give a FUCK
+            if (consensus) {
+                socket.emit("consensus_achieved", cardData);
+            }
+        });
     });
 
     // login - check username and password against the users database
@@ -86,6 +164,8 @@ io.on("connection", socket => {
             newGroup["member_data"].push({
                 name : members[i],
                 pool: [],
+                swipe_lefts: [],
+                swipe_rights: [],
             })
 
             //also take the chance to add them to the db
@@ -120,14 +200,21 @@ io.on("connection", socket => {
                 console.log("fetching for topic", topic);
                 var places = await googleApi.fetchActivities(socket, lng, lat, radius, topic);
                 for (var i = 0; i < places.length; i++) {
-                    //console.log("one of MANY WONDERFUL PLACES", i);
                     await database.insertOneAsyncNoDuplicate(places[i], {activity_id: places[i]["activity_id"]}, tables.ACTIVITY_TABLE);
+                    
+                    //sorry... xD
                     var xddd = {
-                        id: places[i].activity_id
+                        id: places[i].activity_id,
+                        swipe_lefts: 0,
+                        swipe_rights: 0,
                     };
+                    var xddd2 = {
+                        id: places[i].activity_id,
+                    };
+                    
                     group["group_data"]["session"]["pool"].push(xddd);
                     for (var j = 0; j < group["member_data"].length; j++) {
-                        group["member_data"][j]["pool"].push(xddd);
+                        group["member_data"][j]["pool"].push(xddd2);
                     }
                 }
                 //console.log("group before being shipped off to camp", group);
