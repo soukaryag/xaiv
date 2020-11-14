@@ -8,6 +8,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-validator": "^6.6.1",
+    "heroku": "^7.47.2",
     "mkdirp-promise": "^5.0.1",
     "mongodb": "^3.6.3",
     "mongoose": "^5.10.13",
@@ -15,26 +16,7 @@
     "socket.io": "^3.0.0"
   },
   "scripts": {
-    "start": "ts-node src/client/main.ts",
-    "lint": "eslint --ext .ts src/client/* && prettier --check \"src/client/**/*.ts\"",
-    "lint:fix": "eslint --ext .ts src/client/* --fix && prettier --write \"src/client/**/*.ts\"",
-    "bpf-sdk:update": "solana-bpf-sdk-install node_modules/@solana/web3.js && npm run clean",
-    "clean": "npm run clean:program-c && npm run clean:program-rust",
-    "clean:store": "rm -rf store",
-    "build:program-c": "rm -f ./dist/program/helloworld.so && V=1 make -C ./src/program-c && npm run clean:store",
-    "clean:program-c": "V=1 make -C ./src/program-c clean && npm run clean:store",
-    "build:program-rust": "./src/program-rust/do.sh build && npm run clean:store",
-    "clean:program-rust": "./src/program-rust/do.sh clean && rm -rf ./dist && npm run clean:store",
-    "test:program-rust": "./src/program-rust/do.sh test --features program",
-    "cluster:localnet": "npm run clean:store && rm -f .env",
-    "cluster:devnet": "npm run clean:store && cp cluster-devnet.env .env",
-    "cluster:testnet": "npm run clean:store && cp cluster-testnet.env .env",
-    "cluster:mainnet-beta": "npm run clean:store && cp cluster-mainnet-beta.env .env",
-    "localnet:update": "solana-localnet update",
-    "localnet:up": "set -x; solana-localnet down; set -e; solana-localnet up",
-    "localnet:down": "solana-localnet down",
-    "localnet:logs": "solana-localnet logs -f",
-    "pretty": "prettier --write '{,src/**/}*.js'",
-    "postinstall": "npm run bpf-sdk:update && cargo update --manifest-path=src/program-rust/Cargo.toml"
+    "start": "node server.js",
+    "pretty": "prettier --write '{,**/}*.js'"
   }
 }

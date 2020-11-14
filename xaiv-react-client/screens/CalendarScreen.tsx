@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, StyleSheet, View, Dimensions } from 'react-native'
+import { SafeAreaView, Text, StyleSheet, View, Dimensions } from 'react-native'
 
 const { height } = Dimensions.get('window')
 
@@ -22,7 +22,7 @@ class CalendarScreen extends React.Component {
     render() {
         return (
             <SafeAreaView style={styles.container}>
-                Hello
+                <Text>Hello</Text>
             </SafeAreaView>
         )
     }

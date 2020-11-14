@@ -3,9 +3,8 @@ import { StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ScrollView,
 import { Text, View } from '../../components/Themed';
 import Colors from '../../constants/Colors';
 import { Overlay } from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from 'modal-react-native-web';
-
-const { height, width } = Dimensions.get('window')
 
 class DecideScreen extends React.Component {
     socket: any
@@ -33,8 +32,12 @@ class DecideScreen extends React.Component {
             })
         });
 
-        this.socket.emit("get_active_groups_for_user", localStorage.getItem("username"));
-        this.socket.emit("get_inactive_groups_for_user", localStorage.getItem("username"));
+        AsyncStorage.getItem("username").then((value: any) => {
+            this.socket.emit("get_active_groups_for_user", value);
+            this.socket.emit("get_inactive_groups_for_user", value);
+        });
+        
+        
     };
 
     state = {

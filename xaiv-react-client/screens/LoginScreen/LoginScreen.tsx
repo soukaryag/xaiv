@@ -1,5 +1,6 @@
 import React from 'react'
 import { StyleSheet, TextInput, Image, TouchableOpacity, Dimensions } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Text, View } from '../../components/Themed';
 
 const { height, width } = Dimensions.get('window')
@@ -19,11 +20,12 @@ class LoginScreen extends React.Component {
     }
 
     componentDidMount() {
-        const username = localStorage.getItem("username");
-        if (username) {
-            this.setState({username: username})
-            this.navigation.navigate("Root", {socket: this.socket});
-        }
+        AsyncStorage.getItem("username").then((value) => {
+            if (value) {
+                this.setState({username: value})
+                this.navigation.navigate("Root", {socket: this.socket});
+            }
+        });
     }
 
     socketLogin = () => {
@@ -31,7 +33,7 @@ class LoginScreen extends React.Component {
 
         this.socket.on("login_success", (username: string) => {
             console.log(`Logged in ${username} successfully`)
-            localStorage.setItem('username', this.state.username);
+            AsyncStorage.setItem("username", this.state.username);
             this.navigation.navigate("Root", {socket: this.socket});
         })
         this.socket.on("login_failed", () => {
@@ -43,7 +45,7 @@ class LoginScreen extends React.Component {
         this.socket.emit("signup", this.state.username, this.state.password);
 
         this.socket.on("signup_success", (obj: any) => {
-            localStorage.setItem('username', this.state.username);
+            AsyncStorage.setItem("username", this.state.username);
             this.navigation.navigate("Root");
         })
         this.socket.on("signup_failed", (obj: any) => {

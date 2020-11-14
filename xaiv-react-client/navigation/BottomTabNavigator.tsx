@@ -1,7 +1,7 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet } from 'react-native'
+import { StyleSheet, TouchableOpacity, Image, View } from 'react-native'
 import * as React from 'react';
 
 import Colors from '../constants/Colors';
@@ -23,12 +23,13 @@ export default function BottomTabNavigator({ route, navigation }: any) {
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
-      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint, style: styles.container }}>
+      tabBarOptions={{ activeTintColor: "red", style: styles.container }}>
       <BottomTab.Screen
         name="Home"
         component={HomeNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} size={30} />,
+          tabBarIcon: ({ color, focused }) => <TabBarIcon name="home" color={"#bbbbbb"} size={30} focused={focused} />,
+          tabBarLabel: ({}) => "",
         }}
         initialParams={globals}
       />
@@ -36,14 +37,17 @@ export default function BottomTabNavigator({ route, navigation }: any) {
         name="Messages"
         component={MessagesNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="message" color={color} size={22} />,
+          tabBarIcon: ({ color, focused }) => <TabBarIcon name="message-circle" color={"#bbbbbb"} size={30} focused={focused} />,
+          tabBarLabel: ({}) => "",
         }}
+        initialParams={globals}
       />
       <BottomTab.Screen
         name="Decide"
         component={DecideNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="alpha-x-circle-outline" color={color} size={40} />,
+          tabBarIcon: ({ color, focused }) => <TabBarIcon name="plus-circle" color={"#bbbbbb"} size={30} focused={focused} />,
+          tabBarLabel: ({}) => "",
         }}
         initialParams={globals}
       />
@@ -51,15 +55,19 @@ export default function BottomTabNavigator({ route, navigation }: any) {
         name="Calendar"
         component={CalendarNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="calendar" color={color} size={30} />,
+          tabBarIcon: ({ color, focused }) => <TabBarIcon name="calendar" color={"#bbbbbb"} size={30} focused={focused} />,
+          tabBarLabel: ({}) => "",
         }}
+        initialParams={globals}
       />
       <BottomTab.Screen
         name="Profile"
         component={ProfileNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="account" color={color} size={30} />,
+          tabBarIcon: ({ color, focused }) => <TabBarIcon name="user" color={"#bbbbbb"} size={30} focused={focused} />,
+          tabBarLabel: ({}) => "",
         }}
+        initialParams={globals}
       />
     </BottomTab.Navigator>
   );
@@ -67,8 +75,8 @@ export default function BottomTabNavigator({ route, navigation }: any) {
 
 // You can explore the built-in icon families and icons on the web at:
 // https://icons.expo.fyi/
-function TabBarIcon(props: { name: string; color: string; size: number }) {
-  return <MaterialCommunityIcons size={30} style={{ marginBottom: -3 }} {...props} />;
+function TabBarIcon(props: { name: string; color: string; size: number, focused: boolean}) {
+  return <Feather style={{ marginBottom: -3 }} {...props} />;
 }
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
@@ -77,7 +85,6 @@ const HomeStack = createStackNavigator<HomeParamList>();
 
 function HomeNavigator({ route, navigation }: any) {
   const globals = route.params;
-  console.log("HomeNavigator", globals)
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
@@ -138,13 +145,15 @@ function CalendarNavigator({ route, navigation }: any) {
 
 const ProfileStack = createStackNavigator<ProfileParamList>();
 
-function ProfileNavigator() {
+function ProfileNavigator({ route, navigation }: any) {
+  const globals = route.params;
   return (
     <ProfileStack.Navigator>
       <ProfileStack.Screen
         name="ProfileScreen"
         component={ProfileScreen}
         options={{ headerShown: false }}
+        initialParams={globals}
       />
     </ProfileStack.Navigator>
   );
@@ -154,28 +163,5 @@ function ProfileNavigator() {
 const styles = StyleSheet.create({
   container: {
     borderTopColor: "#fff",
-    shadowColor: 'black',
-    shadowOffset: {
-      width: 0,
-      height: -3,
-    },
-    shadowRadius: 14,
-    shadowOpacity: 0.2,
   }
 })
-
-// const TopicStack = createStackNavigator<TopicParamList>();
-
-// function TopicNavigator({route, navigation} : any) {
-//   const globals = route.params;
-//   return (
-//     <TopicStack.Navigator>
-//       <TopicStack.Screen
-//         name="TopicScreen"
-//         component={TopicScreen}
-//         options={{ headerShown: false }}
-//         initialParams={globals}
-//       />
-//     </TopicStack.Navigator>
-//   );
-// }

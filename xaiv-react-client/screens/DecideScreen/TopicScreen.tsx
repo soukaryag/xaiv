@@ -1,8 +1,6 @@
 import React from 'react'
-import { SafeAreaView, StyleSheet, View, Dimensions, Pressable } from 'react-native'
-import Swiper from 'react-native-deck-swiper'
-import Card from '../../components/Card'
-import photoCards from '../../constants/Template'
+import { SafeAreaView, Text, StyleSheet, View, Dimensions, Pressable } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const { height } = Dimensions.get('window')
 
@@ -36,7 +34,9 @@ class TopicScreen extends React.Component {
     selectTopic = (topic: String) => {
         navigator.geolocation.getCurrentPosition(
             position => {
-                this.socket.emit("create_session", localStorage.getItem("username"), this.name, topic, position.coords.latitude, position.coords.longitude, 8);
+                AsyncStorage.getItem("username").then((value) => {
+                    this.socket.emit("create_session", value, this.name, topic, position.coords.latitude, position.coords.longitude, 8);
+                });
             },
         );
         console.log(name, topic);
@@ -57,24 +57,24 @@ class TopicScreen extends React.Component {
                 <View style={styles.suggestedBox}>
                     <Pressable style={styles.suggestedTopic} onPress={() => this.selectTopic("restaurant")}>
                         <View>
-                            Sit-in food
+                            <Text>Sit-in food</Text>
                         </View>
                     </Pressable>
                     <Pressable style={[styles.suggestedTopic, styles.suggestedTopicMiddle]} onPress={() => this.selectTopic("movie_theater")}>
                         <View>
-                            Movie theaters biatch
+                            <Text>Movie theaters biatch</Text>
                         </View>
                     </Pressable>
                     <Pressable style={styles.suggestedTopic} onPress={() => this.selectTopic("gym")}>
                         <View>
-                            Gym
+                        <Text>Gym</Text>
                         </View>
                     </Pressable>
                 </View>
                 <View style={styles.showAllTopics}>
                     <Pressable style={styles.showAllTopicsButton} onPress={() => this.showAllTopics()}>
                         <View>
-                            Show All Topics
+                        <Text>Show All Topics</Text>
                         </View>
                     </Pressable>
                 </View>

@@ -13,13 +13,17 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^10.2.1",
+    "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/bottom-tabs": "^5.8.0",
     "@react-navigation/native": "^5.7.3",
     "@react-navigation/stack": "^5.9.0",
     "@types/express": "^4.17.8",
     "@types/socket.io": "^2.1.11",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "babel-runtime": "^6.26.0",
     "expo": "~39.0.2",
+    "expo-activity-feed": "^0.9.1",
     "expo-asset": "~8.2.0",
     "expo-constants": "~9.2.0",
     "expo-font": "~8.3.0",
@@ -42,11 +46,16 @@
     "socket.io-client": "^3.0.0"
   },
   "devDependencies": {
-    "@babel/core": "~7.9.0",
+    "@babel/core": "^7.12.3",
+    "@babel/runtime": "^7.12.5",
+    "@react-native-async-storage/async-storage": "^1.13.2",
     "@types/react": "^16.9.56",
     "@types/react-native": "~0.63.2",
     "jest-expo": "~39.0.0",
     "typescript": "~3.9.5"
+  },
+  "resolutions": {
+    "@babel/core": "~7.9.0"
   },
   "private": true
 }

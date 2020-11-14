@@ -1,134 +1,205 @@
 import React from 'react'
-import { SafeAreaView, StyleSheet, View, Dimensions, TouchableOpacity } from 'react-native'
-import Swiper from 'react-native-deck-swiper'
-import Card from '../components/Card'
-import IconButton from '../components/IconButton';
-import photoCards from '../constants/Template'
+import { TouchableOpacity, Image, Text, StyleSheet, View, ScrollView, Dimensions, TextInput } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Feather } from '@expo/vector-icons';
+import { Overlay } from 'react-native-elements';
+import HomePost from '../components/HomePost';
+import postCards from '../constants/PostTemplate';
+import Modal from 'modal-react-native-web';
 
-const { height } = Dimensions.get('window')
+const { height, width } = Dimensions.get('window')
 
 class HomeScreen extends React.Component {
     socket: any
     navigation: any
-    swiper: any
     constructor(props: any) {
         super(props);
         this.socket = props.route.params.socket;
     }
 
     state = {
-        cardData: photoCards,
-        latitude: 0,
-        longitude: 0,
-        currIdx: 0,
+        overlay: false,
+        friendUsername: '',
     };
 
-    
-
-    swipeLeft = (idx: number, button=false) => {
-        this.setState({ currIdx: idx });
-        if (button) this.swiper.swipeLeft();
-        this.socket.emit('swipe-left', this.state.cardData[idx]);
-        console.log(`Rejected ${idx}`);
-    };
-    swipeRight = (idx: number, button=false) => {
-        this.setState({ currIdx: idx });
-        if (button) this.swiper.swipeRight();
-        this.socket.emit('swipe-right', this.state.cardData[idx]);
-        console.log(`Accepted ${idx}`);
-    };
-    swipeTop = (idx: number, button=false) => {
-        this.setState({ currIdx: idx });
-        if (button) this.swiper.swipeTop();
-        this.socket.emit('swipe-right', this.state.cardData[idx]);
-        console.log(`SUPER Accepted ${idx}`);
-    };
-
-    componentDidMount() {
-        navigator.geolocation.getCurrentPosition(
-            position => {
-                this.setState({ latitude: position.coords.latitude, longitude: position.coords.longitude });
-                this.socket.emit('get_activities', position.coords.latitude, position.coords.longitude, 1);
-                this.socket.on('send_activities', (res: any) => {
-                    this.setState({ cardData: res });
-                    console.log(this.state);
-                })
-
-            },
-        );
+    toggleOverlay = () => {
+        this.setState({overlay: !this.state.overlay});
     }
 
+    addFriend = () => {
+        AsyncStorage.getItem("username").then((value) => {
+            this.socket.emit("add_friend", value, this.state.friendUsername)
+        });
+        
+        this.socket.on("add_friend_success", () => {
+            this.setState({friendUsername: ''});
+            console.log("[ADD FRIEND] Added friend to friends list!")
+            this.toggleOverlay();
+        }); 
+
+        this.socket.on("add_friend_failed", () => {
+            this.setState({friendUsername: ''});
+            console.log("[ADD FRIEND] Could not add friend :(")
+        }); 
+    }
+
+
     render() {
+        const posts = []
+
+        for (let i = 0; i < postCards.length; i++) {
+            posts.push(<HomePost key={i} postInfo={postCards[i]} />)
+        }
+
         return (
-            <SafeAreaView style={styles.container}>
+            <ScrollView style={styles.container} showsVerticalScrollIndicator={false} stickyHeaderIndices={[1]}>
+                <Overlay ModalComponent={Modal} isVisible={this.state.overlay} onBackdropPress={this.toggleOverlay}>
+                    <View style={styles.overlayContainer}>
+                        
+                        <View style={styles.overlayRow}>
+                            <Text style={styles.overlayHeader}>Add Friends</Text>
+                        </View>
+                        <View style={styles.overlayRow}>
+                            <TextInput
+                                style={styles.inputText}
+                                placeholder="Search"
+                                placeholderTextColor="#cccccc"
+                                onChangeText={text => this.setState({ friendUsername: text })}
+                            />
+                            <TouchableOpacity style={styles.addFriendOverlayBtn} onPress={this.addFriend}>
+                                <TabBarIcon name="plus" color={"#fff"} size={20} />
+                            </TouchableOpacity>
+                        </View>
+                        
+                    </View>
+                </Overlay>
+
+                <View style={styles.header}>
+                    <Image source={{ uri:"https://cdn.discordapp.com/attachments/766156684648251433/776927925773533204/Logo-min.png" }} style={styles.logo} ></Image>
+                    <TouchableOpacity
+                        onPress={() => this.toggleOverlay()}
+                        style={styles.addFriend}
+                        >
+                        <TabBarIcon name="user-plus" color={"#bbbbbb"} size={23} />
+                    </TouchableOpacity>
+                </View>
                 
-                <View style={styles.swiperContainer}>
-                    <Swiper
-                        ref={swiper => {
-                            this.swiper = swiper
-                        }}
-                        animateCardOpacity
-                        cards={this.state.cardData}
-                        renderCard={(card: any) => <Card card={card} />}
-                        disableBottomSwipe={true}
-                        onSwipedLeft={(cardIndex: number) => { this.swipeLeft(cardIndex) }}
-                        onSwipedRight={(cardIndex: number) => { this.swipeRight(cardIndex) }}
-                        onSwipedTop={(cardIndex: number) => { this.swipeTop(cardIndex) }}
-                        cardIndex={0}
-                        backgroundColor="white"
-                        stackSize={3}
-                        infinite
-                        showSecondCard
-                    />
-                </View>
-                <View style={styles.buttonsContainer}>
-                    <IconButton
-                        name="close"
-                        onPress={() => { this.swipeLeft(this.state.currIdx, true) }}
-                        color="white"
-                        backgroundColor="#E5566D"
-                        size={20}
-                    />
-                    <IconButton
-                        name="star"
-                        onPress={() => {  this.swipeTop(this.state.currIdx, true) }}
-                        color="white"
-                        backgroundColor="#3CA3FF"
-                        size={30}
-                    />
-                    <IconButton
-                        name="heart"
-                        onPress={() => { this.swipeRight(this.state.currIdx, true) }}
-                        color="white"
-                        backgroundColor="#4CCC93"
-                        size={20}
-                    />
-                </View>
-            </SafeAreaView>
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.groups}>
+                    <TouchableOpacity
+                        style={styles.groupContainer}
+                    >
+                        <Image source={{ uri: "https://img.freepik.com/free-vector/group-young-people-posing-photo_52683-18824.jpg?size=338&ext=jpg" }}  style={styles.groupImage} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.groupContainer}
+                    >
+                        <Image source={{ uri: "https://previews.123rf.com/images/jemastock/jemastock1903/jemastock190315348/124169755-happy-people-dancing-and-having-fun-vector-illustration-graphic-design.jpg" }}  style={styles.groupImage} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.groupContainer}
+                    >
+                        <Image source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTYntHBHrOU32bP3xo1IY508n5j62kyQZrUpQ&usqp=CAU" }}  style={styles.groupImage} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.groupContainer}
+                    >
+                        <Image source={{ uri: "https://image.freepik.com/free-vector/young-people-illustration-concept_23-2148457572.jpg" }}  style={styles.groupImage} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.groupContainer}
+                    >
+                        <Image source={{ uri: "https://image.freepik.com/free-vector/young-people-illustration-design_23-2148473079.jpg" }}  style={styles.groupImage} />
+                    </TouchableOpacity>
+                </ScrollView>
+
+                {posts}
+
+            </ScrollView>
         )
     }
 }
 
+function TabBarIcon(props: { name: string; color: string; size: number }) {
+    return <Feather style={{ marginBottom: -3 }} {...props} />;
+}
+
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'space-between',
-        backgroundColor: 'white',
+        backgroundColor: '#f0f2f5',
+        color: "#222a36",
+        fontFamily: 'montserrat'
     },
-    swiperContainer: {
-        height: height - 250,
+    overlayContainer: {
+        padding: 10,
     },
-    buttonsContainer: {
-        justifyContent: 'space-between',
-        alignItems: 'center',
+    overlayRow: {
+        padding: 10,
         flexDirection: 'row',
-        paddingHorizontal: '15%',
-        height: 250,
+        justifyContent:'space-between',
+        alignItems:'center',
     },
-    text: {
-        textAlign: "center",
-        fontSize: 50,
-        backgroundColor: "transparent"
+    overlayHeader: {
+        width: "100%",
+        fontSize: 30,
+        fontWeight: "700",
+        textAlign: 'center',
+    },
+    inputText: {
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        borderRadius: 6,
+        borderColor: "#bbbbbb",
+        borderWidth: 1,
+        marginRight: 15,
+    },
+
+    groups: {
+        backgroundColor: '#fff',
+        height: 100,
+        width: width,
+        marginBottom: 2,
+        shadowOpacity: 0.2,
+        flexWrap:"wrap"
+    },
+    header: {
+        backgroundColor: '#fff',
+        width: width,
+        height: 60,
+        flexWrap: "wrap",
+        padding: 10,
+        marginBottom: 2,
+    },
+    groupContainer: {
+        borderWidth:4,
+        borderColor:'rgba(154, 18, 179, 0.6)',
+        alignItems:'center',
+        justifyContent:'center',
+        width:64,
+        height:64,
+        backgroundColor:'#fff',
+        borderRadius:50,
+        margin: 15,
+    },
+    groupImage: { 
+        width: 60, height: 60, borderRadius:50 
+    },
+
+    addFriend: {
+        right: 15,
+        position: "absolute",
+        margin: 10,
+    },
+    addFriendOverlayBtn: {
+        borderRadius: 50,
+        backgroundColor: '#1adb4b',
+        padding: 3,
+    },
+    logo: {
+        left: 15,
+        position: "absolute",
+        margin: 4,
+        width: 40,
+        height: 40,
     }
 })
 

@@ -16,7 +16,7 @@ const login = (socket, username, password) => {
 const signup = (socket, username, password) => {
     database.query({ username: username }, tables.USER_TABLE, function (res) {
         if (res.length == 0) {
-            database.insert({ username: username, password: password }, tables.USER_TABLE, function (res) {
+            database.insert({ username: username, password: password, profile_picture: "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg" }, tables.USER_TABLE, function (res) {
                 console.log("[SIGNUP] Successfully signed up user");
                 socket.emit("signup_success");
             });

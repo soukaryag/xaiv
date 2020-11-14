@@ -1,6 +1,12 @@
+require('dotenv').config()
+
 var MongoClient = require('mongodb').MongoClient;
 
-DATABASE_URL = "mongodb://localhost:27017/mydb";
+const db_username = process.env.DB_USERNAME;
+const db_password = process.env.DB_PASSWORD;
+console.log(db_password, db_username)
+DATABASE_URL = "mongodb+srv://" + db_username + ":" + db_password + "@cluster0.qrq9u.mongodb.net/xaivdatabse?retryWrites=true&w=majority";
+
 DATABASE_NAME = "xaiv"
 
 function insert(args, table, callBack) {
@@ -16,7 +22,6 @@ function insert(args, table, callBack) {
 }
 
 //Async insert. Doesn't insert if duplicate already exists...
-
 async function insertOneAsyncNoDuplicate(args, matchArgs, table) {
     const client = await MongoClient.connect(DATABASE_URL);
     if (!client) {
@@ -29,8 +34,6 @@ async function insertOneAsyncNoDuplicate(args, matchArgs, table) {
         if (result == null) {
             await collection.insertOne(args);
         }
-        //else, do nothing
-        
     }
     catch (err) {
         console.log(err);
