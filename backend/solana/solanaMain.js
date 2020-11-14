@@ -52,55 +52,22 @@ async function newAccountWithLamports(connection, programName, lamports = 100000
     throw new Error(`[ESTABLISH PAYER] Airdrop of ${lamports} failed`);
 }
 
-/**
- * Establish an account to pay for everything
- */
-async function establishPayer(programName) {
-    if (!connection) {
-        connection = await conn.getNodeConnection();
+async function fundAccountWithLamports(connection, pubKey, lamports = 10000000000) {
+    let retries = 10;
+    let prevBalance = await connection.getBalance(pubKey);
+    await connection.requestAirdrop(pubKey, lamports);
+    for (;;) {
+        await sleep(500);
+        if (lamports+prevBalance == (await connection.getBalance(pubKey))) {
+            console.log("[FUNDER] Updated account balance")
+            return "Success";
+        }
+        if (--retries <= 0) {
+            break;
+        }
+        console.log(`[ESTABLISH PAYER] Airdrop retry ${retries}`);
     }
-
-    const res = await database.queryOneAsync({ username: programName }, tables.USER_TABLE) 
-
-    if (res != null) {
-        payerAccount = new solanaWeb3.Account((res.secret_key).split(',').map(item => parseInt(item)));
-        console.log("[ESTABLISH PAYER] Fetched existing account");
-    } else {
-        let fees = 0;
-        const { feeCalculator } = await connection.getRecentBlockhash();
-
-        // Calculate the cost to load the program
-        let data = "";
-        if ( programName === 'swipeLeftProgramId') 
-            data = await fs.readFile(pathToSwipeLeftProgram);
-        else 
-            data = await fs.readFile(pathToSwipeRightProgram);
-        const NUM_RETRIES = 500; // allow some number of retries
-        fees +=
-            feeCalculator.lamportsPerSignature *
-            (solanaWeb3.BpfLoader.getMinNumSignatures(data.length) + NUM_RETRIES) +
-            (await connection.getMinimumBalanceForRentExemption(data.length));
-
-        // Calculate the cost to fund the greeter account
-        fees += await connection.getMinimumBalanceForRentExemption(
-            swipeDataLayout.span,
-        );
-
-        // Calculate the cost of sending the transactions
-        fees += feeCalculator.lamportsPerSignature * 100000000000;
-
-        // Fund a new payer via airdrop
-        payerAccount = await newAccountWithLamports(connection, programName, fees);
-    }
-
-    // const lamports = await connection.getBalance(payerAccount.publicKey);
-    // console.log(
-    //     'Using account',
-    //     payerAccount.publicKey.toBase58(),
-    //     'containing',
-    //     lamports / solanaWeb3.LAMPORTS_PER_SOL,
-    //     'Sol to pay for fees',
-    // );
+    throw new Error(`[ESTABLISH PAYER] Airdrop of ${lamports} failed`);
 }
 
 async function loadProgram(programName) {
@@ -118,7 +85,10 @@ async function loadProgram(programName) {
         return;
     } catch (err) {
         // try to load the program
-        await establishPayer(programName);
+        let payerAccount = await newAccountWithLamports(
+            connection,
+            programName
+        );
 
         // Load the program
         let data = "";
@@ -161,9 +131,10 @@ async function createAccount(cardData, programName) {
     const config = await store.load('config.json');
     const programId = new solanaWeb3.PublicKey(config[programName]);
 
-    if (!payerAccount) {
-        await establishPayer(programName);
-    }
+    let payerAccount = await newAccountWithLamports(
+        connection,
+        programName
+    );
 
     const transaction = new solanaWeb3.Transaction().add(
         solanaWeb3.SystemProgram.createAccount({
@@ -185,21 +156,30 @@ async function createAccount(cardData, programName) {
     );
 
     // append this activity to the database
-    cardData.pub_key_right = activity_account.publicKey.toBase58();
+    cardData.pub_key = activity_account.publicKey.toBase58();
     var tmpArr = []; 
     for(var p in Object.getOwnPropertyNames(activity_account.secretKey)) {
         tmpArr[p] = activity_account.secretKey[p]
     }
-    cardData.secret_key_right = JSON.stringify(tmpArr);
+    cardData.secret_key = JSON.stringify(tmpArr);
+
     database.query({ activity_id: cardData.activity_id }, tables.ACTIVITY_TABLE, function (res) {
         if (res.length == 0) {
+            console.log("[CREATE ACCOUNT] Does not exist, backend error.")
             database.insert(cardData, tables.ACTIVITY_TABLE, function (res) {
                 console.log("[RIGHT] Successfully added activity to the database");
             });
         } else {
-            database.update({ activity_id: cardData.activity_id }, { pub_key_left: cardData.pub_key_right, secret_key_left: cardData.secret_key_right }, tables.ACTIVITY_TABLE, function (res) {
-                console.log("[LEFT] Successfully added activity to the database")
-            })
+            if ( programName === "swipeRightProgramId" ) {
+                database.update({ activity_id: cardData.activity_id }, { pub_key_right: cardData.pub_key, secret_key_right: cardData.secret_key }, tables.ACTIVITY_TABLE, function (res) {
+                    console.log("[RIGHT] Successfully added activity to the database")
+                })
+            } else {
+                database.update({ activity_id: cardData.activity_id }, { pub_key_left: cardData.pub_key, secret_key_left: cardData.secret_key }, tables.ACTIVITY_TABLE, function (res) {
+                    console.log("[LEFT] Successfully added activity to the database")
+                })
+            }
+            
         }
     });
     
@@ -228,19 +208,19 @@ async function incrementCount(activity, programName) {
         data: Buffer.alloc(0),
     })
 
-    if (!payerAccount) {
-        await establishPayer(programName);
-    }
-    await solanaWeb3.sendAndConfirmTransaction(
+    let payerAccount = await newAccountWithLamports(
+        connection,
+        programName
+    );
+
+    const signature = await solanaWeb3.sendAndConfirmTransaction(
         connection,
         new solanaWeb3.Transaction().add(instruction),
         [payerAccount],
-        {
-            skipPreflight: false,
-            commitment: 'singleGossip',
-            preflightCommitment: 'singleGossip',
-        },
+        { skipPreflight: false, commitment: 'recent', preflightCommitment: 'recent' }
     )
+
+    console.log(signature);
 
     console.log("[INCREMENT] Transaction concluded for", activity.activity_name);
     await printAccountData(activity.activity_name, activity.pub_key_right, activity.pub_key_left);

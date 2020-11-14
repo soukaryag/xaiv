@@ -3,8 +3,6 @@ fetch = require("node-fetch");
 async function fetchActivities(socket, latitude, longitude, radiusKM, type) {
     const radMetter = radiusKM * 1000;
 
-    console.log("[GOOGLE]", latitude, longitude, radiusKM, type);
-
     const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radMetter}&type=${type}&key=AIzaSyAjfUxS2_xG_8I0UyUCTBI87HD1bHIgQYw`
     return fetch(url)
         .then(res => {

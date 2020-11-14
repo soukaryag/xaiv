@@ -4,7 +4,6 @@ var MongoClient = require('mongodb').MongoClient;
 
 const db_username = process.env.DB_USERNAME;
 const db_password = process.env.DB_PASSWORD;
-console.log(db_password, db_username)
 DATABASE_URL = "mongodb+srv://" + db_username + ":" + db_password + "@cluster0.qrq9u.mongodb.net/xaivdatabse?retryWrites=true&w=majority";
 
 DATABASE_NAME = "xaiv"

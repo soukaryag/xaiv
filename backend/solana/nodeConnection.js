@@ -27,7 +27,7 @@ switch (process.env.CLUSTER) {
 }
 
 async function getNodeConnection() {
-    const connection = new solanaWeb3.Connection(url, 'recent')
+    const connection = new solanaWeb3.Connection(url, 'singleGossip')
     const version = await connection.getVersion()
     console.log('Connection to cluster established:', url, version)
     return connection

@@ -58,7 +58,6 @@ io.on("connection", socket => {
                 for (var j = 0; j < group["member_data"][i]["pool"].length; j++) {
                     if (group["member_data"][i]["pool"][j]["id"] == cardData["activity_id"]) {
                         //remove it
-                        console.log("left, removing ", cardData["activity_id"], "from the user", username, "'s pool")
                         group["member_data"][i]["pool"].splice(j, 1);
                         break;
                     }
@@ -104,7 +103,6 @@ io.on("connection", socket => {
                     if (group["member_data"][i]["pool"][j]["id"] == cardData["activity_id"]) {
                         //remove it
                         group["member_data"][i]["pool"].splice(j, 1);
-                        console.log("right,m removing ", cardData["activity_id"], "from the user", username, "'s pool")
                         break;
                     }
                 }
@@ -145,7 +143,6 @@ io.on("connection", socket => {
     });
 
     socket.on("create_group", (members, group_name) => {
-        console.log("creating a FUCKING group");
         var newGroup = {};
         newGroup["group_name"] = group_name;
         newGroup["group_data"] = {
@@ -173,7 +170,6 @@ io.on("connection", socket => {
 
             });
         }
-        console.log("The new group is ", newGroup);
         database.insert(newGroup, tables.GROUP_TABLE, function() {
 
         });
@@ -197,7 +193,6 @@ io.on("connection", socket => {
                 group["group_data"]["session"]["active"] = true;
                 group["group_data"]["session"]["topic"] = topic;
                 radius = group["group_data"]["session"]["radius"]; //Consider removing this
-                console.log("fetching for topic", topic);
                 var places = await googleApi.fetchActivities(socket, lng, lat, radius, topic);
                 for (var i = 0; i < places.length; i++) {
                     await database.insertOneAsyncNoDuplicate(places[i], {activity_id: places[i]["activity_id"]}, tables.ACTIVITY_TABLE);
@@ -217,7 +212,6 @@ io.on("connection", socket => {
                         group["member_data"][j]["pool"].push(xddd2);
                     }
                 }
-                //console.log("group before being shipped off to camp", group);
                 database.update({group_name: group_name}, group, tables.GROUP_TABLE, function(e, r) {
                     //joe momma
                     socket.emit("create_session_complete");
@@ -231,9 +225,7 @@ io.on("connection", socket => {
         database.query({username: username}, tables.GROUP_TO_USER_TABLE, async function(res) {
             //Assume only one user (unique usernames)
             var group_names = [];
-            console.log("get active", res);
             for (var i = 0; i < res.length; i++) {
-                console.log(res[i]["group_name"]);
                 var group = await database.queryOneAsync({group_name: res[i]["group_name"]}, tables.GROUP_TABLE);
                 var active = group["group_data"]["session"]["active"];
                 if (active) {
@@ -248,7 +240,6 @@ io.on("connection", socket => {
     socket.on("get_inactive_groups_for_user", async (username) => {
         database.query({username: username}, tables.GROUP_TO_USER_TABLE, async function(res) {
             //Assume only one user (unique usernames)
-            console.log("get inactive", res);
             var group_names = [];
             for (var i = 0; i < res.length; i++) {
                 var group = await database.queryOneAsync({group_name: res[i]["group_name"]}, tables.GROUP_TABLE);
@@ -300,7 +291,6 @@ io.on("connection", socket => {
                             };
                             cardFeed.push(tmp);
                         }
-                        //console.log("FEED IS", cardFeed);
                         socket.emit("return_feed_for_user", cardFeed);
                     }
                     
@@ -316,12 +306,10 @@ io.on("connection", socket => {
 
 async function convertPoolToActivities(userPool) {
     var feed = [];
-    //console.log("cpta given userpool is", userPool);
     for (var i = 0; i < userPool.length; i++) {
         var res = await database.queryOneAsync({activity_id: userPool[i]["id"]}, tables.ACTIVITY_TABLE);
         feed.push(res);
     }
-    //console.log("cpta feed is before returning: ", feed);
     return feed;
 }
 

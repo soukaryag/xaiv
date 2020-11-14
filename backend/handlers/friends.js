@@ -10,7 +10,6 @@ const getFriends = (socket, username) => {
 }
 
 const addFriend = (socket, username, friendUsername) => {
-    console.log(username, "is attempting to add", friendUsername);
     database.query({ username: friendUsername }, tables.USER_TABLE, async function (res) {
         if (res.length == 0) {
             socket.emit("add_friend_failed");
