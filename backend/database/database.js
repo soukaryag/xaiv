@@ -2,8 +2,11 @@ require('dotenv').config()
 
 var MongoClient = require('mongodb').MongoClient;
 
-// DATABASE_URL = "mongodb://localhost:27017/mydb";
-DATABASE_URL = "mongodb+srv://xaiv_admin:xaiv_password@cluster0.qrq9u.mongodb.net/xaivdatabse?retryWrites=true&w=majority";
+const db_username = process.env.DB_USERNAME;
+const db_password = process.env.DB_PASSWORD;
+console.log(db_password, db_username)
+DATABASE_URL = "mongodb+srv://" + db_username + ":" + db_password + "@cluster0.qrq9u.mongodb.net/xaivdatabse?retryWrites=true&w=majority";
+
 DATABASE_NAME = "xaiv"
 
 function insert(args, table, callBack) {

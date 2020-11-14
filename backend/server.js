@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const database = require('./database/database');
 const tables = require('./database/tables.config');
 const conn = require('./solana/nodeConnection');
