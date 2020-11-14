@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, SafeAreaView, StyleSheet, View, Dimensions } from 'react-native'
+import { Image, SafeAreaView, StyleSheet, View, Dimensions, TouchableOpacity } from 'react-native'
 import { Divider, Icon, Text } from 'react-native-elements'
 
 const { height, width } = Dimensions.get('window')
@@ -13,7 +13,12 @@ const Social = ({ name }: any) => (
   />
 )
 
+
+
 class ProfileScreen extends React.Component {
+  createGroup = () => {
+    
+  }
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -35,6 +40,7 @@ class ProfileScreen extends React.Component {
           <Social name="instagram" />
           <Social name="facebook-square" />
         </View>
+        <TouchableOpacity onPress={() => this.createGroup()}>Create a group biatch</TouchableOpacity>
       </SafeAreaView>
     )
   }

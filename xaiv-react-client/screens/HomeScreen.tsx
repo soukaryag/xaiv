@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, StyleSheet, View, Dimensions } from 'react-native'
+import { SafeAreaView, StyleSheet, View, Dimensions, TouchableOpacity } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
 import Card from '../components/Card'
 import IconButton from '../components/IconButton';
@@ -22,6 +22,8 @@ class HomeScreen extends React.Component {
         longitude: 0,
         currIdx: 0,
     };
+
+    
 
     swipeLeft = (idx: number, button=false) => {
         this.setState({ currIdx: idx });
@@ -59,6 +61,7 @@ class HomeScreen extends React.Component {
     render() {
         return (
             <SafeAreaView style={styles.container}>
+                
                 <View style={styles.swiperContainer}>
                     <Swiper
                         ref={swiper => {

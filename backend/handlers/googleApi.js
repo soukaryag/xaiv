@@ -31,7 +31,6 @@ async function fetchActivities(socket, latitude, longitude, radiusKM, type) {
             }
 
             //socket.emit("send_activities", places.slice(0, 10));
-            console.log("HELL FUCKING O?", places);
             return places;
         })
         .catch(error => {

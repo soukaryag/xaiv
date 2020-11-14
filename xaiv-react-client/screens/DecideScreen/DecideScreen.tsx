@@ -27,6 +27,12 @@ class DecideScreen extends React.Component {
             });
         });
 
+        this.socket.on("get_friends_for_user", (friends: any) => {
+            this.setState({
+                friends: friends,
+            })
+        });
+
         this.socket.emit("get_active_groups_for_user", localStorage.getItem("username"));
         this.socket.emit("get_inactive_groups_for_user", localStorage.getItem("username"));
     };
@@ -34,19 +40,39 @@ class DecideScreen extends React.Component {
     state = {
         active_groups : [],
         inactive_groups: [],
-        overlay: false
+        friends: [],
+        overlay: false,
+        createGroupOverlay: false,
     }
 
     startNewSession = () => {
         console.log("starting a new sesson");
-        this.toggleOverlay();
+        this.toggleCreateGroupOverlay();
         //pop up the overlay of non started groups
-
     };
+
+    displayFriends = () => {
+        this.socket.emit("get_friends_for_user");
+        this.toggleOverlay();
+    }
+
+    selectFriend = (friendIndex: number) => {
+        var temp = [...this.state.friends];
+        //temp[friendIndex]["selected"] = !temp[friendIndex]["selected"];
+        //this.setState({
+        //    friends: 
+        //})
+    }
 
     toggleOverlay = () => {
         this.setState({
             overlay: !this.state.overlay
+        });
+    };
+
+    toggleCreateGroupOverlay = () => {
+        this.setState({
+            createGroupOverlay: !this.state.createGroupOverlay
         });
     };
 
@@ -81,6 +107,19 @@ class DecideScreen extends React.Component {
                         })}
                     </ScrollView>
                 </Overlay>
+                <Overlay ModalComponent={Modal} isVisible={this.state.createGroupOverlay} onBackdropPress={this.toggleCreateGroupOverlay}>
+                    <ScrollView style={styles.scrollContainer}>
+                        {this.state.friends.map((prop, key) => {
+                            return (
+                                <Pressable onPress={() => {this.selectFriend(key)}} key={key}>
+                                    <View style={[styles.group, styles.activeGroup]} lightColor={Colors.light.navigation} >
+                                        <Text style={styles.groupText} lightColor={Colors.light.text}>{prop}</Text>
+                                    </View>
+                                </Pressable>
+                            );
+                        })}
+                    </ScrollView>
+                </Overlay>
                 <ScrollView style={styles.scrollContainer}>
                     {this.state.active_groups.map((prop, key) => {
                         return (
@@ -92,6 +131,7 @@ class DecideScreen extends React.Component {
                         );
                     })}
                 </ScrollView>
+                <TouchableOpacity onPress={() => this.displayFriends()}>Create a group biatch</TouchableOpacity>
                 <Pressable style={styles.startButton} onPress={this.startNewSession}><Text style={{fontSize: 24}}>Start New Session</Text></Pressable>
             </View>
         )
