@@ -4,41 +4,87 @@ import Colors from '../../constants/Colors';
 const { height, width } = Dimensions.get('window')
 
 export const styles = StyleSheet.create({
+    // GENERAL
     container: {
         backgroundColor: "#fff",
         flex: 1,
         alignItems: 'center',
         fontFamily: 'montserrat'
     },
-    inputText: {
+    headingText: {
+        fontSize: 35,
+        fontWeight: "500",
+        marginVertical: 10,
+    },
+
+    // OVERLAY
+    overlayContainer: {
+        backgroundColor: "#fff",
+        width: 4*width/5,
         paddingHorizontal: 15,
+    },
+    pickGroupCard: {
+        flexDirection: 'row',
+        paddingHorizontal: 5,
         paddingVertical: 10,
+    },
+    groupPicture: {
+        width: 40, 
+        height: 40, 
+        borderRadius:50 
+    },
+    pickGroupCardTextContainer: {
+        marginLeft: 10,
+    },
+    pickGroupCardTextMain: {
+        fontSize: 16,
+        fontWeight: "500",
+        color: "#111",
+    },
+    pickGroupCardTextSub: {
+        fontSize: 12,
+        fontWeight: "300",
+        color: "#bbb",
+    },
+    inputText: {
+        width: "75%",
+        paddingHorizontal: 15,
+        paddingVertical: 0,
         borderRadius: 6,
         borderColor: "#bbbbbb",
         borderWidth: 1,
-        marginRight: 15,
+        marginRight: 5,
     },
-    friend: {
-        width: '90%',
-        textAlign: 'center',
-        marginTop: 3,
-        marginBottom: 3,
-        marginHorizontal: 'auto',
-        padding: 8,
-        borderBottomRightRadius: 12,
-        shadowColor: "darkgray",
-        shadowOpacity: 0.5,
-        shadowOffset: { width: 3, height: 3},
-        
+    createGroupBtn: {
+        padding: 10,
+        backgroundColor: '#66ff66',
+        borderRadius: 6,
+        marginVertical: 5,
+        marginHorizontal: 1,
+    },
+    createGroupBtnText: {
+        color: "#fff",
+        fontSize: 14,
+        textAlign: "center",
+        fontWeight: "500",
+    },
+    highlightContainer: {
+        width: "100%",
+        marginVertical: 2
+    },
+    formRow: {
+        flexDirection:'row',
+        marginTop: 8,
+        width: "100%",
     },
     selectedFriend: {
-        backgroundColor: "#00FF00",
+        backgroundColor: "#eeeeee",
     },
     unselectedFriend: {
-        backgroundColor: Colors.light.navigation,
+        backgroundColor: "white",
     },
 
-
+    // BODY
     labelRow: {
         flexDirection:'row-reverse',
         marginTop: 4,
@@ -68,11 +114,6 @@ export const styles = StyleSheet.create({
         right: 15,
         position: "absolute",
         margin: 10,
-    },
-    liveSession: {
-        fontSize: 35,
-        fontWeight: "500",
-        marginVertical: 10,
     },
     sessionCard: {
         backgroundColor: '#fff',

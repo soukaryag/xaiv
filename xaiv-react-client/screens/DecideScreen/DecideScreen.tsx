@@ -136,40 +136,55 @@ class DecideScreen extends React.Component {
         return (
             <View style={styles.container}>
                 <Overlay ModalComponent={Modal} isVisible={this.state.overlay} onBackdropPress={this.toggleOverlay}>
-                    <ScrollView style={styles.scrollContainer}>
+                    <ScrollView style={styles.overlayContainer}>
+                        <Text style={styles.headingText}>Create Session</Text>
                         {this.state.inactive_groups.map((prop, key) => {
                             return (
-                                <Pressable onPress={() => {this.decideTopic(prop)}} key={key}>
-                                    <View>
-                                        <Text>{prop}</Text>
+                                <TouchableOpacity onPress={() => {this.decideTopic(prop)}} key={key}>
+                                    <View style={styles.pickGroupCard}>                                        
+                                        <Image source={{ uri: "https://img.freepik.com/free-vector/group-young-people-posing-photo_52683-18824.jpg?size=338&ext=jpg" }} style={styles.groupPicture} />                                    
+                                        <View style={styles.pickGroupCardTextContainer}>
+                                            <Text style={styles.pickGroupCardTextMain}>{prop}</Text>
+                                            <Text style={styles.pickGroupCardTextSub}>Group description</Text>
+                                        </View>
                                     </View>
-                                </Pressable>
+                                </TouchableOpacity>
                             );
                         })}
                     </ScrollView>
                 </Overlay>
+
                 <Overlay ModalComponent={Modal} isVisible={this.state.createGroupOverlay} onBackdropPress={this.toggleCreateGroupOverlay}>
-                    <View>
-                        <TextInput
-                            style={styles.inputText}
-                            placeholder="Group name..."
-                            placeholderTextColor="#cccccc"
-                            onChangeText={text => this.setState({ newGroupName: text })}
-                        />
-                        <ScrollView style={styles.scrollContainer}>
+                    <View style={styles.overlayContainer}>
+                        <Text style={styles.headingText}>Create Group</Text>
+                        
+                        <ScrollView>
                             {this.state.friends.map((prop, key) => {
                                 return (
-                                    <Pressable onPress={() => {this.selectFriend(key)}} key={key}>
-                                        <View style={[styles.friend, prop["friend"]["selected"] ? styles.selectedFriend : styles.unselectedFriend]}>
-                                            <Text>{prop["friend"]["name"]}</Text>
+                                    <TouchableOpacity style={[styles.highlightContainer ,prop["friend"]["selected"] ? styles.selectedFriend : styles.unselectedFriend]} onPress={() => {this.selectFriend(key)}} key={key}>
+                                        <View style={styles.pickGroupCard}>                                        
+                                            <Image source={{ uri: "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg" }} style={styles.groupPicture} />                                    
+                                            <View style={styles.pickGroupCardTextContainer}>
+                                                <Text style={styles.pickGroupCardTextMain}>{prop["friend"]["name"]}</Text>
+                                                <Text style={styles.pickGroupCardTextSub}>User description</Text>
+                                            </View>
                                         </View>
-                                    </Pressable>
+                                    </TouchableOpacity>
                                 );
                             })}
                         </ScrollView>
-                        <TouchableOpacity onPress={() => {this.createGroup()}}>
-                            <Text>Send that shit to the db</Text>
-                        </TouchableOpacity>
+                        <View style={styles.formRow}>
+                            <TextInput
+                                style={styles.inputText}
+                                placeholder="Group name..."
+                                placeholderTextColor="#cccccc"
+                                onChangeText={text => this.setState({ newGroupName: text })}
+                            />
+                            <TouchableOpacity style={styles.createGroupBtn} onPress={() => {this.createGroup()}}>
+                                <Text style={styles.createGroupBtnText}>Create</Text>
+                            </TouchableOpacity>
+                        </View>
+                        
                     </View>                    
                 </Overlay>
 
@@ -188,7 +203,7 @@ class DecideScreen extends React.Component {
                     </TouchableOpacity>
                 </View>
 
-                <Text style={styles.liveSession}>Live Sessions</Text>
+                <Text style={styles.headingText}>Live Sessions</Text>
                 
                 <ScrollView>
                     {this.state.active_groups.map((prop, key) => {

@@ -24,7 +24,7 @@ class ProfileScreen extends React.Component {
     overlay: false,
     username: '',
     friends: '',
-    profilePicUrl: 'https://website.cs.vt.edu/content/website_cs_vt_edu/en/News/department-spotlights/austin_stout_profile.transform/l-medium/image.jpg',
+    profilePicUrl: 'https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg',
   };
 
   async componentDidMount() {
