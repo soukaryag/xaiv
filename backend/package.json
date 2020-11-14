@@ -17,6 +17,6 @@
   },
   "scripts": {
     "start": "node server.js",
-    "pretty": "prettier --write '{,src/**/}*.js'",
+    "pretty": "prettier --write '{,**/}*.js'"
   }
 }
