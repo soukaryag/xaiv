@@ -1,9 +1,9 @@
 import React from 'react'
-import { StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ScrollView, Pressable } from 'react-native'
-import { Text, View } from '../../components/Themed';
-import Colors from '../../constants/Colors';
+import {Text, View, TextInput, Image, TouchableOpacity, ScrollView, Pressable } from 'react-native'
+import { Feather } from '@expo/vector-icons';
 import { Overlay } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { styles } from './DecideScreen.styles';
 import Modal from 'modal-react-native-web';
 
 class DecideScreen extends React.Component {
@@ -33,7 +33,23 @@ class DecideScreen extends React.Component {
             });
         });
 
-        AsyncStorage.getItem("username").then((value) => {
+        this.socket.on("receive_friends", (friends: any) => {
+            console.log("received friends", friends);
+            var temp = friends.map((friend : String) => {
+                return {
+                    "friend": {
+                        "name": friend,
+                        "selected": false,
+                        }
+                    }
+            });
+            console.log(temp);
+            this.setState({
+                friends: temp,
+            })
+        });
+
+        AsyncStorage.getItem("username").then((value: any) => {
             this.socket.emit("get_active_groups_for_user", value);
             this.socket.emit("get_inactive_groups_for_user", value);
         });
@@ -43,7 +59,25 @@ class DecideScreen extends React.Component {
     state = {
         active_groups : [],
         inactive_groups: [],
-        overlay: false
+        friends: [],
+        overlay: false,
+        createGroupOverlay: false,
+        newGroupName: "Unnamed group",
+    }
+
+    createGroup = () => {
+        console.log("create group client")
+        var tmp : any = [];
+        for (var i = 0; i < this.state.friends.length; i++) {
+            if (this.state.friends[i]["friend"]["selected"]) {
+                tmp.push(this.state.friends[i]["friend"]["name"]);
+            }
+        }
+        AsyncStorage.getItem("username").then((value: any) => {
+            console.log("got the vALUE BITCH", value);
+            this.socket.emit("create_group", [value].concat(tmp), this.state.newGroupName);
+        });
+        
     }
 
     startNewSession = () => {
@@ -52,9 +86,35 @@ class DecideScreen extends React.Component {
         //pop up the overlay of non started groups
     };
 
+    displayFriends = () => {
+        console.log("DISPLAY FRIENDS FUNCTION CALLED")
+        AsyncStorage.getItem("username").then((value: any) => {
+            this.socket.emit("get_friends", value);
+        });
+        this.toggleCreateGroupOverlay();
+    }
+
+    selectFriend = (friendIndex: number) => {
+        var temp : any = [];
+        for (var i = 0; i < this.state.friends.length; i++) {
+            temp.push(this.state.friends[i]);
+        }
+        temp[friendIndex]["friend"]["selected"] = ! temp[friendIndex]["friend"]["selected"];
+        console.log("???", temp);
+        this.setState({
+            friends: temp,
+        })
+    }
+
     toggleOverlay = () => {
         this.setState({
             overlay: !this.state.overlay
+        });
+    };
+
+    toggleCreateGroupOverlay = () => {
+        this.setState({
+            createGroupOverlay: !this.state.createGroupOverlay
         });
     };
 
@@ -74,91 +134,108 @@ class DecideScreen extends React.Component {
 
     render() {
         return (
-            <ScrollView style={styles.container}>
-                <View style={styles.topBar} lightColor={Colors.light.header}><Text>Choose a Group</Text></View>
+            <View style={styles.container}>
                 <Overlay ModalComponent={Modal} isVisible={this.state.overlay} onBackdropPress={this.toggleOverlay}>
                     <ScrollView style={styles.scrollContainer}>
                         {this.state.inactive_groups.map((prop, key) => {
                             return (
                                 <Pressable onPress={() => {this.decideTopic(prop)}} key={key}>
-                                    <View style={[styles.group, styles.activeGroup]} lightColor={Colors.light.navigation} >
-                                        <Text style={styles.groupText} lightColor={Colors.light.text}>{prop}</Text>
+                                    <View>
+                                        <Text>{prop}</Text>
                                     </View>
                                 </Pressable>
                             );
                         })}
                     </ScrollView>
                 </Overlay>
-                <ScrollView style={styles.scrollContainer}>
+                <Overlay ModalComponent={Modal} isVisible={this.state.createGroupOverlay} onBackdropPress={this.toggleCreateGroupOverlay}>
+                    <View>
+                        <TextInput
+                            style={styles.inputText}
+                            placeholder="Group name..."
+                            placeholderTextColor="#cccccc"
+                            onChangeText={text => this.setState({ newGroupName: text })}
+                        />
+                        <ScrollView style={styles.scrollContainer}>
+                            {this.state.friends.map((prop, key) => {
+                                return (
+                                    <Pressable onPress={() => {this.selectFriend(key)}} key={key}>
+                                        <View style={[styles.friend, prop["friend"]["selected"] ? styles.selectedFriend : styles.unselectedFriend]}>
+                                            <Text>{prop["friend"]["name"]}</Text>
+                                        </View>
+                                    </Pressable>
+                                );
+                            })}
+                        </ScrollView>
+                        <TouchableOpacity onPress={() => {this.createGroup()}}>
+                            <Text>Send that shit to the db</Text>
+                        </TouchableOpacity>
+                    </View>                    
+                </Overlay>
+
+                <View style={styles.header}>
+                    <TouchableOpacity
+                        onPress={() => this.displayFriends()}
+                        style={styles.createGroup}
+                        >
+                        <TabBarIcon name="users" color={"#bbbbbb"} size={23} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => this.startNewSession()}
+                        style={styles.startSession}
+                        >
+                        <TabBarIcon name="plus" color={"#bbbbbb"} size={23} />
+                    </TouchableOpacity>
+                </View>
+
+                <Text style={styles.liveSession}>Live Sessions</Text>
+                
+                <ScrollView>
                     {this.state.active_groups.map((prop, key) => {
                         return (
-                            <Pressable onPress={() => {this.joinGroupSwiping(prop)}} key={key}>
-                                <View style={[styles.group, styles.activeGroup]} lightColor={Colors.light.navigation} >
-                                    <Text style={styles.groupText} lightColor={Colors.light.text}>{prop}</Text>
+                            <View style={styles.sessionCard}>
+                                <View style={styles.sessionCardDate}>
+                                    <Text style={styles.sessionCardDateTop}>12</Text>
+                                    <Text style={styles.sessionCardDateBottom}>Jun</Text>
                                 </View>
-                            </Pressable>
+                                <View style={styles.sessionCardInformationLabel}>
+                                    <View style={styles.labelRow}>
+                                        <Text style={styles.sessionCardTextLabel}>Group</Text>
+                                    </View>
+                                    <View style={styles.labelRow}>
+                                        <Text style={styles.sessionCardTextLabel}>Activity</Text>
+                                    </View>
+                                    <View style={styles.labelRow}>
+                                        <Text style={styles.sessionCardTextLabel}>Location</Text>
+                                    </View>
+                                </View>
+                                <View style={styles.sessionCardInformation}>
+                                    <View style={styles.textRow}>
+                                        <Text style={styles.sessionCardText} numberOfLines={1}>{prop}</Text>
+                                    </View>
+                                    <View style={styles.textRow}>
+                                        <Text style={styles.sessionCardText} numberOfLines={1}>Restaurant</Text>
+                                    </View>
+                                    <View style={styles.textRow}>
+                                        <Text style={styles.sessionCardText} numberOfLines={1}>Arlington, VA</Text>
+                                    </View>
+                                </View>
+                                <TouchableOpacity style={styles.joinSession} onPress={() => {this.joinGroupSwiping(prop)}} key={key}>
+                                    <TabBarIcon name="play-circle" color={"#44ee44"} size={20} />
+                                </TouchableOpacity>
+                            </View>
                         );
                     })}
                 </ScrollView>
-                <TouchableOpacity style={styles.startButton} onPress={this.startNewSession}>
-                    <Text style={{fontSize: 24}}>Start New Session</Text>
-                </TouchableOpacity>
-            </ScrollView>
+            </View>
         )
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-    },
-    scrollContainer: {
-        width: '100%',
-    },
-    topBar: {
-        justifyContent: 'center',
-        width: '100%',
-        textAlign: 'center',
-        height: 40,
-        fontSize: 16,
-        marginBottom: 10,
-    },
-    group: {
-        width: '90%',
-        textAlign: 'center',
-        marginTop: 3,
-        marginBottom: 3,
-        marginHorizontal: 'auto',
-        padding: 8,
-        borderBottomRightRadius: 12,
-        shadowColor: "darkgray",
-        shadowOpacity: 0.5,
-        shadowOffset: { width: 3, height: 3},
-    },
-    groupText: {
-        fontSize: 18,
-    },
-    activeGroup: {
-        
-    },
-    startButton: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center',
-        width: '70%',
-        position: 'absolute',
-        zIndex: 1,
-        bottom: 25,
-        left: '15%',
-        height: 70,
-        fontSize: 24,
-        backgroundColor: Colors.light.popUp,
-        shadowColor: "darkgray",
-        shadowOpacity: 0.5,
-        shadowOffset: { width: 3, height: 3 },
-        borderRadius: 5,
-    }
-});
+function TabBarIcon(props: { name: string; color: string; size: number }) {
+    return <Feather style={{ marginBottom: -3 }} {...props} />;
+}
+
+
 
 export default DecideScreen
