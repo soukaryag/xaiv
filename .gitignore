@@ -13,7 +13,7 @@ xaiv-react-client/*.orig.*
 xaiv-react-client/web-build/
 
 backend/node_modules
-backend/.env
+*/.env
 
 # macOS
 .DS_Store
