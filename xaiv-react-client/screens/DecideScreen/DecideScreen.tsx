@@ -243,7 +243,6 @@ const styles = StyleSheet.create({
         shadowColor: "darkgray",
         shadowOpacity: 0.5,
         shadowOffset: { width: 3, height: 3},
-        
     },
     friendText: {
         fontSize: 18,
