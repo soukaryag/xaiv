@@ -1,6 +1,7 @@
 import React from 'react'
 import { Image, SafeAreaView, StyleSheet, View, Dimensions } from 'react-native'
-import { Divider, Icon, Text } from 'react-native-elements'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Divider, Text } from 'react-native-elements'
 
 const { height, width } = Dimensions.get('window')
 
@@ -19,8 +20,10 @@ class ProfileScreen extends React.Component {
   };
 
   componentDidMount() {
-    this.setState({ username: localStorage.getItem("username") })
-    this.socket.emit("get_friends", localStorage.getItem("username"));
+    AsyncStorage.getItem("username").then((value) => {
+      this.setState({ username: value })
+      this.socket.emit("get_friends", value);
+    });
     this.socket.on("receive_friends", (friends: string[]) => {
       let tmp = "";
       friends.forEach(function (value) {

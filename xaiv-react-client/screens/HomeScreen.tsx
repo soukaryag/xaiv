@@ -1,10 +1,10 @@
 import React from 'react'
 import { TouchableOpacity, Image, Text, StyleSheet, View, ScrollView, Dimensions, TextInput } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Feather } from '@expo/vector-icons';
 import { Overlay } from 'react-native-elements';
 import HomePost from '../components/HomePost';
 import postCards from '../constants/PostTemplate';
-
 import Modal from 'modal-react-native-web';
 
 const { height, width } = Dimensions.get('window')
@@ -27,8 +27,10 @@ class HomeScreen extends React.Component {
     }
 
     addFriend = () => {
-        this.socket.emit("add_friend", localStorage.getItem("username"), this.state.friendUsername)
-            
+        AsyncStorage.getItem("username").then((value) => {
+            this.socket.emit("add_friend", value, this.state.friendUsername)
+        });
+        
         this.socket.on("add_friend_success", () => {
             this.setState({friendUsername: ''});
             console.log("[ADD FRIEND] Added friend to friends list!")
@@ -141,7 +143,7 @@ const styles = StyleSheet.create({
     overlayHeader: {
         width: "100%",
         fontSize: 30,
-        fontWeight: 700,
+        fontWeight: "700",
         textAlign: 'center',
     },
     inputText: {

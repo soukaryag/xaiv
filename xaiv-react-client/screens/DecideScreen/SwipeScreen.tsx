@@ -1,6 +1,7 @@
 import React from 'react'
 import { SafeAreaView, StyleSheet, View, Dimensions } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Card from '../../components/Card'
 import photoCards from '../../constants/Template'
 import IconButton from '../../components/IconButton';
@@ -36,7 +37,10 @@ class SwipeScreen extends React.Component {
 
     componentDidMount() {
         console.log("mounted - emitting");
-        this.socket.emit("get_feed_for_user", localStorage.getItem("username"), this.name);
+        AsyncStorage.getItem("username").then((value) => {
+            this.socket.emit("get_feed_for_user", value, this.name);
+        });
+
     }
     swipeLeft = (idx: number, button=false) => {
         this.setState({ currIdx: idx });

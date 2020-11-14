@@ -1,8 +1,6 @@
 import React from 'react'
 import { SafeAreaView, StyleSheet, View, Dimensions, Pressable } from 'react-native'
-import Swiper from 'react-native-deck-swiper'
-import Card from '../../components/Card'
-import photoCards from '../../constants/Template'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const { height } = Dimensions.get('window')
 
@@ -36,7 +34,9 @@ class TopicScreen extends React.Component {
     selectTopic = (topic: String) => {
         navigator.geolocation.getCurrentPosition(
             position => {
-                this.socket.emit("create_session", localStorage.getItem("username"), this.name, topic, position.coords.latitude, position.coords.longitude, 8);
+                AsyncStorage.getItem("username").then((value) => {
+                    this.socket.emit("create_session", value, this.name, topic, position.coords.latitude, position.coords.longitude, 8);
+                });
             },
         );
         console.log(name, topic);
