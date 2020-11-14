@@ -62,6 +62,39 @@ io.on("connection", socket => {
         friends.getFriends(socket, username);
     });
 
+    socket.on("create_group", (members, group_name) => {
+        console.log("creating a FUCKING group");
+        var newGroup = {};
+        newGroup["group_name"] = group_name;
+        newGroup["group_data"] = {
+            members: members,
+            session: {
+                active: false,
+                radius: 5,
+                //insert date here
+                topic: "",
+                pool: [],
+            }
+        };
+        newGroup["member_data"]
+        newGroup["member_data"] = [];
+        for (var i = 0; i < members.length; i++) {
+            newGroup["member_data"].push({
+                name : members[i],
+                pool: [],
+            })
+
+            //also take the chance to add them to the db
+            database.insert({group_name: group_name, username: members[i]}, tables.GROUP_TO_USER_TABLE, function() {
+
+            });
+        }
+        console.log("The new group is ", newGroup);
+        database.insert(newGroup, tables.GROUP_TABLE, function() {
+
+        });
+    });
+
     //Instantiate a new session for the given username, group name, and topic string
     socket.on("create_session", (username, group_name, topic, lng, lat, radius) => {
         let ok = false;
@@ -79,6 +112,7 @@ io.on("connection", socket => {
                 //pull card data from the google api
                 group["group_data"]["session"]["active"] = true;
                 group["group_data"]["session"]["topic"] = topic;
+                radius = group["group_data"]["session"]["radius"]; //Consider removing this
                 console.log("fetching for topic", topic);
                 var places = await googleApi.fetchActivities(socket, lng, lat, radius, topic);
                 for (var i = 0; i < places.length; i++) {
@@ -106,7 +140,9 @@ io.on("connection", socket => {
         database.query({username: username}, tables.GROUP_TO_USER_TABLE, async function(res) {
             //Assume only one user (unique usernames)
             var group_names = [];
+            console.log("get active", res);
             for (var i = 0; i < res.length; i++) {
+                console.log(res[i]["group_name"]);
                 var group = await database.queryOneAsync({group_name: res[i]["group_name"]}, tables.GROUP_TABLE);
                 var active = group["group_data"]["session"]["active"];
                 if (active) {
@@ -121,6 +157,7 @@ io.on("connection", socket => {
     socket.on("get_inactive_groups_for_user", async (username) => {
         database.query({username: username}, tables.GROUP_TO_USER_TABLE, async function(res) {
             //Assume only one user (unique usernames)
+            console.log("get inactive", res);
             var group_names = [];
             for (var i = 0; i < res.length; i++) {
                 var group = await database.queryOneAsync({group_name: res[i]["group_name"]}, tables.GROUP_TABLE);

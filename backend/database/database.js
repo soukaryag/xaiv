@@ -44,7 +44,6 @@ async function insertOneAsyncNoDuplicate(args, matchArgs, table) {
 }
 
 async function queryOneAsync(args, table) {
-    console.log("trying to connect")
     const client = await MongoClient.connect(DATABASE_URL);
     if (!client) {
         return;
