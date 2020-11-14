@@ -29,4 +29,4 @@
   - Good to have:
     - Swipe page improvements
 
-    
+push to heroku: `git subtree push --prefix backend heroku master` after staging and commiting changes
