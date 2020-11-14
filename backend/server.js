@@ -53,6 +53,10 @@ io.on("connection", socket => {
         accounts.signup(socket, username, password);
     });
 
+    socket.on("get_user", (username) => {
+        accounts.getUser(socket, username);
+    });
+
     // add friend - add friend to someone's friend list
     socket.on("add_friend", (username, friendUsername) => {
         friends.addFriend(socket, username, friendUsername);

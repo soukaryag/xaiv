@@ -23,7 +23,15 @@ class ProfileScreen extends React.Component {
     AsyncStorage.getItem("username").then((value) => {
       this.setState({ username: value })
       this.socket.emit("get_friends", value);
+      this.socket.emit("get_user", value);
     });
+
+    this.socket.on("getUser"), (user: any) => {
+      this.setState({
+        profilePicUrl: user.profile_picture
+      })
+    }
+    
     this.socket.on("receive_friends", (friends: string[]) => {
       let tmp = "";
       friends.forEach(function (value) {
@@ -51,7 +59,6 @@ class ProfileScreen extends React.Component {
         <Divider style={[styles.divider]} />
         <Text style={[styles.sectionHeader]}>Friends</Text>
         <Text style={[styles.friends]}>{this.state.friends}</Text>
-
       </SafeAreaView>
     )
   }
