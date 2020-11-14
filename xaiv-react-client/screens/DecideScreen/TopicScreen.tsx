@@ -13,6 +13,12 @@ class TopicScreen extends React.Component {
         this.socket = props.route.params.socket;
         this.name = props.route.params.name;
         this.navigation = props.navigation;
+        if ( typeof this.socket == "string" ) {
+            props.navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+            });
+        }
 
         this.socket.on("create_session_complete", () => {
             this.navigation.navigate("Swipe", {socket: this.socket, name: this.name});

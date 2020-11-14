@@ -12,11 +12,19 @@ class SwipeScreen extends React.Component {
     socket: any
     name: any
     swiper: any
+    navigation: any
     constructor(props : any) {
         super(props);
         this.socket = props.route.params.socket;
+        this.navigation = props.navigation;
         this.name = props.route.params.name;
-        console.log("swipe", this.name);
+        if ( typeof this.socket == "string" ) {
+            props.navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+            });
+            return;
+        }
 
         this.socket.on("return_feed_for_user", (feed: any) => { 
             console.log("pool is ", feed);
@@ -35,7 +43,14 @@ class SwipeScreen extends React.Component {
         currIdx: 0
     };
 
-    componentDidMount() {
+    async componentDidMount() {
+        if ( typeof this.socket == "string" ) {
+            await this.navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+            });
+            return;
+        }
         console.log("mounted - emitting");
         AsyncStorage.getItem("username").then((value) => {
             this.socket.emit("get_feed_for_user", value, this.name);

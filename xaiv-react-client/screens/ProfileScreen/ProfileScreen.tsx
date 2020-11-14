@@ -7,9 +7,17 @@ const { height, width } = Dimensions.get('window')
 
 class ProfileScreen extends React.Component {
   socket: any
+  navigation: any
   constructor(props: any) {
     super(props);
     this.socket = props.route.params.socket;
+    this.navigation = props.navigation;
+    if (typeof this.socket == "string") {
+      props.navigation.reset({
+        index: 0,
+        routes: [{ name: 'Login' }],
+      });
+    }
   }
 
   state = {
@@ -19,7 +27,14 @@ class ProfileScreen extends React.Component {
     profilePicUrl: 'https://website.cs.vt.edu/content/website_cs_vt_edu/en/News/department-spotlights/austin_stout_profile.transform/l-medium/image.jpg',
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    if ( typeof this.socket == "string" ) {
+        await this.navigation.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+        });
+        return;
+    }
     AsyncStorage.getItem("username").then((value) => {
       this.setState({ username: value })
       this.socket.emit("get_friends", value);
@@ -31,12 +46,12 @@ class ProfileScreen extends React.Component {
         profilePicUrl: user.profile_picture
       })
     }
-    
+
     this.socket.on("receive_friends", (friends: string[]) => {
       let tmp = "";
       friends.forEach(function (value) {
         tmp += value + "\n";
-      }); 
+      });
       this.setState({ friends: tmp });
     });
   }
