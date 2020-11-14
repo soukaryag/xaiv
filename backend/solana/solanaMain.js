@@ -59,7 +59,6 @@ async function fundAccountWithLamports(connection, pubKey, lamports = 1000000000
     for (;;) {
         await sleep(500);
         if (lamports+prevBalance == (await connection.getBalance(pubKey))) {
-            console.log("[FUNDER] Updated account balance")
             return "Success";
         }
         if (--retries <= 0) {
@@ -165,7 +164,6 @@ async function createAccount(cardData, programName) {
 
     database.query({ activity_id: cardData.activity_id }, tables.ACTIVITY_TABLE, function (res) {
         if (res.length == 0) {
-            console.log("[CREATE ACCOUNT] Does not exist, backend error.")
             database.insert(cardData, tables.ACTIVITY_TABLE, function (res) {
                 console.log("[RIGHT] Successfully added activity to the database");
             });
@@ -219,8 +217,6 @@ async function incrementCount(activity, programName) {
         [payerAccount],
         { skipPreflight: false, commitment: 'recent', preflightCommitment: 'recent' }
     )
-
-    console.log(signature);
 
     console.log("[INCREMENT] Transaction concluded for", activity.activity_name);
     await printAccountData(activity.activity_name, activity.pub_key_right, activity.pub_key_left);

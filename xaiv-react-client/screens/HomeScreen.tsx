@@ -39,13 +39,11 @@ class HomeScreen extends React.Component {
         
         this.socket.on("add_friend_success", () => {
             this.setState({friendUsername: ''});
-            console.log("[ADD FRIEND] Added friend to friends list!")
             this.toggleOverlay();
         }); 
 
         this.socket.on("add_friend_failed", () => {
             this.setState({friendUsername: ''});
-            console.log("[ADD FRIEND] Could not add friend :(")
         }); 
     }
 

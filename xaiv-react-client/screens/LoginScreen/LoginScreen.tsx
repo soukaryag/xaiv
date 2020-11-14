@@ -32,7 +32,7 @@ class LoginScreen extends React.Component {
         this.socket.emit("login", this.state.username, this.state.password);
 
         this.socket.on("login_success", (username: string) => {
-            console.log(`Logged in ${username} successfully`)
+            // console.log(`Logged in ${username} successfully`)
             AsyncStorage.setItem("username", this.state.username);
             this.navigation.navigate("Root", {socket: this.socket});
         })

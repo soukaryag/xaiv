@@ -27,7 +27,7 @@ class SwipeScreen extends React.Component {
         }
 
         this.socket.on("return_feed_for_user", (feed: any) => { 
-            console.log("pool is ", feed);
+            // console.log("pool is ", feed);
             this.setState({
                 ready: true,
                 cardData: feed
@@ -68,7 +68,7 @@ class SwipeScreen extends React.Component {
             this.socket.emit('swipe-left', value, this.name, this.state.cardData[idx]);
         });
         
-        console.log(`Rejected ${idx}`);
+        // console.log(`Rejected ${idx}`);
     };
     swipeRight = (idx: number, button=false) => {
         this.setState({ currIdx: idx });
@@ -76,7 +76,7 @@ class SwipeScreen extends React.Component {
         AsyncStorage.getItem("username").then((value) => {
             this.socket.emit('swipe-right', value, this.name, this.state.cardData[idx]);
         });
-        console.log(`Accepted ${idx}`);
+        // console.log(`Accepted ${idx}`);
     };
     swipeTop = (idx: number, button=false) => {
         this.setState({ currIdx: idx });
@@ -84,7 +84,7 @@ class SwipeScreen extends React.Component {
         AsyncStorage.getItem("username").then((value) => {
             this.socket.emit('swipe-right', value, this.state.cardData[idx]);
         });
-        console.log(`SUPER Accepted ${idx}`);
+        // console.log(`SUPER Accepted ${idx}`);
     };
 
     render() {

@@ -34,7 +34,6 @@ class DecideScreen extends React.Component {
         });
 
         this.socket.on("receive_friends", (friends: any) => {
-            console.log("received friends", friends);
             var temp = friends.map((friend : String) => {
                 return {
                     "friend": {
@@ -43,7 +42,6 @@ class DecideScreen extends React.Component {
                         }
                     }
             });
-            console.log(temp);
             this.setState({
                 friends: temp,
             })
@@ -66,7 +64,7 @@ class DecideScreen extends React.Component {
     }
 
     createGroup = () => {
-        console.log("create group client")
+        // console.log("create group client")
         var tmp : any = [];
         for (var i = 0; i < this.state.friends.length; i++) {
             if (this.state.friends[i]["friend"]["selected"]) {
@@ -74,20 +72,20 @@ class DecideScreen extends React.Component {
             }
         }
         AsyncStorage.getItem("username").then((value: any) => {
-            console.log("got the vALUE BITCH", value);
+            // console.log("got the vALUE BITCH", value);
             this.socket.emit("create_group", [value].concat(tmp), this.state.newGroupName);
         });
         
     }
 
     startNewSession = () => {
-        console.log("starting a new sesson");
+        // console.log("starting a new session");
         this.toggleOverlay();
         //pop up the overlay of non started groups
     };
 
     displayFriends = () => {
-        console.log("DISPLAY FRIENDS FUNCTION CALLED")
+        // console.log("DISPLAY FRIENDS FUNCTION CALLED")
         AsyncStorage.getItem("username").then((value: any) => {
             this.socket.emit("get_friends", value);
         });
@@ -100,7 +98,7 @@ class DecideScreen extends React.Component {
             temp.push(this.state.friends[i]);
         }
         temp[friendIndex]["friend"]["selected"] = ! temp[friendIndex]["friend"]["selected"];
-        console.log("???", temp);
+        // console.log("???", temp);
         this.setState({
             friends: temp,
         })
