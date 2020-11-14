@@ -11,7 +11,7 @@ export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
 
-  let socket = io("https://xaiv-backend.herokuapp.com", {      
+  let socket = io("http://127.0.0.1:3000"/*"https://xaiv-backend.herokuapp.com"*/, {
       transports: ['websocket'], jsonp: false });
   socket.emit("connection");
 

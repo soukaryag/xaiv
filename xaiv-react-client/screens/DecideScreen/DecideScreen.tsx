@@ -26,9 +26,19 @@ class DecideScreen extends React.Component {
             });
         });
 
-        this.socket.on("get_friends_for_user", (friends: any) => {
+        this.socket.on("receive_friends", (friends: any) => {
+            console.log("received friends", friends);
+            var temp = friends.map((friend : String) => {
+                return {
+                    "friend": {
+                        "name": friend,
+                        "selected": false,
+                        }
+                    }
+            });
+            console.log(temp);
             this.setState({
-                friends: friends,
+                friends: temp,
             })
         });
 
@@ -46,25 +56,48 @@ class DecideScreen extends React.Component {
         friends: [],
         overlay: false,
         createGroupOverlay: false,
+        newGroupName: "Unnamed group",
+    }
+
+    createGroup = () => {
+        console.log("create group client")
+        var tmp : any = [];
+        for (var i = 0; i < this.state.friends.length; i++) {
+            if (this.state.friends[i]["friend"]["selected"]) {
+                tmp.push(this.state.friends[i]["friend"]["name"]);
+            }
+        }
+        AsyncStorage.getItem("username").then((value: any) => {
+            console.log("got the vALUE BITCH", value);
+            this.socket.emit("create_group", [value].concat(tmp), this.state.newGroupName);
+        });
+        
     }
 
     startNewSession = () => {
         console.log("starting a new sesson");
-        this.toggleCreateGroupOverlay();
+        this.toggleOverlay();
         //pop up the overlay of non started groups
     };
 
     displayFriends = () => {
-        this.socket.emit("get_friends_for_user");
-        this.toggleOverlay();
+        console.log("DISPLAY FRIENDS FUNCTION CALLED")
+        AsyncStorage.getItem("username").then((value: any) => {
+            this.socket.emit("get_friends", value);
+        });
+        this.toggleCreateGroupOverlay();
     }
 
     selectFriend = (friendIndex: number) => {
-        var temp = [...this.state.friends];
-        //temp[friendIndex]["selected"] = !temp[friendIndex]["selected"];
-        //this.setState({
-        //    friends: 
-        //})
+        var temp : any = [];
+        for (var i = 0; i < this.state.friends.length; i++) {
+            temp.push(this.state.friends[i]);
+        }
+        temp[friendIndex]["friend"]["selected"] = ! temp[friendIndex]["friend"]["selected"];
+        console.log("???", temp);
+        this.setState({
+            friends: temp,
+        })
     }
 
     toggleOverlay = () => {
@@ -111,17 +144,27 @@ class DecideScreen extends React.Component {
                     </ScrollView>
                 </Overlay>
                 <Overlay ModalComponent={Modal} isVisible={this.state.createGroupOverlay} onBackdropPress={this.toggleCreateGroupOverlay}>
+                    <TextInput
+                        style={styles.inputText}
+                        placeholder="Group name..."
+                        placeholderTextColor="#cccccc"
+                        onChangeText={text => this.setState({ newGroupName: text })}
+                    />
                     <ScrollView style={styles.scrollContainer}>
                         {this.state.friends.map((prop, key) => {
+                            console.log("POOP", prop["friend"]["name"]);
                             return (
                                 <Pressable onPress={() => {this.selectFriend(key)}} key={key}>
-                                    <View style={[styles.group, styles.activeGroup]} lightColor={Colors.light.navigation} >
-                                        <Text style={styles.groupText} lightColor={Colors.light.text}>{prop}</Text>
+                                    <View style={[styles.friend, prop["friend"]["selected"] ? styles.selectedFriend : styles.unselectedFriend]}>
+                                        <Text style={styles.groupText} lightColor={Colors.light.text}>{prop["friend"]["name"]}</Text>
                                     </View>
                                 </Pressable>
                             );
                         })}
                     </ScrollView>
+                    <TouchableOpacity onPress={() => {this.createGroup()}}>
+                        <Text>Send that shit to the db</Text>
+                    </TouchableOpacity>
                 </Overlay>
                 <ScrollView style={styles.scrollContainer}>
                     {this.state.active_groups.map((prop, key) => {
@@ -134,7 +177,7 @@ class DecideScreen extends React.Component {
                         );
                     })}
                 </ScrollView>
-                <TouchableOpacity onPress={() => this.displayFriends()}>Create a group biatch</TouchableOpacity>
+                <TouchableOpacity onPress={() => this.displayFriends()}><Text>Create a group biatch</Text></TouchableOpacity>
                 <Pressable style={styles.startButton} onPress={this.startNewSession}><Text style={{fontSize: 24}}>Start New Session</Text></Pressable>
             </View>
         )
@@ -174,6 +217,36 @@ const styles = StyleSheet.create({
     },
     activeGroup: {
         
+    },
+    inputText: {
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        borderRadius: 6,
+        borderColor: "#bbbbbb",
+        borderWidth: 1,
+        marginRight: 15,
+    },
+    friend: {
+        width: '90%',
+        textAlign: 'center',
+        marginTop: 3,
+        marginBottom: 3,
+        marginHorizontal: 'auto',
+        padding: 8,
+        borderBottomRightRadius: 12,
+        shadowColor: "darkgray",
+        shadowOpacity: 0.5,
+        shadowOffset: { width: 3, height: 3},
+        
+    },
+    friendText: {
+        fontSize: 18,
+    },
+    selectedFriend: {
+        backgroundColor: "#00FF00",
+    },
+    unselectedFriend: {
+        backgroundColor: Colors.light.navigation,
     },
     startButton: {
         justifyContent: 'center',
