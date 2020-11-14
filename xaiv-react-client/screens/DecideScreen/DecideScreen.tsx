@@ -74,7 +74,7 @@ class DecideScreen extends React.Component {
 
     render() {
         return (
-            <View style={styles.container} lightColor="#eee" darkColor="#003f5c">
+            <ScrollView style={styles.container}>
                 <View style={styles.topBar} lightColor={Colors.light.header}><Text>Choose a Group</Text></View>
                 <Overlay ModalComponent={Modal} isVisible={this.state.overlay} onBackdropPress={this.toggleOverlay}>
                     <ScrollView style={styles.scrollContainer}>
@@ -100,10 +100,10 @@ class DecideScreen extends React.Component {
                         );
                     })}
                 </ScrollView>
-                <Pressable style={styles.startButton} onPress={this.startNewSession}>
+                <TouchableOpacity style={styles.startButton} onPress={this.startNewSession}>
                     <Text style={{fontSize: 24}}>Start New Session</Text>
-                </Pressable>
-            </View>
+                </TouchableOpacity>
+            </ScrollView>
         )
     }
 }
