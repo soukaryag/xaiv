@@ -4,8 +4,8 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Dimensions
 
 const { width } = Dimensions.get('window')
 
-const HomePost = ({ postInfo }: any) => (
-    <View style={styles.post} key={postInfo.key}>
+const HomePost = ({ key, postInfo }: any) => (
+    <View style={styles.post}>
         <View style={styles.postHeader}>
             <TouchableOpacity
                 style={styles.profilePictureContainer}
@@ -14,7 +14,7 @@ const HomePost = ({ postInfo }: any) => (
             </TouchableOpacity>
             <View>
                 <Text style={styles.profileName}>{postInfo.username}</Text>
-                <Text style={styles.postHeaderActivity}>{postInfo.activity_description}</Text>
+                <Text style={styles.postHeaderActivity}>visited {postInfo.activity_description}</Text>
             </View>
 
         </View>

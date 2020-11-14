@@ -46,7 +46,7 @@ class HomeScreen extends React.Component {
         const posts = []
 
         for (let i = 0; i < postCards.length; i++) {
-            posts.push(<HomePost postInfo={postCards[i]} />)
+            posts.push(<HomePost key={i} postInfo={postCards[i]} />)
         }
 
         return (
@@ -113,6 +113,7 @@ class HomeScreen extends React.Component {
                 </ScrollView>
 
                 {posts}
+
             </ScrollView>
         )
     }
