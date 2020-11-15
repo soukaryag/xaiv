@@ -20,6 +20,12 @@ Like any hackathon project, the app is quite rushed. When testing it out, please
 
 ## Use
 
+### Through expo
+1. Go to `https://expo.io/@soukaryag/projects/xaiv`
+2. Scan the QR code with your iOS or Android device, alternatively use the `Open project in the browser option`
+3. Welcome to Xaiv, have fun!
+
+### Local Machine
 1. Clone the repository to your local machine
    - `git clone https://github.com/soukaryag/xaiv.git`
 2. Continue to the client folder
