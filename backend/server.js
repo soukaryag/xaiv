@@ -88,6 +88,7 @@ io.on("connection", socket => {
                 if (p[i]["swipe_rights"] == group["group_data"]["members"].length) {
                     console.log("consensus achieved!!");
                     consensus = true;
+                    group["group_data"]["session"]["consensus"].push(p[i]);
                 }
             }
         }
@@ -153,6 +154,7 @@ io.on("connection", socket => {
                 //insert date here
                 topic: "",
                 pool: [],
+                consensus: [],
             }
         };
         newGroup["member_data"]

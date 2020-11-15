@@ -98,13 +98,15 @@ function HomeNavigator({ route, navigation }: any) {
 
 const MessagesStack = createStackNavigator<MessagesParamList>();
 
-function MessagesNavigator() {
+function MessagesNavigator({ route, navigation }: any) {
+  const globals = route.params;
   return (
     <MessagesStack.Navigator>
       <MessagesStack.Screen
         name="MessagesScreen"
         component={MessagesScreen}
         options={{ headerShown: false }}
+        initialParams={globals}
       />
     </MessagesStack.Navigator>
   );

@@ -65,6 +65,7 @@ class DecideScreen extends React.Component {
 
     createGroup = () => {
         // console.log("create group client")
+        
         var tmp : any = [];
         for (var i = 0; i < this.state.friends.length; i++) {
             if (this.state.friends[i]["friend"]["selected"]) {
