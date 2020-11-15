@@ -4,6 +4,7 @@ import { Text, SafeAreaView, View, TouchableOpacity, ScrollView, TextInput, Imag
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles } from './DecideScreen/DecideScreen.styles';
 import { Overlay } from 'react-native-elements';
+import Modal from 'modal-react-native-web';
 import ConsensusCard from '../components/ConsensusCard';
 
 const { height, width } = Dimensions.get('window')
@@ -97,7 +98,7 @@ class MessagesScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Overlay isVisible={this.state.createGroupOverlay} onBackdropPress={this.toggleCreateGroupOverlay}>
+                <Overlay ModalComponent={Modal} isVisible={this.state.createGroupOverlay} onBackdropPress={this.toggleCreateGroupOverlay}>
                     <View style={styles.overlayContainer}>
                         <Text style={styles.headingText}>Create Group</Text>
 

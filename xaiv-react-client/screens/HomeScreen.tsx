@@ -6,6 +6,7 @@ import { Overlay } from 'react-native-elements';
 import HomePost from '../components/HomePost';
 import TopPost from '../components/TopPost';
 import postCards from '../constants/PostTemplate';
+import Modal from 'modal-react-native-web';
 
 const { height, width } = Dimensions.get('window')
 
@@ -84,7 +85,7 @@ class HomeScreen extends React.Component {
 
         return (
             <ScrollView style={styles.container} showsVerticalScrollIndicator={false} stickyHeaderIndices={[1]}>
-                <Overlay isVisible={this.state.overlay} onBackdropPress={this.toggleOverlay}>
+                <Overlay ModalComponent={Modal} isVisible={this.state.overlay} onBackdropPress={this.toggleOverlay}>
                     <View style={styles.overlayContainer}>
                         
                         <View style={styles.overlayRow}>
