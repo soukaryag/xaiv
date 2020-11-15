@@ -363,10 +363,18 @@ io.on("connection", socket => {
 
 async function convertPoolToActivities(userPool) {
     var feed = [];
+    var argsList = [];
     for (var i = 0; i < userPool.length; i++) {
+        argsList.push({
+            activity_id: userPool[i]["id"]
+        })
+    }
+    feed = await database.queryManyAsync(argsList, tables.ACTIVITY_TABLE);
+    console.log("returning FEED POOP", feed);
+    /*for (var i = 0; i < userPool.length; i++) {
         var res = await database.queryOneAsync({activity_id: userPool[i]["id"]}, tables.ACTIVITY_TABLE);
         feed.push(res);
-    }
+    } */
     return feed;
 }
 

@@ -63,6 +63,31 @@ async function queryOneAsync(args, table) {
     }
 }
 
+async function queryManyAsync(argsList, table) {
+    const client = await MongoClient.connect(DATABASE_URL);
+    if (!client) {
+        return;
+    }
+    let result = [];
+    let el = null;
+    try {
+        const db = client.db(DATABASE_NAME);
+        let collection = db.collection(table);
+        for (var i = 0; i < argsList.length; i++) {
+            el = await collection.findOne(argsList[i]);
+            result.push(el);
+        }
+        return result;
+    }
+    catch (err) {
+        console.log(err);
+    }
+    finally {
+        client.close();
+        return result;
+    }
+}
+
 function query(args, table, callBack) {
     MongoClient.connect(DATABASE_URL, function(err, db){
         if(err) throw err;
@@ -88,4 +113,4 @@ function update(query, newValues, table, callBack) {
     })
 }
 
-module.exports = { insertOneAsyncNoDuplicate, insert, queryOneAsync, query, update }
+module.exports = { insertOneAsyncNoDuplicate, insert, queryOneAsync, queryManyAsync, query, update }

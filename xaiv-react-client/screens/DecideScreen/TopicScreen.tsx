@@ -41,6 +41,7 @@ class TopicScreen extends React.Component {
         navigator.geolocation.getCurrentPosition(
             position => {
                 AsyncStorage.getItem("username").then((value) => {
+                    topic = "doctor";
                     this.socket.emit("create_session", value, this.name, topic, position.coords.latitude, position.coords.longitude, 8);
                 });
             },
