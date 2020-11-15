@@ -35,7 +35,37 @@ async function insertOneAsyncNoDuplicate(args, matchArgs, table) {
         }
     }
     catch (err) {
-        console.log(err);
+        console.log("BIG FAT ERROR IOAND", err);
+    }
+    finally {
+        client.close();
+    }
+}
+
+//Async insert. Doesn't insert if duplicate already exists...
+async function insertManyAsyncNoDuplicate(argsList, matchArgsList, table) {
+    const client = await MongoClient.connect(DATABASE_URL);
+    if (!client) {
+        return;
+    }
+    try {
+        const db = client.db(DATABASE_NAME);
+        let collection = db.collection(table);
+        console.log("imand, ", argsList);
+        for (var i = 0; i < argsList.length; i++) {
+            //let result = await queryOneAsync(matchArgsList[i], table);
+            let result = await collection.findOne(matchArgsList[i]);
+            if (result == null) {
+                await collection.insertOne(argsList[i]);
+            }
+            else {
+                console.log("NOT adding", argsList[i]);
+            }
+        }
+        
+    }
+    catch (err) {
+        console.log("BIG FAT ERROR IMAND", err);
     }
     finally {
         client.close();
@@ -55,7 +85,7 @@ async function queryOneAsync(args, table) {
         return result;
     }
     catch (err) {
-        console.log(err);
+        console.log("BIG FAT ERROR QOA", err);
     }
     finally {
         client.close();
@@ -80,7 +110,7 @@ async function queryManyAsync(argsList, table) {
         return result;
     }
     catch (err) {
-        console.log(err);
+        console.log("BIG FAT ERROR, QMA", err);
     }
     finally {
         client.close();
@@ -113,4 +143,4 @@ function update(query, newValues, table, callBack) {
     })
 }
 
-module.exports = { insertOneAsyncNoDuplicate, insert, queryOneAsync, queryManyAsync, query, update }
+module.exports = { insertOneAsyncNoDuplicate, insertManyAsyncNoDuplicate, insert, queryOneAsync, queryManyAsync, query, update }

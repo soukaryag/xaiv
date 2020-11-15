@@ -231,9 +231,14 @@ io.on("connection", socket => {
                 group["group_data"]["session"]["topic"] = topic;
                 radius = group["group_data"]["session"]["radius"]; //Consider removing this
                 var places = await googleApi.fetchActivities(socket, lng, lat, radius, topic);
+                var argsList = [];
+                var matchArgsList = [];
+                
                 for (var i = 0; i < places.length; i++) {
-                    await database.insertOneAsyncNoDuplicate(places[i], {activity_id: places[i]["activity_id"]}, tables.ACTIVITY_TABLE);
-                    
+                    argsList.push(places[i]);
+                    matchArgsList.push({
+                        activity_id: places[i]["activity_id"]
+                    })
                     //sorry... xD
                     var xddd = {
                         id: places[i].activity_id,
@@ -249,6 +254,8 @@ io.on("connection", socket => {
                         group["member_data"][j]["pool"].push(xddd2);
                     }
                 }
+
+                await database.insertManyAsyncNoDuplicate(argsList, matchArgsList, tables.ACTIVITY_TABLE);
                 database.update({group_name: group_name}, group, tables.GROUP_TABLE, function(e, r) {
                     //joe momma
                     socket.emit("create_session_complete");
