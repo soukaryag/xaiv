@@ -21,9 +21,9 @@ class MessagesScreen extends React.Component {
             return;
         }
         
-        this.socket.on("return_decided_groups_for_user", (decided_groups: any) => { 
+        this.socket.on("return_active_groups_for_user", (active_groups: any) => { 
             this.setState({
-                decided_groups: decided_groups,
+                active_groups: active_groups,
             });
         });
 
@@ -42,13 +42,13 @@ class MessagesScreen extends React.Component {
         });
 
         AsyncStorage.getItem("username").then((value: any) => {
-            this.socket.emit("get_decided_groups_for_user", value);
+            this.socket.emit("get_active_groups_for_user", value);
         });
         
     };
 
     state = {
-        decided_groups: [],
+        active_groups: [],
         friends: [],
         createGroupOverlay: false,
         newGroupName: "Unnamed group",
@@ -145,7 +145,7 @@ class MessagesScreen extends React.Component {
                 <Text style={styles.headingText}>Decided Events</Text>
                 
                 <ScrollView>
-                    {this.state.decided_groups.map((prop, key) => {
+                    {this.state.active_groups.map((prop, key) => {
                         return (
                             <View style={styles.sessionCard}>
                                 <View style={styles.sessionCardDate}>
