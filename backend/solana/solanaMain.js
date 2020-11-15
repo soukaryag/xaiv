@@ -69,6 +69,37 @@ async function fundAccountWithLamports(connection, pubKey, lamports = 1000000000
     throw new Error(`[ESTABLISH PAYER] Airdrop of ${lamports} failed`);
 }
 
+async function establishPayer(programName) {
+    if (!connection) {
+        connection = await conn.getNodeConnection();
+    }
+    let fees = 0;
+    const { feeCalculator } = await connection.getRecentBlockhash();
+
+    // Calculate the cost to load the program
+    let data = "";
+    if ( programName === 'swipeLeftProgramId') 
+        data = await fs.readFile(pathToSwipeLeftProgram);
+    else 
+        data = await fs.readFile(pathToSwipeRightProgram);
+    const NUM_RETRIES = 500; // allow some number of retries
+    fees +=
+        feeCalculator.lamportsPerSignature *
+        (solanaWeb3.BpfLoader.getMinNumSignatures(data.length) + NUM_RETRIES) +
+        (await connection.getMinimumBalanceForRentExemption(data.length));
+
+    // Calculate the cost to fund the greeter account
+    fees += await connection.getMinimumBalanceForRentExemption(
+        swipeDataLayout.span,
+    );
+
+    // Calculate the cost of sending the transactions
+    fees += feeCalculator.lamportsPerSignature * 100000;
+
+    // Fund a new payer via airdrop
+    payerAccount = await newAccountWithLamports(connection, programName, fees);
+}
+
 async function loadProgram(programName) {
     if (!connection) {
         connection = await conn.getNodeConnection();
@@ -84,10 +115,7 @@ async function loadProgram(programName) {
         return;
     } catch (err) {
         // try to load the program
-        let payerAccount = await newAccountWithLamports(
-            connection,
-            programName
-        );
+        await establishPayer(programName);
 
         // Load the program
         let data = "";
