@@ -48,7 +48,7 @@ If you are having trouble, please contact us! Thanks.
       - ~~Create a group CHECK~~
       - ~~Choose a topic / start a group session CHECK~~
       - ~~Populate session pool on the backend CHECK~~
-      - Conclude group session / show users consensuses achieved
+      - ~~Conclude group session / show users consensuses achieved~~
       - ~~Make card data length dyanmic based on number of activities~~
       - Change group_name as query to a unique group id
       - ~~Some kind of loader to prevent double sends~~
@@ -58,7 +58,7 @@ If you are having trouble, please contact us! Thanks.
       - ~~Record consensus event~~
       - ~~Home page displays blockchain events in real time~~
     - Other:
-      - Get the app to actually work on mobile
+      - ~~Get the app to actually work on mobile~~
       - ~~Deploy backend to heroku and update endpoints accordingly~~
   
   - Good to have:
