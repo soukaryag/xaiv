@@ -244,4 +244,21 @@ async function printAccountData(activity_name, pub_key_right, pub_key_left) {
     );
 }
 
-module.exports = { loadProgram, swipeDataLayout, createAccount, incrementCount };
+async function getAccountData(accountInfo) {
+    if (!connection) {
+        connection = await conn.getNodeConnection();
+    }
+
+    PubKeyRight = new solanaWeb3.PublicKey(accountInfo.pub_key_right);
+    const accountInfo_right = await connection.getAccountInfo(PubKeyRight);
+    PubKeyLeft = new solanaWeb3.PublicKey(accountInfo.pub_key_left);
+    const accountInfo_left = await connection.getAccountInfo(PubKeyLeft);
+    if (accountInfo_right === null || accountInfo_left === null) {
+        throw 'Error: cannot find the account';
+    }
+    const infoRight = swipeDataLayout.decode(Buffer.from(accountInfo_right.data));
+    const infoLeft = swipeDataLayout.decode(Buffer.from(accountInfo_left.data));
+    return { left: infoLeft, right: infoRight }
+}
+
+module.exports = { loadProgram, swipeDataLayout, createAccount, getAccountData, incrementCount };
