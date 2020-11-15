@@ -30,6 +30,8 @@ Like any hackathon project, the app is quite rushed. When testing it out, please
    - This app is best viewed in mobile view, you can do this by using `Ctrl+Shift+I` to access the web console and click the mobile icon on the top right on the console.
 6. Welcome to Xaiv, have fun!
 
+If you are having trouble, please contact us! Thanks.
+
 
 
 ## To do
