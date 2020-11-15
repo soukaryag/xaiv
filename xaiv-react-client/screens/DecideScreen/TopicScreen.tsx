@@ -1,19 +1,20 @@
 import React from 'react'
-import { SafeAreaView, Text, StyleSheet, View, Dimensions, Pressable } from 'react-native'
+import { SafeAreaView, Image, Text, StyleSheet, View, Dimensions, TouchableOpacity } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { LinearGradient } from 'expo-linear-gradient';
 
-const { height } = Dimensions.get('window')
+const { height, width } = Dimensions.get('window')
 
 class TopicScreen extends React.Component {
     socket: any
     navigation: any
     name: any
-    constructor(props : any) {
+    constructor(props: any) {
         super(props);
         this.socket = props.route.params.socket;
         this.name = props.route.params.name;
         this.navigation = props.navigation;
-        if ( typeof this.socket == "string" ) {
+        if (typeof this.socket == "string") {
             props.navigation.reset({
                 index: 0,
                 routes: [{ name: 'Login' }],
@@ -21,7 +22,7 @@ class TopicScreen extends React.Component {
         }
 
         this.socket.on("create_session_complete", () => {
-            this.navigation.navigate("Swipe", {socket: this.socket, name: this.name});
+            this.navigation.navigate("Swipe", { socket: this.socket, name: this.name });
         });
     }
 
@@ -30,7 +31,7 @@ class TopicScreen extends React.Component {
     };
 
     componentDidMount() {
-        
+
     }
 
     showAllTopics = () => {
@@ -48,42 +49,38 @@ class TopicScreen extends React.Component {
         console.log(name, topic);
         //Update the group to have an active session
         //Populate the group pool with google api cards
-        
+
     }
 
 
     render() {
-        /*if (!this.state.ready) {
-            return (
-                <View>Loading...</View>
-            );
-        } */
         return (
-            <View style={styles.container} lightColor="#eee" darkColor="#003f5c">
-                <View style={styles.suggestedBox}>
-                    <Pressable style={styles.suggestedTopic} onPress={() => this.selectTopic("restaurant")}>
-                        <View>
-                            <Text>Sit-in food</Text>
-                        </View>
-                    </Pressable>
-                    <Pressable style={[styles.suggestedTopic, styles.suggestedTopicMiddle]} onPress={() => this.selectTopic("movie_theater")}>
-                        <View>
-                            <Text>Movie theaters biatch</Text>
-                        </View>
-                    </Pressable>
-                    <Pressable style={styles.suggestedTopic} onPress={() => this.selectTopic("gym")}>
-                        <View>
-                        <Text>Gym</Text>
-                        </View>
-                    </Pressable>
-                </View>
-                <View style={styles.showAllTopics}>
-                    <Pressable style={styles.showAllTopicsButton} onPress={() => this.showAllTopics()}>
-                        <View>
-                        <Text>Show All Topics</Text>
-                        </View>
-                    </Pressable>
-                </View>
+            <View style={styles.container}>
+                <LinearGradient
+                    // Button Linear Gradient
+                    colors={['#FF3D00', '#FB5A00', '#E17D20']}
+                    style={styles.linearGradientContainer}>
+                    <View style={styles.suggestedBox}>
+
+                        <TouchableOpacity style={styles.suggestedTopic} onPress={() => this.selectTopic("restaurant")}>
+                            <Image source={{ uri: "https://image.freepik.com/free-vector/cartoon-cook-chef-illustration-restaurant-cook-chef-hat-cook-uniform_268458-4.jpg" }} style={styles.image} />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.suggestedTopic, styles.suggestedTopicMiddle]} onPress={() => this.selectTopic("movie_theater")}>
+                            <Image source={{ uri: "https://images.creativemarket.com/0.1.0/ps/8802225/600/400/m2/fpnw/wm0/movie-theatre-6-1-.jpg?1596014447&s=aa422fc225d4a9a9e330a0317c80cdba" }} style={styles.image} />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.suggestedTopic} onPress={() => this.selectTopic("gym")}>
+                            <Image source={{ uri: "https://static.vecteezy.com/system/resources/previews/000/450/953/non_2x/happy-man-exercising-in-the-park-vector-illustration-in-flat-style-concept-illustration-for-healthy-lifestyle-sport-exercising.jpg" }} style={styles.image} />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.showAllTopics}>
+                        <TouchableOpacity style={styles.showAllTopicsButton} onPress={() => this.showAllTopics()}>
+                            <View>
+                                <Text style={styles.btnText}>Show All Topics</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </LinearGradient>
+
             </View>
         )
     }
@@ -97,10 +94,21 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         backgroundColor: 'white',
     },
+    linearGradientContainer: {
+        paddingVertical: 25,
+        paddingHorizontal: 3,
+        alignItems: 'center',
+        flex: 1,
+        width: width,
+        height: height,
+    },
+    image: {
+        flex: 1,
+    },
     suggestedBox: {
         flex: 1,
         width: "100%",
-        height: "70%",
+        height: "85%",
         display: "flex",
         flexDirection: 'row',
         justifyContent: "space-between"
@@ -109,34 +117,35 @@ const styles = StyleSheet.create({
         flex: 1,
         height: "100%",
         backgroundColor: "#C68FFF",
-        shadowColor: "darkgray",
-        shadowOpacity: 0.2,
-        shadowOffset: { width: -3, height: 7},
+        shadowColor: "black",
+        shadowOpacity: 0.4,
+        shadowRadius: 4,
+        marginHorizontal: 2,
     },
     suggestedTopicMiddle: {
         marginHorizontal: "1%"
     },
     showAllTopics: {
-        height: "30%",
+        height: "15%",
         width: "100%",
+        paddingTop: 10,
         alignItems: 'center',
         justifyContent: 'center',
     },
     showAllTopicsButton: {
         textAlign: "center",
-        fontSize: 18,
         backgroundColor: "white",
         textTransform: "uppercase",
-        borderStyle: "solid",
-        borderWidth: 1,
-        borderColor: "black",
-        padding: "10%",
-        width: "80%",
+        padding: 14,
+        width: "60%",
         borderRadius: 30,
-        shadowColor: "darkgray",
-        shadowOpacity: 0.2,
-        shadowOffset: { width: 0, height: 7},
-    }
+        shadowColor: "black",
+        shadowOpacity: 0.4,
+        shadowRadius: 7,
+    },
+    btnText: {
+        fontSize: 18,
+        fontWeight: "500",
+    },
 })
-
 export default TopicScreen

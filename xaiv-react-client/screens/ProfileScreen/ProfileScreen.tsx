@@ -1,7 +1,8 @@
 import React from 'react'
-import { Image, SafeAreaView, StyleSheet, View, Dimensions } from 'react-native'
+import { Image, SafeAreaView, Text, StyleSheet, View, Dimensions, TouchableOpacity } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Divider, Text } from 'react-native-elements'
+import { Divider } from 'react-native-elements'
+import { LinearGradient } from 'expo-linear-gradient';
 
 const { height, width } = Dimensions.get('window')
 
@@ -21,19 +22,18 @@ class ProfileScreen extends React.Component {
   }
 
   state = {
-    overlay: false,
     username: '',
     friends: '',
     profilePicUrl: 'https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg',
   };
 
   async componentDidMount() {
-    if ( typeof this.socket == "string" ) {
-        await this.navigation.reset({
-            index: 0,
-            routes: [{ name: 'Login' }],
-        });
-        return;
+    if (typeof this.socket == "string") {
+      await this.navigation.reset({
+        index: 0,
+        routes: [{ name: 'Login' }],
+      });
+      return;
     }
     AsyncStorage.getItem("username").then((value) => {
       this.setState({ username: value })
@@ -56,9 +56,6 @@ class ProfileScreen extends React.Component {
     });
   }
 
-  toggleOverlay = () => {
-    this.setState({ overlay: !this.state.overlay });
-  }
 
   render() {
     return (
@@ -66,11 +63,11 @@ class ProfileScreen extends React.Component {
         <View style={styles.imageContainer}>
           <Image source={{ uri: this.state.profilePicUrl }} style={styles.image} />
         </View>
-        <Text h4 style={[styles.name]}>{this.state.username}</Text>
+        <Text style={[styles.name]}>{this.state.username}</Text>
         <Text style={[styles.desc]}>Software Engineer at Xaiv</Text>
         <Divider style={[styles.divider]} />
         <Text style={[styles.sectionHeader]}>About Me</Text>
-        <Text style={[styles.desc]}>Beep boop bop, badaboom bap bop. POW. byebye doggy.</Text>
+        <Text style={[styles.desc]}>This is me, thanks for reading. Hope you have a great day :)</Text>
         <Divider style={[styles.divider]} />
         <Text style={[styles.sectionHeader]}>Friends</Text>
         <Text style={[styles.friends]}>{this.state.friends}</Text>

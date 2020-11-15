@@ -16,6 +16,7 @@ class HomeScreen extends React.Component {
     constructor(props: any) {
         super(props);
         this.socket = props.route.params.socket;
+        this.navigation = props.navigation;
         if ( typeof this.socket == "string" ) {
             props.navigation.reset({
                 index: 0,
@@ -32,6 +33,14 @@ class HomeScreen extends React.Component {
     };
 
     componentDidMount() {
+        if ( typeof this.socket == "string" ) {
+            this.navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+            });
+            return;
+        }
+
         navigator.geolocation.getCurrentPosition(
             position => {
                 this.socket.emit("get_top_activities_solana", position.coords.latitude, position.coords.longitude);
