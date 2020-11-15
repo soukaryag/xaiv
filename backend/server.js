@@ -143,6 +143,29 @@ io.on("connection", socket => {
         friends.getFriends(socket, username);
     });
 
+    socket.on("get_top_activities_solana", async () => {
+        database.queryRandom(2, tables.ACTIVITY_TABLE, async function(res) {
+            if ( res.length < 2 ) return {} 
+            resultZero = await solanaMain.getAccountData(res[0]);
+            resultOne = await solanaMain.getAccountData(res[1]);
+            information = {
+                activity_zero: {
+                    activity_name: res[0].activity_name.slice(0, 14), 
+                    activity_photo: res[0].activity_photo,
+                    right: resultZero.right.swipe,
+                    left: resultZero.left.swipe
+                },
+                activity_one: {
+                    activity_name: res[1].activity_name.slice(0, 14), 
+                    activity_photo: res[1].activity_photo,
+                    right: resultOne.right.swipe,
+                    left: resultOne.left.swipe
+                }
+            }
+            socket.emit("receive_top_activities_solana", information);
+        })
+    });
+
     socket.on("create_group", (members, group_name) => {
         var newGroup = {};
         newGroup["group_name"] = group_name;

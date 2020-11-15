@@ -20,13 +20,13 @@ const HomePost = ({ key, postInfo }: any) => (
         </View>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={styles.postBody}>
             <View style={styles.photoCard}>
-
+                <Image source={{ uri: `${postInfo.pic_1}` }} style={styles.postPicture} />
             </View>
             <View style={styles.photoCard}>
-
+                <Image source={{ uri: `${postInfo.pic_2}` }} style={styles.postPicture} />
             </View>
             <View style={styles.photoCard}>
-
+                <Image source={{ uri: `${postInfo.pic_3}` }} style={styles.postPicture} />
             </View>
         </ScrollView>
         <View style={styles.postFooter}>
@@ -77,6 +77,10 @@ const styles = StyleSheet.create({
     },
     profilePicture: {
         width: 36, height: 36, borderRadius:50 
+    },
+    postPicture: {
+        flex: 1,
+        borderRadius: 8,
     },
     profilePictureContainer: {
         width:38,

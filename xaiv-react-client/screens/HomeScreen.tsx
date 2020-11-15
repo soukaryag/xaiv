@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Feather } from '@expo/vector-icons';
 import { Overlay } from 'react-native-elements';
 import HomePost from '../components/HomePost';
+import TopPost from '../components/TopPost';
 import postCards from '../constants/PostTemplate';
 import Modal from 'modal-react-native-web';
 
@@ -26,7 +27,21 @@ class HomeScreen extends React.Component {
     state = {
         overlay: false,
         friendUsername: '',
+        postCards: postCards,
+        topPost: {},
     };
+
+    componentDidMount() {
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                this.socket.emit("get_top_activities_solana", position.coords.latitude, position.coords.longitude);
+            },
+        );
+
+        this.socket.on("receive_top_activities_solana", (res: any) => {
+            this.setState({ topPost: res })
+        });
+    }
 
     toggleOverlay = () => {
         this.setState({overlay: !this.state.overlay});
@@ -34,7 +49,7 @@ class HomeScreen extends React.Component {
 
     addFriend = () => {
         AsyncStorage.getItem("username").then((value) => {
-            this.socket.emit("add_friend", value, this.state.friendUsername)
+            this.socket.emit("add_friend", value, this.state.friendUsername);
         });
         
         this.socket.on("add_friend_success", () => {
@@ -51,8 +66,13 @@ class HomeScreen extends React.Component {
     render() {
         const posts = []
 
-        for (let i = 0; i < postCards.length; i++) {
-            posts.push(<HomePost key={i} postInfo={postCards[i]} />)
+        if ('activity_zero' in this.state.topPost) {
+            console.log(this.state.topPost);
+            posts.push(<TopPost key={0} postInfo={this.state.topPost}/>)
+        }
+
+        for (let i = 0; i < this.state.postCards.length; i++) {
+            posts.push(<HomePost key={i+1} postInfo={this.state.postCards[i]} />)
         }
 
         return (
