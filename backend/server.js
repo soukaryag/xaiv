@@ -93,6 +93,8 @@ io.on("connection", socket => {
                     };
                     var act = await database.queryOneAsync({activity_id: p[i]["id"]}, tables.ACTIVITY_TABLE);
                     temp["photo"] = act["activity_photo"];
+                    temp["name"] = act["activity_name"];
+                    temp["topic"] = group["group_data"]["session"]["topic"];
                     group["group_data"]["session"]["consensus"].push(temp);
                 }
             }
@@ -268,6 +270,26 @@ io.on("connection", socket => {
                 }
             }
             socket.emit("return_active_groups_for_user",  group_names);
+        });
+    });
+
+    socket.on("get_active_groups_and_consensus_for_user", async (username) => {
+        database.query({username: username}, tables.GROUP_TO_USER_TABLE, async function(res) {
+            //Assume only one user (unique usernames)
+            var groups = [];
+            for (var i = 0; i < res.length; i++) {
+                var group = await database.queryOneAsync({group_name: res[i]["group_name"]}, tables.GROUP_TABLE);
+                var active = group["group_data"]["session"]["active"];
+                if (active) {
+                    groups.push({
+                        name: res[i]["group_name"],
+                        consensus: group.group_data.session.consensus
+                    });
+                }
+                
+            }
+            console.log(groups);
+            socket.emit("return_active_groups_and_consensus_for_user",  groups);
         });
     });
 
