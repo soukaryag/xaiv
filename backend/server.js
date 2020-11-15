@@ -144,20 +144,25 @@ io.on("connection", socket => {
     });
 
     socket.on("get_top_activities_solana", async () => {
-        database.query({pub_key_right: { $regex: ".*" }}, tables.ACTIVITY_TABLE, async function(res) {
+        database.query({pub_key_right: { $regex: ".*" }, pub_key_left: { $regex: ".*" }}, tables.ACTIVITY_TABLE, async function(res) {
             if ( res.length < 2 ) return {} 
-            resultZero = await solanaMain.getAccountData(res[0]);
-            resultOne = await solanaMain.getAccountData(res[1]);
+            let tmp = [];
+            while(tmp.length < 2){
+                var r = Math.floor(Math.random() * (res.length - 1)) + 1;
+                if(tmp.indexOf(r) === -1) tmp.push(r);
+            }
+            resultZero = await solanaMain.getAccountData(res[tmp[0]]);
+            resultOne = await solanaMain.getAccountData(res[tmp[1]]);
             information = {
                 activity_zero: {
-                    activity_name: res[0].activity_name.slice(0, 14), 
-                    activity_photo: res[0].activity_photo,
+                    activity_name: res[tmp[0]].activity_name.slice(0, 14), 
+                    activity_photo: res[tmp[0]].activity_photo,
                     right: resultZero.right.swipe,
                     left: resultZero.left.swipe
                 },
                 activity_one: {
-                    activity_name: res[1].activity_name.slice(0, 14), 
-                    activity_photo: res[1].activity_photo,
+                    activity_name: res[tmp[1]].activity_name.slice(0, 14), 
+                    activity_photo: res[tmp[1]].activity_photo,
                     right: resultOne.right.swipe,
                     left: resultOne.left.swipe
                 }

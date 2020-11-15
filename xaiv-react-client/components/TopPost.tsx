@@ -31,7 +31,7 @@ const TopPost = ({ key, postInfo }: any) => (
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.footerIcons}>
                     <TabBarIcon name="thumbs-down" color={"#f17650"} size={18} />
-                    <Text style={styles.footerIconLabel}>{postInfo.activity_zero.right}</Text>
+                    <Text style={styles.footerIconLabel}>{postInfo.activity_zero.left}</Text>
                 </TouchableOpacity>
 
             </View>
@@ -62,7 +62,7 @@ const TopPost = ({ key, postInfo }: any) => (
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.footerIcons}>
                     <TabBarIcon name="thumbs-down" color={"#f17650"} size={18} />
-                    <Text style={styles.footerIconLabel}>{postInfo.activity_one.right}</Text>
+                    <Text style={styles.footerIconLabel}>{postInfo.activity_one.left}</Text>
                 </TouchableOpacity>
 
             </View>
