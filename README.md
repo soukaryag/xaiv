@@ -20,6 +20,10 @@ Users will be able to post about this on their feed easily and even make comment
    - This app is best viewed in mobile view, you can do this by using `Ctrl+Shift+I` to access the web console and click the mobile icon on the top right on the console.
 6. Welcome to Xaiv, have fun!
 
+##Blockchain Implementation
+
+The app can be broken into two parts. The first is the local, decision-making functionality. This governs users, groups, and serving "decision session" data to groups. This is all done with a typical server and database, no blockchain needed. The second part of the app, however, is where Solana comes in. Each action taken by a user - any user - is sent anonymously to the blockchain simply as an event with a timestamp. This includes swipes and (in the future) consensus being reached / confirmation that a group has done the activity they decided on. The hope of this is to provide a trustless data aggregate of user activity. It sort of operates as a Yelp alternative, where instead of writing formal reviews and explicitly rating restaurants (among other things), data is collected much more casually, and anonymously, from users simply using the group decision making portion of the app. It also reduces (or arguably, eliminates) the need to trust us as a centralized organization providing the data, since each data point is permanently stored, timestamped, on a public ledger, and the code and platform can easily be audited to verify that all user interactions successfully make it onto the blockchain. Data from the blockchain is shown on the home page as a live feed, like Venmo.
+
 ## To do
 - Functionality:
   - Essential:
