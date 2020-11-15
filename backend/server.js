@@ -88,7 +88,12 @@ io.on("connection", socket => {
                 if (p[i]["swipe_rights"] == group["group_data"]["members"].length) {
                     console.log("consensus achieved!!");
                     consensus = true;
-                    group["group_data"]["session"]["consensus"].push(p[i]);
+                    var temp = {
+                        id: p[i]["id"],
+                    };
+                    var act = await database.queryOneAsync({activity_id: p[i]["id"]}, tables.ACTIVITY_TABLE);
+                    temp["photo"] = act["activity_photo"];
+                    group["group_data"]["session"]["consensus"].push(temp);
                 }
             }
         }
