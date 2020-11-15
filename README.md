@@ -8,6 +8,16 @@ XAIV essentially acts as a Tinder but for activities for when you cannot decide 
 
 Users will be able to post about this on their feed easily and even make comments to review their time and experience at the location. We also have a calendar feature so that users with many groups and sessions can keep track of their activities and where and when it will be taking place. With our app, decisions are made easier and quicker with a swipe of your finger.
 
+## Blockchain Implementation
+
+The app can be broken into two parts. The first is the core "decision making helper" functionality. Users can create a profile, add their friends to a group, and poll the Google Places API freely, swiping as a group until they come to as many agreements as they like. None of this requires the use of a blockchain; Instead, it uses a regular back-end server and database. The second part of the app, however, is where Solana and its blockchain come in. We aim to **tokenize data by-products from casual user interactions with the app, and store them, aggregated and anonymously, on the blockchain**. Each action taken by a user - any user - is sent to the blockchain as a micro-event with a timestamp. This currently includes only swipe events, but will later be expanded to more events. With all these events, a chronological history of user events is transparently built and maintained
+
+Why is this important? The hope of this is to generate **meaningful** and **trustless** data aggregates, while also being **transparent about privacy** to our users. You could think of it as Yelp alternative, where instead of writing formal reviews and explicitly rating restaurants (among other things), data is collected much more casually, and anonymously, from users simply using the group decision making portion of the app. Users are incentivized to provide this data, thanks to the app offering them a useful service free of charge. They also won't have any concerns regarding privacy - none of the data is tied to them personally, and, most importantly, *they can see that* (on the blockchain). It also reduces (or arguably, eliminates) the need to trust us as a centralized organization providing the data, since each data point is permanently stored on a public ledger (with timestamps!). The code and platform can easily be audited to verify that all user interactions successfully make it onto the blockchain. Third parties can see the data being built in real time, leaving any room for doubt regarding its validity or possible tampering. Also, any event from another user (pinged to the blockchain up, and ponged back on request) is shown on the home page of our app as a live feed, like Venmo does. This helps promote a social atmosphere for our users.
+
+## Looking Forward
+
+Like any hackathon project, the app is quite rushed. When testing it out, please interpret any malfunctions or empty pages with a grain of salt :). The core group decision making functionality works, and the app makes (a currently simplistic) use of the blockchain to store data. Blockchain programming was a new experience for us, and getting even a basic application to work within the time constraints has been difficult. Ideally, with more time, we'd expand our implementation of Solana to be necessary and meaningful. This isn't the first "decider" app anyone's ever made, but the way we intend to store and make use of its data by-products is unprecedented. Hopefully, what we've programmed so far using Solana serves as a convincing *proof of concept*, if nothing else.
+
 ## Use
 
 1. Clone the repository to your local machine
@@ -20,9 +30,9 @@ Users will be able to post about this on their feed easily and even make comment
    - This app is best viewed in mobile view, you can do this by using `Ctrl+Shift+I` to access the web console and click the mobile icon on the top right on the console.
 6. Welcome to Xaiv, have fun!
 
-## Blockchain Implementation
+If you are having trouble, please contact us! Thanks.
 
-The app can be broken into two parts. The first is the local, decision-making functionality. This governs users, groups, and serving "decision session" data to groups. This is all done with a typical server and database, no blockchain needed. The second part of the app, however, is where Solana comes in. Each action taken by a user - any user - is sent anonymously to the blockchain simply as an event with a timestamp. This includes swipes and (in the future) consensus being reached / confirmation that a group has done the activity they decided on. The hope of this is to provide a trustless data aggregate of user activity. It sort of operates as a Yelp alternative, where instead of writing formal reviews and explicitly rating restaurants (among other things), data is collected much more casually, and anonymously, from users simply using the group decision making portion of the app. It also reduces (or arguably, eliminates) the need to trust us as a centralized organization providing the data, since each data point is permanently stored, timestamped, on a public ledger, and the code and platform can easily be audited to verify that all user interactions successfully make it onto the blockchain. Data from the blockchain is shown on the home page as a live feed, like Venmo.
+
 
 ## To do
 - Functionality:
