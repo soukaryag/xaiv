@@ -51,15 +51,11 @@ async function insertManyAsyncNoDuplicate(argsList, matchArgsList, table) {
     try {
         const db = client.db(DATABASE_NAME);
         let collection = db.collection(table);
-        console.log("imand, ", argsList);
         for (var i = 0; i < argsList.length; i++) {
             //let result = await queryOneAsync(matchArgsList[i], table);
             let result = await collection.findOne(matchArgsList[i]);
             if (result == null) {
                 await collection.insertOne(argsList[i]);
-            }
-            else {
-                console.log("NOT adding", argsList[i]);
             }
         }
         

@@ -14,7 +14,7 @@ export default function App() {
   const PROD_URL = "https://xaiv-backend.herokuapp.com"
   const LOCAL_URL = "http://127.0.0.1:3000"
 
-  let socket = io(LOCAL_URL, {      
+  let socket = io(PROD_URL, {      
       transports: ['websocket'], jsonp: false });
   socket.emit("connection");
 
