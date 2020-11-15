@@ -1,10 +1,13 @@
 import { Feather } from '@expo/vector-icons';
 import React from 'react'
-import { Text, SafeAreaView, View, TouchableOpacity, ScrollView, TextInput, Image } from 'react-native'
+import { Text, SafeAreaView, View, TouchableOpacity, ScrollView, TextInput, Image, Dimensions, StyleSheet } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles } from './DecideScreen/DecideScreen.styles';
 import { Overlay } from 'react-native-elements';
 import Modal from 'modal-react-native-web';
+import ConsensusCard from '../components/ConsensusCard';
+
+const { height, width } = Dimensions.get('window')
 
 class MessagesScreen extends React.Component {
     socket: any
@@ -21,9 +24,10 @@ class MessagesScreen extends React.Component {
             return;
         }
         
-        this.socket.on("return_decided_groups_for_user", (decided_groups: any) => { 
+        this.socket.on("return_active_groups_and_consensus_for_user", (active_groups: any) => { 
+            console.log(active_groups);
             this.setState({
-                decided_groups: decided_groups,
+                active_groups: active_groups,
             });
         });
 
@@ -42,13 +46,13 @@ class MessagesScreen extends React.Component {
         });
 
         AsyncStorage.getItem("username").then((value: any) => {
-            this.socket.emit("get_decided_groups_for_user", value);
+            this.socket.emit("get_active_groups_and_consensus_for_user", value);
         });
         
     };
 
     state = {
-        decided_groups: [],
+        active_groups: [],
         friends: [],
         createGroupOverlay: false,
         newGroupName: "Unnamed group",
@@ -145,39 +149,54 @@ class MessagesScreen extends React.Component {
                 <Text style={styles.headingText}>Decided Events</Text>
                 
                 <ScrollView>
-                    {this.state.decided_groups.map((prop, key) => {
+                    {this.state.active_groups.map((prop, key) => {
+                        var copy = {"consensus" : []};
+                        Object.assign(copy, prop);
+                        console.log("poop 1", prop);
+                        console.log("poop", copy);
                         return (
-                            <View style={styles.sessionCard}>
-                                <View style={styles.sessionCardDate}>
-                                    <Text style={styles.sessionCardDateTop}>12</Text>
-                                    <Text style={styles.sessionCardDateBottom}>Jun</Text>
+                            <View>
+                                <View style={styles.sessionCard}>
+                                    <View style={styles.sessionCardDate}>
+                                        <Text style={styles.sessionCardDateTop}>12</Text>
+                                        <Text style={styles.sessionCardDateBottom}>Jun</Text>
+                                    </View>
+                                    <View style={styles.sessionCardInformationLabel}>
+                                        <View style={styles.labelRow}>
+                                            <Text style={styles.sessionCardTextLabel}>Group</Text>
+                                        </View>
+                                        <View style={styles.labelRow}>
+                                            <Text style={styles.sessionCardTextLabel}>Activity</Text>
+                                        </View>
+                                        <View style={styles.labelRow}>
+                                            <Text style={styles.sessionCardTextLabel}>Location</Text>
+                                        </View>
+                                    </View>
+                                    <View style={styles.sessionCardInformation}>
+                                        <View style={styles.textRow}>
+                                            <Text style={styles.sessionCardText} numberOfLines={1}>{prop["name"]}</Text>
+                                        </View>
+                                        <View style={styles.textRow}>
+                                            <Text style={styles.sessionCardText} numberOfLines={1}>Restaurant</Text>
+                                        </View>
+                                        <View style={styles.textRow}>
+                                            <Text style={styles.sessionCardText} numberOfLines={1}>Arlington, VA</Text>
+                                        </View>
+                                    </View>
+                                    
                                 </View>
-                                <View style={styles.sessionCardInformationLabel}>
-                                    <View style={styles.labelRow}>
-                                        <Text style={styles.sessionCardTextLabel}>Group</Text>
-                                    </View>
-                                    <View style={styles.labelRow}>
-                                        <Text style={styles.sessionCardTextLabel}>Activity</Text>
-                                    </View>
-                                    <View style={styles.labelRow}>
-                                        <Text style={styles.sessionCardTextLabel}>Location</Text>
-                                    </View>
-                                </View>
-                                <View style={styles.sessionCardInformation}>
-                                    <View style={styles.textRow}>
-                                        <Text style={styles.sessionCardText} numberOfLines={1}>{prop}</Text>
-                                    </View>
-                                    <View style={styles.textRow}>
-                                        <Text style={styles.sessionCardText} numberOfLines={1}>Restaurant</Text>
-                                    </View>
-                                    <View style={styles.textRow}>
-                                        <Text style={styles.sessionCardText} numberOfLines={1}>Arlington, VA</Text>
-                                    </View>
-                                </View>
-                                <TouchableOpacity style={styles.joinSession} onPress={() => {}} key={key}>
-                                    <TabBarIcon name="play-circle" color={"#44ee44"} size={20} />
-                                </TouchableOpacity>
+                                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={messagesStyles.post}>
+                                {copy.consensus.map((group : any, key : number) => {
+                                    console.log("THE GROUP", group);
+                                    return (
+                                        <ConsensusCard key={key} cardInfo={group} />
+                                    );
+                                })}
+                                </ScrollView>
+                                
+                                
                             </View>
+                            
                         );
                     })}
                 </ScrollView>
@@ -185,6 +204,26 @@ class MessagesScreen extends React.Component {
         )
     }
 }
+
+const messagesStyles = StyleSheet.create({
+    groups: {
+        backgroundColor: '#fff',
+        height: 100,
+        width: width,
+        marginBottom: 2,
+        shadowOpacity: 0.2,
+        flexWrap:"wrap"
+    },
+    post: {
+        marginHorizontal: 5,
+        backgroundColor: 'white',
+        flexDirection: 'row',
+        width: width - 10,
+        marginBottom: 8,
+        paddingVertical: 10,
+        shadowOpacity: 0.15,
+    },
+})
 
 function TabBarIcon(props: { name: string; color: string; size: number }) {
     return <Feather style={{ marginBottom: -3 }} {...props} />;

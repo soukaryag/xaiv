@@ -88,7 +88,14 @@ io.on("connection", socket => {
                 if (p[i]["swipe_rights"] == group["group_data"]["members"].length) {
                     console.log("consensus achieved!!");
                     consensus = true;
-                    group["group_data"]["session"]["consensus"].push(p[i]);
+                    var temp = {
+                        id: p[i]["id"],
+                    };
+                    var act = await database.queryOneAsync({activity_id: p[i]["id"]}, tables.ACTIVITY_TABLE);
+                    temp["photo"] = act["activity_photo"];
+                    temp["name"] = act["activity_name"];
+                    temp["topic"] = group["group_data"]["session"]["topic"];
+                    group["group_data"]["session"]["consensus"].push(temp);
                 }
             }
         }
@@ -266,6 +273,26 @@ io.on("connection", socket => {
         });
     });
 
+    socket.on("get_active_groups_and_consensus_for_user", async (username) => {
+        database.query({username: username}, tables.GROUP_TO_USER_TABLE, async function(res) {
+            //Assume only one user (unique usernames)
+            var groups = [];
+            for (var i = 0; i < res.length; i++) {
+                var group = await database.queryOneAsync({group_name: res[i]["group_name"]}, tables.GROUP_TABLE);
+                var active = group["group_data"]["session"]["active"];
+                if (active) {
+                    groups.push({
+                        name: res[i]["group_name"],
+                        consensus: group.group_data.session.consensus
+                    });
+                }
+                
+            }
+            console.log(groups);
+            socket.emit("return_active_groups_and_consensus_for_user",  groups);
+        });
+    });
+
     //Return all of a user's INACTIVE groups
     socket.on("get_inactive_groups_for_user", async (username) => {
         database.query({username: username}, tables.GROUP_TO_USER_TABLE, async function(res) {
@@ -336,10 +363,18 @@ io.on("connection", socket => {
 
 async function convertPoolToActivities(userPool) {
     var feed = [];
+    var argsList = [];
     for (var i = 0; i < userPool.length; i++) {
+        argsList.push({
+            activity_id: userPool[i]["id"]
+        })
+    }
+    feed = await database.queryManyAsync(argsList, tables.ACTIVITY_TABLE);
+    console.log("returning FEED POOP", feed);
+    /*for (var i = 0; i < userPool.length; i++) {
         var res = await database.queryOneAsync({activity_id: userPool[i]["id"]}, tables.ACTIVITY_TABLE);
         feed.push(res);
-    }
+    } */
     return feed;
 }
 
