@@ -291,7 +291,6 @@ io.on("connection", socket => {
                         consensus: group.group_data.session.consensus
                     });
                 }
-                
             }
             console.log(groups);
             socket.emit("return_active_groups_and_consensus_for_user",  groups);
