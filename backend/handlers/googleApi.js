@@ -1,9 +1,11 @@
 fetch = require("node-fetch");
+require('dotenv').config();
 
 async function fetchActivities(socket, latitude, longitude, radiusKM, type) {
     const radMetter = radiusKM * 1000;
+    const api_key = process.env.GOOGLE_API_KEY;
 
-    const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radMetter}&type=${type}&key=AIzaSyAjfUxS2_xG_8I0UyUCTBI87HD1bHIgQYw`
+    const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radMetter}&type=${type}&key=${api_key}`
     return fetch(url)
         .then(res => {
             return res.json()

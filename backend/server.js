@@ -62,9 +62,7 @@ io.on("connection", socket => {
                         break;
                     }
                 }
-            }
-
-            
+            }            
         }
 
         database.update({group_name: group_name}, group, tables.GROUP_TABLE, function() {
