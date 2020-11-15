@@ -31,7 +31,7 @@ Card.propTypes = {
 
 const styles = StyleSheet.create({
   card: {
-    height: height - 250,
+    height: height - 300,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',

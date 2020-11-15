@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, StyleSheet, View, Dimensions, ActivityIndicator, TouchableOpacity } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, Dimensions, ActivityIndicator, TouchableOpacity } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
 import { Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -111,6 +111,7 @@ class SwipeScreen extends React.Component {
                         >
                         <TabBarIcon name="arrow-left" color={"#bbbbbb"} size={23} />
                     </TouchableOpacity>
+                    <Text style={styles.groupName}>{this.name}</Text>
                 </View>
                 <View style={styles.swiperContainer}>
                     <Swiper
@@ -165,23 +166,28 @@ function TabBarIcon(props: { name: string; color: string; size: number }) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         justifyContent: 'space-between',
         backgroundColor: 'white',
     },
     header: {
         backgroundColor: '#fff',
         width: width,
-        height: 40,
+        height: 50,
         flexWrap: "wrap",
         paddingTop: 10,
-        paddingRight: 10,
     },
     leaveSession: {
         left: 15,
         position: "absolute",
         marginTop: 10,
         marginLeft: 10,
+    },
+    groupName: {
+        textAlign: "center",
+        fontSize: 20,
+        marginTop: 5,
+        fontWeight: "500",
+        color: "#888"
     },
     swiperContainer: {
         height: height - 260,
@@ -192,7 +198,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingTop: 20,
         paddingHorizontal: '15%',
-        height: 230,
+        height: 200,
     },
     text: {
         textAlign: "center",
