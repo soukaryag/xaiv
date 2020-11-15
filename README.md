@@ -16,7 +16,7 @@ Why is this important? The hope of this is to generate **meaningful** and **trus
 
 ## Looking Forward
 
-Like any hackathon project, the app is quite rushed. When testing it out, take any malfunctions or unfinished sections with a grain of salt. The core group decision making functionality works, and the app makes a simplistic use of the blockchain to store data. Blockchain programming was a new experience for us, and getting even a basic application to work has been difficult. In the future, we wish to expand our use of Solana to the point of being unique, necessary, and meaningful. This isn't the first "decider" app anyone's ever made, but the way we intend to store and make use of its data is unprecedented. Hopefully, what we've programmed so far using Solana serves as a convincing proof of concept for our use case.
+Like any hackathon project, the app is quite rushed. When testing it out, please interpret any malfunctions or empty pages with a grain of salt :). The core group decision making functionality works, and the app makes (a currently simplistic) use of the blockchain to store data. Blockchain programming was a new experience for us, and getting even a basic application to work within the time constraints has been difficult. Ideally, with more time, we'd expand our implementation of Solana to be necessary and meaningful. This isn't the first "decider" app anyone's ever made, but the way we intend to store and make use of its data by-products is unprecedented. Hopefully, what we've programmed so far using Solana serves as a convincing *proof of concept*, if nothing else.
 
 ## Use
 
