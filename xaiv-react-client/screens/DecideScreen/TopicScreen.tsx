@@ -35,19 +35,17 @@ class TopicScreen extends React.Component {
     }
 
     showAllTopics = () => {
-        console.log("Show all the topics biatch");
+
     }
 
     selectTopic = (topic: String) => {
         navigator.geolocation.getCurrentPosition(
             position => {
                 AsyncStorage.getItem("username").then((value) => {
-                    topic = "laundry";
                     this.socket.emit("create_session", value, this.name, topic, position.coords.latitude, position.coords.longitude, 8);
                 });
             },
         );
-        console.log(name, topic);
         //Update the group to have an active session
         //Populate the group pool with google api cards
 

@@ -36,7 +36,7 @@ class SwipeScreen extends React.Component {
         });
 
         this.socket.on("consensus_achieved", (cardData: any) => {
-            console.log("CONSENUS ACHIEVED ON", cardData);
+            //console.log("CONSENUS ACHIEVED ON", cardData);
         });
     }
 
@@ -56,7 +56,6 @@ class SwipeScreen extends React.Component {
             });
             return;
         }
-        console.log("mounted - emitting");
         AsyncStorage.getItem("username").then((value) => {
             this.socket.emit("get_feed_for_user", value, this.name);
         });

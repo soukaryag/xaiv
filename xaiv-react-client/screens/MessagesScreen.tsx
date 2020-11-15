@@ -152,8 +152,6 @@ class MessagesScreen extends React.Component {
                     {this.state.active_groups.map((prop, key) => {
                         var copy = {"consensus" : []};
                         Object.assign(copy, prop);
-                        console.log("poop 1", prop);
-                        console.log("poop", copy);
                         return (
                             <View>
                                 <View style={styles.sessionCard}>
@@ -187,7 +185,6 @@ class MessagesScreen extends React.Component {
                                 </View>
                                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={messagesStyles.post}>
                                 {copy.consensus.map((group : any, key : number) => {
-                                    console.log("THE GROUP", group);
                                     return (
                                         <ConsensusCard key={key} cardInfo={group} />
                                     );
