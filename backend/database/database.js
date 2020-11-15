@@ -75,18 +75,6 @@ function query(args, table, callBack) {
     })
 }
 
-function queryRandom(num, table, callBack) {
-    MongoClient.connect(DATABASE_URL, function(err, db){
-        if(err) throw err;
-        var dbo = db.db(DATABASE_NAME);
-        dbo.collection(table).aggregate([{ $sample: { size: num } }]).toArray(function(err, result){
-            if(err) throw err;
-            db.close();
-            return callBack(result);
-        });
-    })
-}
-
 function update(query, newValues, table, callBack) {
     MongoClient.connect(DATABASE_URL, function(err, db){
         if(err) throw err;
@@ -100,4 +88,4 @@ function update(query, newValues, table, callBack) {
     })
 }
 
-module.exports = { insertOneAsyncNoDuplicate, insert, queryOneAsync, query, queryRandom, update }
+module.exports = { insertOneAsyncNoDuplicate, insert, queryOneAsync, query, update }

@@ -144,7 +144,7 @@ io.on("connection", socket => {
     });
 
     socket.on("get_top_activities_solana", async () => {
-        database.queryRandom(2, tables.ACTIVITY_TABLE, async function(res) {
+        database.query({pub_key_right: { $regex: ".*" }}, tables.ACTIVITY_TABLE, async function(res) {
             if ( res.length < 2 ) return {} 
             resultZero = await solanaMain.getAccountData(res[0]);
             resultOne = await solanaMain.getAccountData(res[1]);
