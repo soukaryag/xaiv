@@ -76,7 +76,8 @@ class DecideScreen extends React.Component {
             // console.log("got the vALUE BITCH", value);
             this.socket.emit("create_group", [value].concat(tmp), this.state.newGroupName);
         });
-        
+        this.toggleCreateGroupOverlay();
+        this.forceUpdate()
     }
 
     startNewSession = () => {

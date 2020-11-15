@@ -1,12 +1,13 @@
 import React from 'react'
-import { SafeAreaView, StyleSheet, View, Dimensions } from 'react-native'
+import { SafeAreaView, StyleSheet, View, Dimensions, ActivityIndicator, TouchableOpacity } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
+import { Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Card from '../../components/Card'
 import photoCards from '../../constants/Template'
 import IconButton from '../../components/IconButton';
 
-const { height } = Dimensions.get('window')
+const { height, width } = Dimensions.get('window')
 
 class SwipeScreen extends React.Component {
     socket: any
@@ -61,6 +62,12 @@ class SwipeScreen extends React.Component {
         });
 
     }
+    leaveSession = () => {
+        this.navigation.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+        });
+    }
     swipeLeft = (idx: number, button=false) => {
         this.setState({ currIdx: idx });
         if (button) this.swiper.swipeLeft();
@@ -90,11 +97,21 @@ class SwipeScreen extends React.Component {
     render() {
         if (!this.state.ready) {
             return (
-                <View>Loading...</View>
+                <View style={[{flex: 1,justifyContent: "center"}, { flexDirection: "row", justifyContent: "space-around", padding: 10 }]}>
+                    <ActivityIndicator size="large" color="#00ff00" />
+                </View>
             );
         }
         return (
             <SafeAreaView style={styles.container}>
+                <View style={styles.header}>
+                    <TouchableOpacity
+                        onPress={() => this.leaveSession()}
+                        style={styles.leaveSession}
+                        >
+                        <TabBarIcon name="arrow-left" color={"#bbbbbb"} size={23} />
+                    </TouchableOpacity>
+                </View>
                 <View style={styles.swiperContainer}>
                     <Swiper
                         ref={swiper => {
@@ -142,6 +159,9 @@ class SwipeScreen extends React.Component {
     }
 }
 
+function TabBarIcon(props: { name: string; color: string; size: number }) {
+    return <Feather style={{ marginBottom: -3 }} {...props} />;
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -149,15 +169,30 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         backgroundColor: 'white',
     },
+    header: {
+        backgroundColor: '#fff',
+        width: width,
+        height: 40,
+        flexWrap: "wrap",
+        paddingTop: 10,
+        paddingRight: 10,
+    },
+    leaveSession: {
+        left: 15,
+        position: "absolute",
+        marginTop: 10,
+        marginLeft: 10,
+    },
     swiperContainer: {
-        height: height - 250,
+        height: height - 260,
     },
     buttonsContainer: {
         justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row',
+        paddingTop: 20,
         paddingHorizontal: '15%',
-        height: 250,
+        height: 230,
     },
     text: {
         textAlign: "center",
