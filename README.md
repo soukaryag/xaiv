@@ -50,7 +50,7 @@ If you are having trouble, please contact us! Thanks.
 ### To be implemented
 - Settings screen for topic selection
    - Select specific location, radius, list of more topics, etc.
-- Group messagin system
+- Group messaging system
 - Calendar showing upcoming decided events
 
 ## To do
