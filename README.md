@@ -22,7 +22,7 @@ Like any hackathon project, the app is quite rushed. When testing it out, please
 
 ### Through expo
 1. Go to `https://expo.io/@soukaryag/projects/xaiv`
-2. Scan the QR code with your iOS or Android device, alternatively use the `Open project in the browser option`
+2. Scan the QR code with your iOS or Android device, alternatively use the `Open project in the browser` option
 3. Welcome to Xaiv, have fun!
 
 ### Local Machine
@@ -38,7 +38,20 @@ Like any hackathon project, the app is quite rushed. When testing it out, please
 
 If you are having trouble, please contact us! Thanks.
 
+## Features
+### Implemented
+- Basic account system with signup and login
+- Add other users as friends
+- Create groups with friends 
+- Start real time sessions to decide on an activity with a group
+- Look back on past sessions and decisions
+- View most popular swiped location on the home feed, tracked via Solana
 
+### To be implemented
+- Settings screen for topic selection
+   - Select specific location, radius, list of more topics, etc.
+- Group messagin system
+- Calendar showing upcoming decided events
 
 ## To do
 - Functionality:
