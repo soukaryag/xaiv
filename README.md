@@ -10,7 +10,7 @@ Users will be able to post about this on their feed easily and even make comment
 
 ## Use
 
-1. Clone the repository to you local machine
+1. Clone the repository to your local machine
    - `git clone https://github.com/soukaryag/xaiv.git`
 2. Continue to the client folder
    - `cd xaiv/xaiv-react-client`
