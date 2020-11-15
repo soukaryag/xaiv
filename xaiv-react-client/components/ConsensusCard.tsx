@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         marginRight: 25,
     },
     footerIconLabel: {
-        fontsize: 10,
+        fontSize: 10,
         fontWeight: "500",
         color: "#f17650",
         marginLeft: 4,

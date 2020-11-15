@@ -159,7 +159,6 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#f0f2f5',
         color: "#222a36",
-        fontFamily: 'montserrat'
     },
     overlayContainer: {
         padding: 10,

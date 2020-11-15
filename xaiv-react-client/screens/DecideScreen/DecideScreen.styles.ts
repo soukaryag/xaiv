@@ -4,20 +4,16 @@ import Colors from '../../constants/Colors';
 const { height, width } = Dimensions.get('window')
 
 export const styles = StyleSheet.create({
-    // GENERAL
     container: {
         backgroundColor: "#fff",
         flex: 1,
         alignItems: 'center',
-        fontFamily: 'montserrat'
     },
     headingText: {
         fontSize: 35,
         fontWeight: "500",
         marginVertical: 10,
     },
-
-    // OVERLAY
     overlayContainer: {
         backgroundColor: "#fff",
         width: 4*width/5,
@@ -83,8 +79,6 @@ export const styles = StyleSheet.create({
     unselectedFriend: {
         backgroundColor: "white",
     },
-
-    // BODY
     labelRow: {
         flexDirection:'row-reverse',
         marginTop: 4,

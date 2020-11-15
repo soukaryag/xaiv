@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "xaiv-react-client",
-    "slug": "xaiv-react-client",
+    "name": "Xaiv",
+    "slug": "xaiv",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -29,6 +29,8 @@
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
-    }
+    },
+    "description": "Tinder style group decisions application",
+    "githubUrl": "https://github.com/soukaryag/xaiv"
   }
 }

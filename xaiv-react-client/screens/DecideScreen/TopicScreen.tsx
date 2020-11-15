@@ -46,9 +46,6 @@ class TopicScreen extends React.Component {
                 });
             },
         );
-        //Update the group to have an active session
-        //Populate the group pool with google api cards
-
     }
 
 
@@ -56,7 +53,6 @@ class TopicScreen extends React.Component {
         return (
             <View style={styles.container}>
                 <LinearGradient
-                    // Button Linear Gradient
                     colors={['#FF3D00', '#FB5A00', '#E17D20']}
                     style={styles.linearGradientContainer}>
                     <View style={styles.suggestedBox}>
