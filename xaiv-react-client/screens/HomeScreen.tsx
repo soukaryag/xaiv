@@ -76,7 +76,6 @@ class HomeScreen extends React.Component {
         const posts = []
 
         if ('activity_zero' in this.state.topPost) {
-            console.log(this.state.topPost);
             posts.push(<TopPost key={0} postInfo={this.state.topPost}/>)
         }
 
