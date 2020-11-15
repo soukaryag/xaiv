@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, TextInput, Image, TouchableOpacity, Dimensions } from 'react-native'
+import { StyleSheet, TextInput, TouchableOpacity, Dimensions } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Text, View } from '../../components/Themed';
 
@@ -32,7 +32,6 @@ class LoginScreen extends React.Component {
         this.socket.emit("login", this.state.username, this.state.password);
 
         this.socket.on("login_success", (username: string) => {
-            // console.log(`Logged in ${username} successfully`)
             AsyncStorage.setItem("username", this.state.username);
             this.navigation.navigate("Root", {socket: this.socket});
         })

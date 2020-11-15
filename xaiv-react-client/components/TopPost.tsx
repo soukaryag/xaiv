@@ -71,7 +71,7 @@ const TopPost = ({ key, postInfo }: any) => (
 )
 
 function TabBarIcon(props: { name: string; color: string; size: number }) {
-    return <Feather style={{ marginBottom: -3 }} {...props} />;
+    return <Feather style={{ marginBottom: -3 }} {...props} />
 }
 
 const styles = StyleSheet.create({

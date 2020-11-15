@@ -1,7 +1,7 @@
 import { Feather } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet, TouchableOpacity, Image, View } from 'react-native'
+import { StyleSheet, Text, Image, View } from 'react-native'
 import * as React from 'react';
 
 import Colors from '../constants/Colors';
@@ -28,7 +28,7 @@ export default function BottomTabNavigator({ route, navigation }: any) {
         component={HomeNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => <TabBarIcon name="home" color={"#bbbbbb"} size={30} focused={focused} />,
-          tabBarLabel: ({}) => "",
+          tabBarLabel: ({}) => <Text></Text>,
         }}
         initialParams={globals}
       />
@@ -37,7 +37,7 @@ export default function BottomTabNavigator({ route, navigation }: any) {
         component={MessagesNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => <TabBarIcon name="message-circle" color={"#bbbbbb"} size={30} focused={focused} />,
-          tabBarLabel: ({}) => "",
+          tabBarLabel: ({}) => <Text></Text>,
         }}
         initialParams={globals}
       />
@@ -46,7 +46,7 @@ export default function BottomTabNavigator({ route, navigation }: any) {
         component={DecideNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => <TabBarIcon name="plus-circle" color={"#bbbbbb"} size={30} focused={focused} />,
-          tabBarLabel: ({}) => "",
+          tabBarLabel: ({}) => <Text></Text>,
         }}
         initialParams={globals}
       />
@@ -55,7 +55,7 @@ export default function BottomTabNavigator({ route, navigation }: any) {
         component={CalendarNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => <TabBarIcon name="calendar" color={"#bbbbbb"} size={30} focused={focused} />,
-          tabBarLabel: ({}) => "",
+          tabBarLabel: ({}) => <Text></Text>,
         }}
         initialParams={globals}
       />
@@ -64,7 +64,7 @@ export default function BottomTabNavigator({ route, navigation }: any) {
         component={ProfileNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => <TabBarIcon name="user" color={"#bbbbbb"} size={30} focused={focused} />,
-          tabBarLabel: ({}) => "",
+          tabBarLabel: ({}) => <Text></Text>,
         }}
         initialParams={globals}
       />
@@ -72,14 +72,10 @@ export default function BottomTabNavigator({ route, navigation }: any) {
   );
 }
 
-// You can explore the built-in icon families and icons on the web at:
-// https://icons.expo.fyi/
 function TabBarIcon(props: { name: string; color: string; size: number, focused: boolean}) {
-  return <Feather style={{ marginBottom: -3 }} {...props} />;
+  return <Feather style={{ marginBottom: -3 }} {...props} />
 }
 
-// Each tab has its own navigation stack, you can read more about this pattern here:
-// https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
 const HomeStack = createStackNavigator<HomeParamList>();
 
 function HomeNavigator({ route, navigation }: any) {
@@ -163,6 +159,6 @@ function ProfileNavigator({ route, navigation }: any) {
 
 const styles = StyleSheet.create({
   container: {
-    borderTopColor: "#fff",
+    borderTopColor: "rgba(0,0,0,0)",
   }
 })

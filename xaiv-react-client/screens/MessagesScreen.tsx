@@ -4,7 +4,6 @@ import { Text, SafeAreaView, View, TouchableOpacity, ScrollView, TextInput, Imag
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles } from './DecideScreen/DecideScreen.styles';
 import { Overlay } from 'react-native-elements';
-import Modal from 'modal-react-native-web';
 import ConsensusCard from '../components/ConsensusCard';
 
 const { height, width } = Dimensions.get('window')
@@ -59,8 +58,6 @@ class MessagesScreen extends React.Component {
     }
 
     createGroup = () => {
-        // console.log("create group client")
-
         var tmp: any = [];
         for (var i = 0; i < this.state.friends.length; i++) {
             if (this.state.friends[i]["friend"]["selected"]) {
@@ -100,7 +97,7 @@ class MessagesScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Overlay ModalComponent={Modal} isVisible={this.state.createGroupOverlay} onBackdropPress={this.toggleCreateGroupOverlay}>
+                <Overlay isVisible={this.state.createGroupOverlay} onBackdropPress={this.toggleCreateGroupOverlay}>
                     <View style={styles.overlayContainer}>
                         <Text style={styles.headingText}>Create Group</Text>
 
@@ -220,7 +217,7 @@ const messagesStyles = StyleSheet.create({
 })
 
 function TabBarIcon(props: { name: string; color: string; size: number }) {
-    return <Feather style={{ marginBottom: -3 }} {...props} />;
+    return <Feather style={{ marginBottom: -3 }} {...props} />
 }
 
 export default MessagesScreen

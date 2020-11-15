@@ -28,7 +28,6 @@ class SwipeScreen extends React.Component {
         }
 
         this.socket.on("return_feed_for_user", (feed: any) => { 
-            // console.log("pool is ", feed);
             this.setState({
                 ready: true,
                 cardData: feed
@@ -36,7 +35,7 @@ class SwipeScreen extends React.Component {
         });
 
         this.socket.on("consensus_achieved", (cardData: any) => {
-            //console.log("CONSENUS ACHIEVED ON", cardData);
+            
         });
     }
 
@@ -156,7 +155,7 @@ class SwipeScreen extends React.Component {
 }
 
 function TabBarIcon(props: { name: string; color: string; size: number }) {
-    return <Feather style={{ marginBottom: -3 }} {...props} />;
+    return <Feather style={{ marginBottom: -3 }} {...props} />
 }
 
 const styles = StyleSheet.create({

@@ -10,6 +10,7 @@ import {io} from 'socket.io-client'
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
+  console.disableYellowBox = true;
 
   const PROD_URL = "https://xaiv-backend.herokuapp.com"
   const LOCAL_URL = "http://127.0.0.1:3000"

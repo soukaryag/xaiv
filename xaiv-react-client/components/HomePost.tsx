@@ -10,7 +10,7 @@ const HomePost = ({ key, postInfo }: any) => (
             <TouchableOpacity
                 style={styles.profilePictureContainer}
             >
-                <Image source={{ uri: `${postInfo.profile_picture}` }} style={styles.profilePicture} />
+                <Image source={{ uri: `${postInfo.profile_picture}` }} style={styles.profilePicture}/>
             </TouchableOpacity>
             <View>
                 <Text style={styles.profileName}>{postInfo.username}</Text>
@@ -42,7 +42,7 @@ const HomePost = ({ key, postInfo }: any) => (
 )
 
 function TabBarIcon(props: { name: string; color: string; size: number }) {
-    return <Feather style={{ marginBottom: -3 }} {...props} />;
+    return <Feather style={{ marginBottom: -3 }} {...props} />
 }
 
 const styles = StyleSheet.create({

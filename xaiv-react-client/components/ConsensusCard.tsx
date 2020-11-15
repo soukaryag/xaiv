@@ -5,7 +5,6 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Dimensions
 const { width } = Dimensions.get('window')
 
 const ConsensusCard = ({key, cardInfo} : any) => (
-
     <View style={styles.postSub}>
         <View style={styles.postHeader}>
             <TouchableOpacity
@@ -28,7 +27,7 @@ const ConsensusCard = ({key, cardInfo} : any) => (
 )
 
 function TabBarIcon(props: { name: string; color: string; size: number }) {
-    return <Feather style={{ marginBottom: -3 }} {...props} />;
+    return <Feather style={{ marginBottom: -3 }} {...props} />
 }
 
 const styles = StyleSheet.create({

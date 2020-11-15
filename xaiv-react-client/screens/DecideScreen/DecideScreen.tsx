@@ -4,7 +4,6 @@ import { Feather } from '@expo/vector-icons';
 import { Overlay } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles } from './DecideScreen.styles';
-import Modal from 'modal-react-native-web';
 
 class DecideScreen extends React.Component {
     socket: any
@@ -64,8 +63,6 @@ class DecideScreen extends React.Component {
     }
 
     createGroup = () => {
-        // console.log("create group client")
-        
         var tmp : any = [];
         for (var i = 0; i < this.state.friends.length; i++) {
             if (this.state.friends[i]["friend"]["selected"]) {
@@ -73,7 +70,6 @@ class DecideScreen extends React.Component {
             }
         }
         AsyncStorage.getItem("username").then((value: any) => {
-            // console.log("got the vALUE BITCH", value);
             this.socket.emit("create_group", [value].concat(tmp), this.state.newGroupName);
         });
         this.toggleCreateGroupOverlay();
@@ -81,13 +77,10 @@ class DecideScreen extends React.Component {
     }
 
     startNewSession = () => {
-        // console.log("starting a new session");
         this.toggleOverlay();
-        //pop up the overlay of non started groups
     };
 
     displayFriends = () => {
-        // console.log("DISPLAY FRIENDS FUNCTION CALLED")
         AsyncStorage.getItem("username").then((value: any) => {
             this.socket.emit("get_friends", value);
         });
@@ -100,7 +93,6 @@ class DecideScreen extends React.Component {
             temp.push(this.state.friends[i]);
         }
         temp[friendIndex]["friend"]["selected"] = ! temp[friendIndex]["friend"]["selected"];
-        // console.log("???", temp);
         this.setState({
             friends: temp,
         })
@@ -119,13 +111,8 @@ class DecideScreen extends React.Component {
     };
 
     joinGroupSwiping = (name: String) => {
-        //display a swipe screen, and give it the required params:
-        //socket
-        //group
         this.navigation.navigate("Swipe", {socket: this.socket, name: name});
     };
-
-    /* Navigate to the pick topic screen */
 
     decideTopic = (name: String) => {
         this.toggleOverlay();
@@ -135,7 +122,7 @@ class DecideScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Overlay ModalComponent={Modal} isVisible={this.state.overlay} onBackdropPress={this.toggleOverlay}>
+                <Overlay isVisible={this.state.overlay} onBackdropPress={this.toggleOverlay}>
                     <ScrollView style={styles.overlayContainer}>
                         <Text style={styles.headingText}>Create Session</Text>
                         {this.state.inactive_groups.map((prop, key) => {
@@ -154,7 +141,7 @@ class DecideScreen extends React.Component {
                     </ScrollView>
                 </Overlay>
 
-                <Overlay ModalComponent={Modal} isVisible={this.state.createGroupOverlay} onBackdropPress={this.toggleCreateGroupOverlay}>
+                <Overlay isVisible={this.state.createGroupOverlay} onBackdropPress={this.toggleCreateGroupOverlay}>
                     <View style={styles.overlayContainer}>
                         <Text style={styles.headingText}>Create Group</Text>
                         
@@ -248,7 +235,7 @@ class DecideScreen extends React.Component {
 }
 
 function TabBarIcon(props: { name: string; color: string; size: number }) {
-    return <Feather style={{ marginBottom: -3 }} {...props} />;
+    return <Feather style={{ marginBottom: -3 }} {...props} />
 }
 
 
